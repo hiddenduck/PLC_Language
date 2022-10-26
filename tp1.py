@@ -2,7 +2,7 @@ import re
 
 print("Split de uma linha por virgulas")
 
-input = open("teste1.csv", "r", encoding="utf-8")
+input = open("emd.csv", "r", encoding="utf-8")
 entradas = {}
 i = 0
 for linha in input:
