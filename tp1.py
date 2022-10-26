@@ -6,7 +6,12 @@ input = open("emd.csv", "r", encoding="utf-8")
 entradas = {}
 i = 0
 for linha in input:
-    entradas[i] = re.split(r',', linha)
+    linha = linha[:-1]
+    if i == 0:
+        entradas[i] = linha
+        #cenas especiais
+    else:
+        entradas[i] = re.split(r',', linha)
     i+=1
 input.close()
 output = open("output.txt", "w")
