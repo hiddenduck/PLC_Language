@@ -1,4 +1,4 @@
-_id,index,dataEMD,nome/primeiro,nome/último,idade,género,morada,modalidade,clube,email,federado,resultado
+['_id', 'index', 'dataEMD', 'nome/primeiro', 'nome/último', 'idade', 'género', 'morada', 'modalidade', 'clube', 'email', 'federado', 'resultado']
 ['6045074cd77860ac9483d34e', '0', '2020-02-25', 'Delgado', 'Gay', '28', 'F', 'Gloucester', 'BTT', 'ACRroriz', 'delgado.gay@acrroriz.biz', 'true', 'true']
 ['6045074ca6adebd591b5d239', '1', '2019-07-31', 'Foreman', 'Prince', '34', 'M', 'Forestburg', 'Ciclismo', 'ACDRcrespos', 'foreman.prince@acdrcrespos.org', 'false', 'true']
 ['6045074c221e2fdf430e9ef0', '2', '2021-01-06', 'Cheryl', 'Berger', '21', 'M', 'Umapine', 'Basquetebol', 'Vitoria', 'cheryl.berger@vitoria.biz', 'false', 'true']
