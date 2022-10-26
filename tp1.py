@@ -8,7 +8,7 @@ i = 0
 for linha in input:
     linha = linha[:-1]
     if i == 0:
-        entradas[i] = linha
+        entradas[i] = re.split(r'\,(?![0-9]+})',linha) # faz sentido olhar para espaços também tipo {3, 5} ??
         #cenas especiais
     else:
         entradas[i] = re.split(r',', linha)
