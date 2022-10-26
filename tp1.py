@@ -4,15 +4,10 @@ print("Split de uma linha por virgulas")
 
 input = open("emd.csv", "r", encoding="utf-8")
 entradas = {}
-i = 0
-for linha in input:
+entradas[0] = re.split(r'\,(?!s*[0-9]+})',linha[0:-1])
+for i,linha in enumerate(input[1:]):
     linha = linha[:-1]
-    if i == 0:
-        entradas[i] = re.split(r'\,(?!s*[0-9]+})',linha)
-        #cenas especiais
-    else:
-        entradas[i] = re.split(r',', linha)
-    i+=1
+     entradas[i+1] = re.split(r',', linha)
 input.close()
 output = open("output.txt", "w")
 for i in entradas:
