@@ -1,0 +1,4 @@
+['Número', 'Nome', 'Curso\n']
+['3162', 'Cândido Faísca', 'Teatro\n']
+['7777', 'Cristiano Ronaldo', 'Desporto\n']
+['264', 'Marcelo Sousa', 'Ciência Política\n']
