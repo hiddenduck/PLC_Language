@@ -22,7 +22,7 @@ for coluna in colunas:
             coluna[2] = coluna[1]
             #tentar evitar as vírgulas com espaços vazios porque torna o resto muito mais fácil
         #apanha os casos todos logo, também só aumenta 5 bytes a cada string?
-        linha_magica += r'([^,]+(?:,[^,]+){%d,%d}),{1,%d}' % (int(coluna[1])-1, int(coluna[2])-1,int(coluna[2]) - int(coluna[1]) + 1)
+        linha_magica += r'([^,]+(?:,[^,]+){%d,%d}),{0,%d},' % (int(coluna[1])-1, int(coluna[2])-1,int(coluna[2]) - int(coluna[1]))
         lm += r'%s:[\%d]\n' % (coluna[0],i)
     else:
         linha_magica += r'([^{,]+),'
@@ -49,7 +49,7 @@ print(lm)
 res = ''
 for linha in input:
     linha = linha[:-1]
-    print(linha)
+    #print(linha)
     res += re.sub(linha_magica,lm,linha)
 
 print(res)
