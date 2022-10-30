@@ -15,32 +15,13 @@ def linha_magica_constructor(s):
         return r'([^{,]+),'
     min = int(s.group(2))
     max = min
-    fun = ""
     if s.group(3):
         max = int(s.group(3))
-    if s.group(4):
-        fun = s.group(4)
-    return r'([^,]+(?:,[^,]+){%d,%d}),{0,%d},(%s){0}' % (min-1, max-1, max - min, fun)
+    return r'([^,]+(?:,[^,]+){%d,%d}),{0,%d},' % (min-1, max-1, max - min)
 
 linha_magica = re.sub(r'(?<![^,])([^{^,]+)(?:{(\d+)(?:,(\d+))?})?(?:::([^,]+))?,*', linha_magica_constructor, primeira)
 linha_magica = linha_magica[:-1]
 print(linha_magica)
-#será que é possível fazer sub(ou mesmo sub n) nesta string e construir logo algo super interessante, uma linha magica logo de estoura, evitando um for
-
-#colunas: 0 -> título; 1->min/único; 2->max; 3->função
-#for coluna in colunas:
-#    if coluna[1] != '':
-#        #será possível escrever esta restrição sem obrigar que exista pelo menos um, para podermos usar 0
-#        if coluna[2] == '':
-#            coluna[2] = coluna[1]
-#            #tentar evitar as vírgulas com espaços vazios porque torna o resto muito mais fácil
-#        #apanha os casos todos logo, também só aumenta 5 bytes a cada string?
-#        linha_magica += r'([^,]+(?:,[^,]+){%d,%d}),{0,%d},' % (int(coluna[1])-1, int(coluna[2])-1,int(coluna[2]) - int(coluna[1]))
-#    else:
-#        linha_magica += r'([^{,]+),'
-#linha_magica = linha_magica[:-1]
-#print(linha_magica)
-#print(linha_magica == result)
 
 #o group de 0 é a linha sempre?
 for linha in input:
