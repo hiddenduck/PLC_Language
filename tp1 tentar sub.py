@@ -15,8 +15,11 @@ def linha_magica_constructor(s):
         return r'([^{,]+),'
     min = int(s.group(2))
     max = min
+    fun = ""
     if s.group(3):
         max = int(s.group(3))
+    if s.group(4):
+        fun = s.group(4)
     return r'([^,]+(?:,[^,]+){%d,%d}),{0,%d},' % (min-1, max-1, max - min)
 
 linha_magica = re.sub(r'(?<![^,])([^{^,]+)(?:{(\d+)(?:,(\d+))?})?(?:::([^,]+))?,*', linha_magica_constructor, primeira)
