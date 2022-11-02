@@ -12,7 +12,7 @@ print(colunas)
 def linha_magica_constructor(s):
     print(s)
     if not s.group(2):
-        return r'([^{,]+),'
+        return r'([^,]+),'
     min = int(s.group(2))
     max = min
     fun = ""
