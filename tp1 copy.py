@@ -11,7 +11,7 @@ colunas = re.findall(r'(?<![^,])([^{^,]+)(?:{(\d+)(?:,(\d+))?})?(?:::([^,]+))?',
 print(colunas)
 
 linha_magica = r''
-lm = r''
+lm = lambda x: ''
 print(linha_magica)
 i = 1
 #colunas: 0 -> título; 1->min/único; 2->max; 3->função
@@ -23,35 +23,51 @@ for coluna in colunas:
             #tentar evitar as vírgulas com espaços vazios porque torna o resto muito mais fácil
         #apanha os casos todos logo, também só aumenta 5 bytes a cada string?
         linha_magica += r'([^,]+(?:,[^,]+){%d,%d}),{0,%d},' % (int(coluna[1])-1, int(coluna[2])-1,int(coluna[2]) - int(coluna[1]))
-        lm += r'%s:[\%d]\n' % (coluna[0],i)
     else:
         linha_magica += r'([^{,]+),'
-        lm += r'%s:\%d\n' % (coluna[0],i)
-    i += 1
 linha_magica = linha_magica[:-1]
 print(linha_magica)
 print(lm)
 #o group de 0 é a linha sempre?
-"""for linha in input:
-    linha = linha[:-1]
-    print(linha)
-    teste = re.search(linha_magica, linha)
-    for i in range(len(colunas)):
-        if (colunas[i][1] != ''):
-            lista = re.split(r',', teste.group(i+1))
-            if (colunas[i][3] != ''):
-                fun = eval(colunas[i][3])
-                print(colunas[i][0] + "_" + colunas[i][3] + " : " + str(fun(map(int,lista))))
-            else:
-                print(colunas[i][0] + " : " + str(lista))
-        else:
-            print(colunas[i][0] + " : " + teste.group(i+1))"""
+
 res = ''
 for linha in input:
     linha = linha[:-1]
-    #print(linha)
-    res += re.sub(linha_magica,lm,linha)
-
-print(res)
+    for coluna in colunas:
+        if coluna[1] != '':
+            if coluna[2] != '':
+                if coluna[3] != '':
+                    fun = eval(coluna[3])
+                    linha = re.sub(r'([^,]+(?:,[^,]+){%d,%d})' % (int(coluna[1])-1, int(coluna[2])-1), r'%s_%s:\11111\n' % (coluna[0],coluna[3]), linha, count = 1)
+                    break    
+                linha = re.sub(r'([^,]+(?:,[^,]+){%d,%d})' % (int(coluna[1])-1, int(coluna[2])-1), (r'%s:[\1]2222222\n' % coluna[0]), linha, count = 1)
+                break
+        linha = re.sub(r'([^,]+(?:,[^,]+))', r'%s:\1333333333\n'%coluna[0], linha, count = 1)
+    res += linha
+    print(linha)
+#print(res)
 
 input.close()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+d = {
+    [3,2,1],
+    [3,2,1],
+    [3,2,1,4,5,6,7],
+    [3,2,1],
+    [1,2,3],
+    [1,2,3],
+}
+
