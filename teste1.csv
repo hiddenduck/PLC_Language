@@ -1,5 +1,4 @@
-Número,Nome,Curso,Notas{5},,,,,Pokemon
+Número,Nome,Curso,Notas{1,5}::teste1,,,,,Pokemon
 3162,Cândido Faísca,Teatro,12,13,14,5,6,Giratina
 7777,Cristiano Ronaldo,Desporto,17,12,12,2,3,Garbodor
-264,Marcelo Sousa,Ciência Política,18,19,19,20,34,Vanilux
-
+264,Marcelo Sousa,Ciência Política,20,,,,,Vanilux
