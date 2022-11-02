@@ -1,12 +1,12 @@
 import re
 
 colunas = []
-
-print("Split de uma linha por virgulas")
+coluna_match = re.compile(r'([^{},]+)(?:{(\d+)(?:,(\d+))?})?(?:::([^{},]+))?,*')
 
 input = open("teste1.csv", "r", encoding="utf-8")
+
 primeira = input.readline()[:-1]
-colunas = re.findall(r'(?<![^,])([^{^,]+)(?:{(\d+)(?:,(\d+))?})?(?:::([^,]+))?,*', primeira)
+colunas = re.findall(coluna_match, primeira)
 print(colunas)
 
 def linha_magica_constructor(s):
@@ -22,7 +22,7 @@ def linha_magica_constructor(s):
         fun = s.group(4)
     return r'([^,]+(?:,[^,]+){%d,%d}),{0,%d},' % (min-1, max-1, max - min)
 
-linha_magica = re.sub(r'(?<![^,])([^{^,]+)(?:{(\d+)(?:,(\d+))?})?(?:::([^,]+))?,*', linha_magica_constructor, primeira)
+linha_magica = re.sub(coluna_match, linha_magica_constructor, primeira)
 linha_magica = linha_magica[:-1]
 print(linha_magica)
 
