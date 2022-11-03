@@ -6,7 +6,7 @@ import re
 
 
 
-f1 = eval("sum")
+f1 = eval("sum([1,2,3,4,5])")
 #f2 = eval("mean")
 
 print(f1)

@@ -1,7 +1,7 @@
 import re
 
 def teste1(lista):
-    return [[x] for x in lista]
+    return '\n'
 
 colunas = []
 
@@ -69,7 +69,8 @@ for linha in input:
     linha = linha[:-1]
     print(linha)
     res += re.sub(patern,replace,linha)
-    res += '\n'
+    
+res = re.sub(r'(((?:%s))\(.*\))'%(fun_str), lambda x: str(eval(x.group(1))),res)
 
 print(res)
 
