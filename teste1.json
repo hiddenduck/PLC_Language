@@ -3,7 +3,7 @@
 		"Número": "3162",
 		"Nome": "Cândido Faísca",
 		"Curso": "Teatro",
-		"Notas": [12,13,14,5,6],
+		"Notas_teste1": [[12], [13], [14], [5], [6]],
 		"Pokemon": "Giratina",
 		"ListaSadakaNoFun": [1,2]
 	},
@@ -11,7 +11,7 @@
 		"Número": "7777",
 		"Nome": "Cristiano Ronaldo",
 		"Curso": "Desporto",
-		"Notas": [17,12,12,2,3],
+		"Notas_teste1": [[17], [12], [12], [2], [3]],
 		"Pokemon": "Garbodor",
 		"ListaSadakaNoFun": [3,4,5]
 	},
@@ -19,7 +19,7 @@
 		"Número": "264",
 		"Nome": "Marcelo Sousa",
 		"Curso": "Ciência Política",
-		"Notas": [20],
+		"Notas_teste1": [[20]],
 		"Pokemon": "Vanilux",
 		"ListaSadakaNoFun": [5,6,2]
 	}

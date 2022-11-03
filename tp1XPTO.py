@@ -8,7 +8,7 @@ def teste1(lista):
 
 colunas = []
 
-filename = "emd.csv"
+filename = "teste1.csv"
 
 input = open(filename, "r", encoding="utf-8")
 primeira = input.readline()[:-1]
@@ -34,7 +34,7 @@ for coluna in colunas:
         patern += r'([^,]+(?:,[^,]+){%d,%d}),{0,%d},' % (min-1, max-1, max - min)
         if coluna[3] != '':
             fun_str += r'%s|' % (coluna[3])
-            replace += r'\t\t"%s_%s": [\%d],\n' % (coluna[0],coluna[3],i)
+            replace += r'\t\t"%s_%s": %s([\%d]),\n' % (coluna[0],coluna[3],coluna[3],i)
         else:
             replace += r'\t\t"%s": [\%d],\n' % (coluna[0],i)
     i += 1
@@ -55,7 +55,7 @@ for linha in input:
 res = re.sub(r'(((?:%s))\(.*\))'%(fun_str), lambda x: str(eval(x.group(1))),res)
 res = res[:-2] + "\n]"
 
-#print(res)
+print(res)
 
 end = time.time()
 
