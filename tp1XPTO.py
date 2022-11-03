@@ -15,7 +15,7 @@ colunas = re.findall(r'(?<![^,])([^{^,]+)(?:{(\d+)(?:,(\d+))?})?(?:::([^,]+))?',
 #será que é possível fazer sub(ou mesmo sub n) nesta string e construir logo algo super interessante, uma linha magica logo de estoura, evitando um for
 print(colunas)
 
-patern = r'^'
+patern = r''
 replace = r''
 fun_str = ""
 i = 1
@@ -44,7 +44,7 @@ for coluna in colunas:
                 fun_str += r'%s|' % (coluna[3])
     i += 1
 
-patern = patern[:-1] + '$'
+patern = patern[:-1]
 fun_str = fun_str[:-1]
 print(patern)
 print(replace)
