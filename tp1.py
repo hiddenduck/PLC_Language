@@ -7,8 +7,6 @@ def teste1(l):
 start = time.time()
 colunas = []
 
-print("Split de uma linha por virgulas")
-
 input = open("emd.csv", "r", encoding="utf-8")
 primeira = input.readline()[:-1]
 colunas = re.findall(r'(?<![^,])([^{^,]+)(?:{(\d+)(?:,(\d+))?})?(?:::([^,]+))?', primeira)
@@ -39,9 +37,9 @@ for linha in input:
             else:
                 fun = eval(colunas[i][3])
                 res+=',\n\t\t\"%s_%s\": %s' % (colunas[i][0], colunas[i][3], str(fun(map(int,lis))))
-    res += '\n\t}\n'
+    res += '\n\t}'
 res = res + ']'
-#print(res)
+print(res)
 
 end = time.time()
 

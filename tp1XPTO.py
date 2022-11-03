@@ -32,9 +32,11 @@ for coluna in colunas:
         if coluna[2] != '':
             max = int(coluna[2])
         patern += r'([^,]+(?:,[^,]+){%d,%d}),{0,%d},' % (min-1, max-1, max - min)
-        replace += r'\t\t"%s": [\%d],\n' % (coluna[0],i)
         if coluna[3] != '':
             fun_str += r'%s|' % (coluna[3])
+            replace += r'\t\t"%s_%s": [\%d],\n' % (coluna[0],coluna[3],i)
+        else:
+            replace += r'\t\t"%s": [\%d],\n' % (coluna[0],i)
     i += 1
 
 patern = patern[:-1]
