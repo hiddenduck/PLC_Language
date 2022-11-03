@@ -16,7 +16,7 @@ fun_str = r''
 def teste1(l):
     return [[x] for x in l]
 
-def pattern_constructor(s):
+def pattern_constructor(s,pattern,replace):
     print(s)
     if not s.group(2):
         return r'([^,]+),'
