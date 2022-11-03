@@ -1,7 +1,8 @@
+from ast import pattern
 import re
 
 def teste1(lista):
-    return '\n'
+    return [[x] for x in lista]
 
 colunas = []
 
@@ -16,7 +17,7 @@ colunas = re.findall(r'(?<![^,])([^{^,]+)(?:{(\d+)(?:,(\d+))?})?(?:::([^,]+))?',
 print(colunas)
 
 patern = r''
-replace = r''
+replace = r'\t{\n'
 fun_str = ""
 i = 1
 fun_pos = 0
@@ -24,27 +25,29 @@ fun_pos = 0
 for coluna in colunas:
     if coluna[1] == '':
         patern += r'([^{,]+),'    
-        replace += r'%s:\%d\n' % (coluna[0],i)
+        replace += r'\t\t"%s": "\%d"\n' % (coluna[0],i)
     else:
         if coluna[2] == '':
             if coluna[3] == '':
                 patern += r'([^,]+(?:,[^,]+){%d}),{0,%d},' % (int(coluna[1])-1, int(coluna[1])-1)
-                replace += r'%s:[\%d]\n' % (coluna[0],i)
+                replace += r'\t\t"%s": [\%d]\n' % (coluna[0],i)
             else:
                 patern += r'([^,]+(?:,[^,]+){%d}),{0,%d},' % (int(coluna[1])-1, int(coluna[1])-1)
-                replace += r'%s_%s:%s([\%d])\n' % (coluna[0],coluna[3],coluna[3],i)
+                replace += r'\t\t"%s_%s": %s([\%d])\n' % (coluna[0],coluna[3],coluna[3],i)
                 fun_str += r'%s|' % (coluna[3])
         else:
             if coluna[3] == '':
                 patern += r'([^,]+(?:,[^,]+){%d,%d}),{0,%d},' % (int(coluna[1])-1, int(coluna[2])-1,int(coluna[2])-1) 
-                replace += r'%s:[\%d]\n' % (coluna[0],i)
+                replace += r'\t\t"%s": [\%d]\n' % (coluna[0],i)
             else:
                 patern += r'([^,]+(?:,[^,]+){%d,%d}),{0,%d},' % (int(coluna[1])-1, int(coluna[2])-1,int(coluna[2])-1) 
-                replace += r'%s_%s:%s([\%d])\n' % (coluna[0],coluna[3],coluna[3],i)
+                replace += r'\t\t"%s_%s": %s([\%d])\n' % (coluna[0],coluna[3],coluna[3],i)
                 fun_str += r'%s|' % (coluna[3])
     i += 1
 
 patern = patern[:-1]
+replace += "\t},\n"
+
 fun_str = fun_str[:-1]
 print(patern)
 print(replace)
@@ -64,13 +67,15 @@ print(replace)
         else:
             print(colunas[i][0] + " : " + teste.group(i+1))"""
 
-res = ''
+res = '[\n'
 for linha in input:
     linha = linha[:-1]
     print(linha)
     res += re.sub(patern,replace,linha)
     
 res = re.sub(r'(((?:%s))\(.*\))'%(fun_str), lambda x: str(eval(x.group(1))),res)
+
+res = res[:-2] + "\n]"
 
 print(res)
 
