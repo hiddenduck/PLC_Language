@@ -49,20 +49,6 @@ fun_str = fun_str[:-1]
 print(patern)
 print(replace)
 #o group de 0 é a linha sempre?
-"""for linha in input:
-    linha = linha[:-1]
-    print(linha)
-    teste = re.search(linha_magica, linha)
-    for i in range(len(colunas)):
-        if (colunas[i][1] != ''):
-            lista = re.split(r',', teste.group(i+1))
-            if (colunas[i][3] != ''):
-                fun = eval(colunas[i][3])
-                print(colunas[i][0] + "_" + colunas[i][3] + " : " + str(fun(map(int,lista))))
-            else:
-                print(colunas[i][0] + " : " + str(lista))
-        else:
-            print(colunas[i][0] + " : " + teste.group(i+1))"""
 
 res = ''
 for linha in input:
