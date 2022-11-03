@@ -8,8 +8,6 @@ def teste1(lista):
 
 colunas = []
 
-print("Split de uma linha por virgulas")
-
 filename = "emd.csv"
 
 input = open(filename, "r", encoding="utf-8")
@@ -55,7 +53,7 @@ for linha in input:
 res = re.sub(r'(((?:%s))\(.*\))'%(fun_str), lambda x: str(eval(x.group(1))),res)
 res = res[:-2] + "\n]"
 
-print(res)
+#print(res)
 
 end = time.time()
 
@@ -68,4 +66,3 @@ filename = re.sub(r'.csv',r'.json',filename)
 output = open(filename, 'w', encoding="utf-8")
 output.write(res)
 output.close()
-
