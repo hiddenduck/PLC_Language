@@ -18,10 +18,10 @@ for linha in input:
     linha = linha[:-1]
     split = re.split(r',', linha)
     r = 0
-    res += '\t{'
+    res += '\t{\n'
     for i in range(len(colunas)):
         if colunas[i][1] == '':
-            res += ',\n\t\t\"%s\": \"%s\"' % (colunas[i][0], split[r])
+            res += '\t\t\"%s\": \"%s\",\n' % (colunas[i][0], split[r])
             r += 1
         else:
             max = int(colunas[i][1])
@@ -33,12 +33,12 @@ for linha in input:
                     lis.append((split[r]))
                 r+=1
             if colunas[i][3] == '':
-                res+=',\n\t\t\"%s\": %s' % (colunas[i][0], str(lis))
+                res+='\t\t\"%s\": %s,\n' % (colunas[i][0], str(lis))
             else:
                 fun = eval(colunas[i][3])
-                res+=',\n\t\t\"%s_%s\": %s' % (colunas[i][0], colunas[i][3], str(fun(map(int,lis))))
-    res += '\n\t}'
-res = res + ']'
+                res+='\t\t\"%s_%s\": %s,\n' % (colunas[i][0], colunas[i][3], str(fun(map(int,lis))))
+    res = res[:-2] + '\n\t},\n'
+res = res[:-2] + '\n]'
 print(res)
 
 end = time.time()
