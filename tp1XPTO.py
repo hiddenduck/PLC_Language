@@ -31,16 +31,16 @@ for coluna in colunas:
                 patern += r'([^,]+(?:,[^,]+){%d}),{0,%d},' % (int(coluna[1])-1, int(coluna[1])-1)
                 replace += r'%s:[\%d]\n' % (coluna[0],i)
             else:
-                patern += r'((?:[^\[\],]+)|(?:\[[^,]*(?:,[^,]*)*\])),'    
-                replace += r'%s_%s:%s(\\%d)\n' % (coluna[0],coluna[3],coluna[3],i)
+                patern += r'([^,]+(?:,[^,]+){%d}),{0,%d},' % (int(coluna[1])-1, int(coluna[1])-1)
+                replace += r'%s_%s:%s([\%d])\n' % (coluna[0],coluna[3],coluna[3],i)
                 fun_str += r'%s|' % (coluna[3])
         else:
             if coluna[3] == '':
                 patern += r'([^,]+(?:,[^,]+){%d,%d}),{0,%d},' % (int(coluna[1])-1, int(coluna[2])-1,int(coluna[2])-1) 
                 replace += r'%s:[\%d]\n' % (coluna[0],i)
             else:
-                patern += r'((?:[^\[\],]+)|(?:\[[^,]*(?:,[^,]*)*\])),'    
-                replace += r'%s_%s:%s(\\%d)\n' % (coluna[0],coluna[3],coluna[3],i)
+                patern += r'([^,]+(?:,[^,]+){%d,%d}),{0,%d},' % (int(coluna[1])-1, int(coluna[2])-1,int(coluna[2])-1) 
+                replace += r'%s_%s:%s([\%d])\n' % (coluna[0],coluna[3],coluna[3],i)
                 fun_str += r'%s|' % (coluna[3])
     i += 1
 
