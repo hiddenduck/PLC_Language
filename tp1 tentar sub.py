@@ -9,7 +9,14 @@ primeira = input.readline()[:-1]
 colunas = re.findall(coluna_match, primeira)
 print(colunas)
 
-def linha_magica_constructor(s):
+pattern = r''
+replace = r''
+fun_str = r''
+
+def teste1(l):
+    return [[x] for x in l]
+
+def pattern_constructor(s):
     print(s)
     if not s.group(2):
         return r'([^,]+),'
@@ -19,18 +26,20 @@ def linha_magica_constructor(s):
     if s.group(3):
         max = int(s.group(3))
     if s.group(4):
-        fun = s.group(4)
+        fun_str += r'%s|'
+    replace = '1'
     return r'([^,]+(?:,[^,]+){%d,%d}),{0,%d},' % (min-1, max-1, max - min)
 
-linha_magica = re.sub(coluna_match, linha_magica_constructor, primeira)
-linha_magica = linha_magica[:-1]
-print(linha_magica)
-
+pattern = re.sub(coluna_match, pattern_constructor, primeira)
+pattern = pattern[:-1]
+print(pattern)
+print(replace)
+print(fun_str)
 #o group de 0 é a linha sempre?
 for linha in input:
     linha = linha[:-1]
     print(linha)
-    teste = re.search(linha_magica, linha)
+    teste = re.search(pattern, linha)
     for i in range(len(colunas)):
         if (colunas[i][1] != ''):
             lista = re.split(r',', teste.group(i+1))
