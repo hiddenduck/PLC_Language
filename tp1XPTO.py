@@ -67,4 +67,5 @@ filename = filename[:-3] + "json"
 
 output = open(filename, 'w', encoding="utf-8")
 output.write(res)
+output.close()
 
