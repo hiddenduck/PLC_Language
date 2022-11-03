@@ -63,7 +63,7 @@ print("time: %d ms" % ((end-start) * 1000))
 
 input.close()
 
-filename = filename[:-3] + "json"
+filename = re.sub(r'.csv',r'.json',filename)
 
 output = open(filename, 'w', encoding="utf-8")
 output.write(res)
