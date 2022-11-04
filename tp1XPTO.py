@@ -18,14 +18,14 @@ colunas = re.findall(r'(?<![^,])([^{^,]+)(?:{(\d+)(?:,(\d+))?})?(?:::([^,]+))?',
 #print(colunas)
 
 patern = r''
-replace = r'\t{\n'
+replace = '\t{\n'
 fun_str = r''
 i = 1
 #colunas: 0 -> título; 1->min/único; 2->max; 3->função
 for coluna in colunas:
     if coluna[1] == '':
         patern += r'([^{,]+),'    
-        replace += r'\t\t"%s": "\%d",\n' % (coluna[0],i)
+        replace += '\t\t"%s": "\%d",\n' % (coluna[0],i)
     else:
         min = int(coluna[1])
         max = min
@@ -34,13 +34,14 @@ for coluna in colunas:
         patern += r'([^,]+(?:,[^,]+){%d,%d}),{0,%d},' % (min-1, max-1, max - min)
         if coluna[3] != '':
             fun_str += r'%s|' % (coluna[3])
-            replace += r'\t\t"%s_%s": %s([\%d]),\n' % (coluna[0],coluna[3],coluna[3],i)
+            replace += '\t\t"%s_%s": %s([\%d]),\n' % (coluna[0],coluna[3],coluna[3],i)
         else:
-            replace += r'\t\t"%s": [\%d],\n' % (coluna[0],i)
+            replace += '\t\t"%s": [\%d],\n' % (coluna[0],i)
     i += 1
 
+print(replace)
 patern = patern[:-1]
-replace = replace [:-3] + "\n\t},\n"
+replace = replace [:-2] + "\n\t},\n"
 fun_str = fun_str[:-1]
 #print(patern)
 #print(replace)
@@ -63,7 +64,7 @@ print("time: %d ms" % ((end-start) * 1000))
 
 input.close()
 
-filename = re.sub(r'.csv',r'.json',filename)
+filename = re.sub(r'csv',r'json',filename)
 
 output = open(filename, 'w', encoding="utf-8")
 output.write(res)
