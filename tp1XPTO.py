@@ -6,13 +6,14 @@ start = time.time()
 def teste1(lista):
     return [[x] for x in lista]
 
-colunas = []
+#colunas = []
 
 filename = "teste1.csv"
 
 input = open(filename, "r", encoding="utf-8")
 primeira = input.readline()[:-1]
 colunas = re.findall(r'(?<![^,])([^{^,]+)(?:{(\d+)(?:,(\d+))?})?(?:::([^,]+))?', primeira)
+#print(colunas)
 
 #será que é possível fazer sub(ou mesmo sub n) nesta string e construir logo algo super interessante, uma linha magica logo de estoura, evitando um for
 #print(colunas)
@@ -39,7 +40,7 @@ for coluna in colunas:
             replace += '\t\t"%s": [\%d],\n' % (coluna[0],i)
     i += 1
 
-print(replace)
+#print(replace)
 patern = patern[:-1]
 replace = replace [:-2] + "\n\t},\n"
 fun_str = fun_str[:-1]
@@ -52,7 +53,7 @@ for linha in input:
     linha = linha[:-1]
     #print(linha)
     res += re.sub(patern,replace,linha)
-    
+
 res = re.sub(r'(((?:%s))\(.*\))'%(fun_str), lambda x: str(eval(x.group(1))),res)
 res = res[:-2] + "\n]"
 
