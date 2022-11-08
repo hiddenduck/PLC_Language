@@ -1,6 +1,6 @@
 import re
 from pprint import pprint
-
+"""
 f1 = eval("sum([1,2,3,4,5])")
 #f2 = eval("mean")
 
@@ -26,8 +26,8 @@ line = re.sub(r'(1,2)',lambda x: fun(i,x.group(1)) ,line)
 
 
 print(line)
-
-
+"""
+print(int(''))
 
 
 
