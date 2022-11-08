@@ -41,10 +41,8 @@ replace = '\t{\n'
 # %% [markdown]
 # 
 
-# %%
-i = 1
 #colunas: 0 -> título; 1->min/único; 2->max; 3->função
-for coluna in colunas:
+for i,coluna in enumerate(colunas, start=1):
     if coluna[2] == '':
         patern += r'([^{,]+),'    
         replace += '\t\t"%s": "\%d",\n' % (coluna[0],i)
@@ -57,8 +55,6 @@ for coluna in colunas:
             replace += '\t\t"%s_%s": %s([\%d]),\n' % (coluna[0],coluna[3],coluna[3],i)
         else:
             replace += '\t\t"%s": [\%d],\n' % (coluna[0],i)
-    i += 1
-
 
 patern = patern[:-1]
 replace = re.sub(r',\n$', '\n\t},\n', replace) #replace = replace[:-2] + '\n\t},\n'

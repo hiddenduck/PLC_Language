@@ -27,7 +27,11 @@ line = re.sub(r'(1,2)',lambda x: fun(i,x.group(1)) ,line)
 
 print(line)
 """
-print(int(''))
+
+
+s = 'ola'
+
+print(s.pop())
 
 
 
