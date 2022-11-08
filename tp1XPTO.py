@@ -47,6 +47,8 @@ fun_str = fun_str[:-1]
 #print(patern)
 #print(replace)
 #o group de 0 é a linha sempre?
+print(patern)
+print(replace)
 
 res = '[\n'
 for linha in input:
@@ -54,7 +56,7 @@ for linha in input:
     #print(linha)
     res += re.sub(patern,replace,linha)
 
-res = re.sub(r'(((?:%s))\(.*\))'%(fun_str), lambda x: str(eval(x.group(1))),res)
+res = re.sub(r'_(%s)": ((?:%s)\(.*\))'%(fun_str, fun_str), lambda x: '_%s": %s' % (x.group(1), str(eval(x.group(2)))), res)
 res = res[:-2] + "\n]"
 
 print(res)
