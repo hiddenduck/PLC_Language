@@ -1,5 +1,5 @@
 Pessoas{1,3},Fruta,Animais{2},Lanche{4}::len,Probabilidade,Trofeus{0,2}::sorted
-André,Carlos,Gonçalo,Maça,Cão,Gato,Croissant,Lanche,Bolo de Arroz,Nata,0.5,,,
-Amor Martim,Eugénio Isidora,,Banana,Aye-aye,tardígrado,Pão de ló,Anjo,Guardanapo,Suspiro,0.1,Darwin Award,Nobel da Paz
-Horácio Cipriano,,,Pitaia,Lova-a-deus,Bicho-da-seda,Donut,Torrada,Pão com chouriço,Bola de Berlim,0,Bola de Ouro
-Urban Niclas,Patrik Barbro,Utônio,Pepino,Coelacanth,T-Rex,Barra de Chocolate,Batatas fritas,Sandes,Pão,0.99,Turing Award,IgNobel
+André,Carlos,Gonçalo,Maça,Cão,Gato,"Croissant","Lanche","Bolo de Arroz","Nata",0.5,,,
+Amor Martim,Eugénio Isidora,,Banana,Aye-aye,tardígrado,"Pão de ló","Anjo","Guardanapo","Suspiro",0.1,"Darwin Award","Nobel da Paz"
+Horácio Cipriano,,,Pitaia,Lova-a-deus,Bicho-da-seda,"Donut","Torrada","Pão com chouriço","Bola de Berlim",0,"Bola de Ouro"
+Urban Niclas,Patrik Barbro,Utônio,Pepino,Coelacanth,T-Rex,"Barra de Chocolate","Batatas fritas","Sandes","Pão",0.99,"Turing Award","IgNobel"

@@ -16,7 +16,7 @@
 	{
 		"Aluno": "Carlos",
 		"Número": "96936",
-		"Disciplina": "LA",
+		"Disciplina": "CP",
 		"Média": "18",
 		"Faltas": "0"
 	},
@@ -30,7 +30,7 @@
 	{
 		"Aluno": "Eduardo",
 		"Número": "11111",
-		"Disciplina": "CP",
+		"Disciplina": "LA",
 		"Média": "7",
 		"Faltas": "5"
 	},
