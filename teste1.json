@@ -1,26 +1,51 @@
 [
 	{
-		"Número": "3162",
-		"Nome": [Cândido,Faísca],
-		"Idade": "20",
-		"Notas_sum": 39,
-		"Tipo Sanguíneo": "O",
-		"Anos de Vitória de Bola de Ouro_len": 0
+		"Aluno": "André",
+		"Número": "94956",
+		"Disciplina": "SO",
+		"Média": "20",
+		"Faltas": "10"
 	},
 	{
-		"Número": "7777",
-		"Nome": [Cristiano,Ronaldo],
-		"Idade": "37",
-		"Notas_sum": 72,
-		"Tipo Sanguíneo": "A",
-		"Anos de Vitória de Bola de Ouro_len": 5
+		"Aluno": "Bruno",
+		"Número": "94957",
+		"Disciplina": "POO",
+		"Média": "9.4",
+		"Faltas": "100"
 	},
 	{
-		"Número": "264",
-		"Nome": [Marcelo,Sousa],
-		"Idade": "37",
-		"Notas_sum": 76,
-		"Tipo Sanguíneo": "B",
-		"Anos de Vitória de Bola de Ouro_len": 5
+		"Aluno": "Carlos",
+		"Número": "96936",
+		"Disciplina": "LA",
+		"Média": "18",
+		"Faltas": "0"
+	},
+	{
+		"Aluno": "Dantas",
+		"Número": "00000",
+		"Disciplina": "ALF",
+		"Média": "0",
+		"Faltas": "99999"
+	},
+	{
+		"Aluno": "Eduardo",
+		"Número": "11111",
+		"Disciplina": "CP",
+		"Média": "7",
+		"Faltas": "5"
+	},
+	{
+		"Aluno": "Filipa",
+		"Número": "22222",
+		"Disciplina": "AUC",
+		"Média": "16",
+		"Faltas": "2"
+	},
+	{
+		"Aluno": "Gonçalo",
+		"Número": "97485",
+		"Disciplina": "PLC",
+		"Média": "17",
+		"Faltas": "0"
 	}
 ]
