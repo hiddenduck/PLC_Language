@@ -1,12 +1,4 @@
-Número,Nome,Curso,Notas{5}::sum,,,,,Pokemon,ListaSadakaNoFun{2,3}
-3162,Cândido Faísca,Teatro,12,13,14,5,6,Giratina,1,2,
-	 
-
-7777,Cristiano Ronaldo,Desporto,17,12,12,2,3,Garbodor,3,4,5
-     
-
-264,Marcelo Sousa,Ciência Política,20,4,5,6,7,Vanilux,5,6,	
-
-
-
-
+Número,Nome{2},,,Idade,Notas{3,5}::sum,,,,,,Tipo Sanguíneo,Anos de Vitória de Bola de Ouro{1,5}::len,,,,,
+3162,Cândido,Faísca,20,12,13,14,,,O,2022,,,,
+7777,Cristiano,Ronaldo,37,17,12,20,11,12,A,2008,2014,2015,2016,2017
+264,Marcelo,Sousa,37,18,19,19,20,,B,2009,2010,2011,2012,2013
