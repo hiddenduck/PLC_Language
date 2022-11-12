@@ -7,9 +7,10 @@ def teste1(l):
 start = time.time()
 colunas = []
 
-input = open("teste1.csv", "r", encoding="utf-8")
+input = open("teste2.csv", "r", encoding="utf-8")
 primeira = input.readline()[:-1]
 colunas = re.findall(r'(?<![^,])([^{^,]+)(?:{(\d+)(?:,(\d+))?})?(?:::([^,]+))?', primeira)
+print(colunas)
 #será que é possível fazer sub(ou mesmo sub n) nesta string e construir logo algo super interessante, uma linha magica logo de estoura, evitando um for
 
 res = '[\n'
