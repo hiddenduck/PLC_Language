@@ -1,4 +1,8 @@
-Número,Nome,Curso,Notas{5}::sum,,,,,Pokemon,ListaSadakaNoFun{2,3}
-3162,Cândido Faísca,Teatro,12,13,14,5,6,Giratina,1,2,
-7777,Cristiano Ronaldo,Desporto,17,12,12,2,3,Garbodor,3,4,5
-264,Marcelo Sousa,Ciência Política,20,4,5,6,7,Vanilux,5,6,
+Aluno,Número,Disciplina,Notas{3,5}::max,Faltas
+André,94956,SO,20,10,15,,,10
+Bruno,94957,POO,9.4,9,9,9,,100
+Carlos,96936,CP,18,18,10,18,10,0
+Dantas,00000,ALF,0,0,0,0,,99999
+Eduardo,11111,LA,7,7,7,,,5
+Filipa,22222,AUC,16,10,6,,,2
+Gonçalo,97485,PLC,17,10,18,,,0
