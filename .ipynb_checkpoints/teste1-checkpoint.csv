@@ -1,6 +1,6 @@
-Aluno,Número,Disciplina,Notas{3,5}::max,Faltas
+Aluno,Número,Disciplina,Notas{3,5}::len,Faltas
 André,94956,SO,20,10,15,,,10
-Bruno,94957,POO,9.4,9,9,9,,100
+Bruno,94957,POO,9,9,9,9,,100
 Carlos,96936,CP,18,18,10,18,10,0
 Dantas,00000,ALF,0,0,0,0,,99999
 Eduardo,11111,LA,7,7,7,,,5
