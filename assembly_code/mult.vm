@@ -1,0 +1,82 @@
+
+start
+//variavel z
+pushi 0
+
+//variavel x
+pushi 6
+
+//variavel y
+pushi 7
+
+//entrada no ciclo while
+
+//inicio do ciclo
+while:
+	//condition while y =! 0
+	dup 1
+	jz endWhile //salto caso veja um zero no topo
+
+	//corpo do ciclo
+
+	//inicio do if
+	dup 1 // copiar y
+	pushi 2
+	mod //resultado é 1 (true) caso y seja odd
+	
+	jz opEven //salta para caso even se vir um no topo da pilha um 0
+
+	jump opOdd //salta para o caso odd se nao saltar para even
+
+endIf: //depois das operacoes
+	jump while // salto de volta para o inicio do ciclo
+
+
+
+//fim de ciclo
+endWhile:
+	pushs "end while"
+	writes
+	stop // fim do programa
+
+
+
+
+//operacoes caso odd
+opOdd:
+	//subtrair 1 a y
+	pushi 1
+	sub
+
+	//colocar fp[0] e fp[1] (z,x) na stack
+	pushl 0
+	pushl 1
+	add //somar x e z
+	storel 0 // colocar resulrado em fn[0]
+	
+	jump endIf //salto de volta para o while
+
+
+
+//operacoes caso even
+opEven:
+	//dividir y por 2
+	pushi 2
+	div
+
+	//multplicar x por 2
+	pushl 1 //carregar fp[1] (x) para o topo da stack
+	
+	pushi 2
+	mul
+
+	storel 1 // colocar o novo x em fp[1]
+	
+	jump endIf //salto de volta para o while
+
+
+
+
+
+
+
