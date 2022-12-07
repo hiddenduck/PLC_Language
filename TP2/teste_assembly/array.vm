@@ -1,0 +1,11 @@
+start
+
+alloc 5 //alocacao do array
+
+pushi 2 // valor a colocar no array
+
+//inicio da colocacao no array
+
+load 0
+
+stop

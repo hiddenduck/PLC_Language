@@ -1,0 +1,51 @@
+//var para teste
+pushi 0
+
+pushi 0
+
+//inicio da declaracao variaveis da funcao
+//pushi -2 //base
+
+read//var por leitura
+atoi
+
+read
+atoi
+
+//pushi 5 //expoente
+
+pusha label
+
+call
+
+pop 2
+
+pushs "-acabou"
+writes
+
+stop
+
+label:
+
+	pushi 1 //res
+
+while0:
+	pushl -1
+	jz endwhile
+	
+	pushl -2 //push da base
+	pushl 0 //push do res
+	mul //multiplicacao dos dois
+	storel 0 // update res
+	
+	pushl -1
+	pushi 1
+	sub //subtrair 1 ao expoente
+	storel -1	
+	
+	jump while0
+	
+endwhile:
+	writei
+	return
+
