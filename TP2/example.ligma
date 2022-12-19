@@ -22,6 +22,22 @@ x = y + z = 3
 
 lmao -> x & y -> z
 
+int x <- 0
+x int <- 0
+
+int[30]
+int[] x <- 0
+x[40]
+x[]int 
+
+x [40]
+x[40]
+x[y = 30]
+
+x ballz 30
+
+
+
 z <- 4 -> x & y <- 3 #erro
 z <- (4 -> x) & (y <- 3)
 z <- (4 -> x) & (y <- 3) #pogzão

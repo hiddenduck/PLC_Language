@@ -1,13 +1,10 @@
+#include "stdio.h"
+
 
 int main () {
-    int x, y = 1, z;
-
-    x = 3 & y = z;
-
-    z = x & (y = 3),
-
-    z = 1 = x;
-    x = y + (z = 3);
-
-    return;
+    int x[30];
+    int y;
+    x[y = 20] = 0;
+    printf("%d. %d", y, x[y]);
+    return 0;
 }
