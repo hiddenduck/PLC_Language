@@ -50,6 +50,8 @@ print: ?(x <- z) é pré-processado para:
 x <- z
 ?x
 
+Arrays 
+
 z = x for y
 
 g : x
