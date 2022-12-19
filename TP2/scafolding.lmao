@@ -1,0 +1,58 @@
+Lmao => Linguagem Muito Alternativa e Original
+Ligma => Linguagem Improvisada por Gonçalo, Machado e André
+
+
+rekt <=> end
+lmao
+ligma
+oof
+yikes
+deez
+
+Uma Linguagem com tipos por inferência
+
+int z <- atribuição
+
+f : x , y -> z 
+    z <- x + y
+    rekt
+
+
+Atribuições:
+z -> x
+x <- z <-> y
+(x <- z) <-> y
+x <- (z <-> y)
+
+Operações:
+Soma: x + Z
+Sub: x - z
+Mult: x * z
+Div: x / z
+Pow: x ^ z
+
+XOR:
+
+(!a & b) | (a & !b)
+
+(a | b) & (!a | !b)
+
+Relações:
+Ordem:
+x < y
+x < y
+x <= y
+x >= y
+
+Função embutida
+print: (?x)
+print: ?(x <- z) é pré-processado para:
+x <- z
+?x
+
+z = x for y
+
+g : x
+
+h : -> x
+
