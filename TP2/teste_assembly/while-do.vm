@@ -1,0 +1,43 @@
+start
+
+pushi 5 // x = 5
+
+pusha while
+
+call
+
+stop
+
+while:
+
+pushi 0 // r = 0
+
+test:
+
+pushl -1
+
+pushi 1
+
+sub
+
+jz end //while x > 1
+
+loop:
+
+pushl -1
+
+add //r += x
+
+pushl -1
+
+pushi 1
+
+sub 
+
+storel -1 //x -= 1
+
+jump test
+
+end:
+
+return
