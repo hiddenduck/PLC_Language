@@ -1,0 +1,32 @@
+pushi 1
+pushi 3
+pushn 5
+pushi 0
+
+start
+
+pushg 1
+pushi 5
+add
+storeg 0
+
+pushgp
+pushi 2
+padd
+
+pushg 0
+
+pushgp
+pushi 2
+padd
+
+
+pushg 1
+loadn 
+
+pushi 3
+add
+
+storen
+
+
