@@ -4,8 +4,11 @@ from lex import tokens
 
 #YOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO provavelmente o lex deu asneira por causa das labels
 
-table = dict()
-swich_table = dict()
+type_table = {int}
+id_table = dict()
+id_local_table = dict()
+label_table = dict()
+scope = 0
 #++ x = (tipo, classe, localidade, endereço, dimenção)
 
 def p_axiom_code(p):
@@ -101,11 +104,23 @@ def p_exp_op(p):
 
 
 def p_exp_decl(p):
-    "Exp: Decl"
+    "Exp: Decl" 
 
 
 def p_decl(p):
     "Decl: ID ID"
+    if p[1] not in type_table:
+        print("Semantic error. Type %s not included in typing set." % p[1])
+        #invoke error?
+    #Conseguir redeclarar dentro de um local scope e depois recuperar as declarações
+    if p[2] in id_table:
+        print("Semantic error. ID %s already included in global typing." % p[2])
+        #invoke error?
+    if p[2] in id_local_table:
+       print("Semantic error. ID %s already included in local typing." % p[2])
+
+    p[0] = r"pushi 0\n"
+    id_local_table[p[2]] = {'classe' : 'var', 'endereco' : length(id_local_table), 'scope' : scope}
 
 
 def p_atrib_left(p):

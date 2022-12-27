@@ -38,7 +38,17 @@ t_ANY_ignore = ' \n\t'
 
 literals = ['(',')','[',']','{','}',':',',',';']
 
-t_ID = '[a-zA-Z]\w*' # \w contém o _ e não queremos vars a começar por _
+reserved = {
+    'if' : 'IF',
+    'else' : 'ELSE',
+    'while' : 'WHILE',
+    'switch' : 'SWITCH'
+}
+
+def t_ID(t):
+    '[a-zA-Z]\w*' # \w contém o _ e não queremos vars a começar por _
+    t.type = reserved.get(t.value, 'ID')
+    return t
 
 def t_NUM(t):
     r'-?[0-9]+'
@@ -50,14 +60,6 @@ t_RARROW = '-+>'
 t_LARROW = '<-+'
 
 t_SWAP = '<-+>'
-
-t_IF = 'if'
-
-t_ELSE = 'else'
-
-t_WHILE = 'while'
-
-t_SWITCH = 'switch'
 
 t_NEG = '~ | !'
 
