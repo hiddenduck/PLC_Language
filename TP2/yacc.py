@@ -2,6 +2,8 @@ import ply.yacc as yacc
 import sys
 from lex import tokens
 
+#YOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO provavelmente o lex deu asneira por causa das labels
+
 table = dict()
 swich_table = dict()
 #++ x = (tipo, classe, localidade, endereço, dimenção)
@@ -107,11 +109,11 @@ def p_decl(p):
 
 
 def p_atrib_left(p):
-    "Atrib: ID SETAE Exp"
+    "Atrib: ID LARROW Exp"
 
 
 def p_atrib_right(p):
-    "Atrib: Exp SETAD ID"
+    "Atrib: Exp RARROW ID"
 
 
 def p_atrib_equiv(p):

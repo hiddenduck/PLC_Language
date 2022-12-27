@@ -10,15 +10,15 @@ states = [
 tokens = (
 'ID',
 'NUM',
-'SETAD',
-'SETAE',
+'RARROW',
+'LARROW',
 'SWAP',
 'IF',
 'ELSE',
 'WHILE',
 'SWITCH',
 'FUNC',
-'RETURN'
+'RETURN',
 'NEG',
 'AND',
 'OR',
@@ -27,24 +27,27 @@ tokens = (
 'LEQ',
 'GEQ',
 'EQUAL',
-'PLUS',
-'MINUS',
-'TIMES',
-'RSLASH',
+'ADD',
+'SUB',
+'MUL',
+'DIV',
 'POW'
 )
 
 t_ANY_ignore = ' \n\t'
 
-literals = ['(',')','[',']','{','}',':',',']
+literals = ['(',')','[',']','{','}',':',',',';']
 
 t_ID = '[a-zA-Z]\w*' # \w contém o _ e não queremos vars a começar por _
 
-t_NUM = '[0-9]+'
+def t_NUM(t):
+    r'-?[0-9]+'
+    t.value = int(t.value)
+    return t
 
-t_SETAD = '-+>'
+t_RARROW = '-+>'
 
-t_SETAE = '<-+'
+t_LARROW = '<-+'
 
 t_SWAP = '<-+>'
 
@@ -60,7 +63,7 @@ t_NEG = '~ | !'
 
 t_AND = '&'
 
-t_OR = '/|'
+t_OR = '\|'
 
 t_LESSER = '<'
 
@@ -72,15 +75,15 @@ t_GEQ = '>='
 
 t_EQUAL = '=+'
 
-t_PLUS = '/+'
+t_ADD = '\+'
 
-t_MINUS = '-'
+t_SUB = '-'
 
-t_TIMES = '/*'
+t_MUL = '\*'
 
-t_RSLASH = '//'
+t_DIV = '/'
 
-t_POW = '/^'
+t_POW = '\^'
 
 
 def t_ANY_error(t):
@@ -92,13 +95,37 @@ def t_FUNC(t):
     t.lexer.begin('Funcao')
     return t
 
-
 def t_Funcao_RETURN(t):
     r'rekt'
     t.lexer.begin('INITIAL')
     return t
 
+#Isto vai dar barraco 100% -> tentar fazer vários estados para ter LABELS e IDS
+def t_Label_LABEL(t):
+    r'[a-zA-Z]\w*'
+    t.lexer.begin('Cond')
+    return t
+
+"""def t_Label_out(t):
+    r'('
+    t.lexer.begin('Cond')
+    return t
+
+#def t_Cond(t):
+    r','
+    t.lexer.begin('Label')
+    return t
+
+def t_Cond(t):
+    r'{'
+    t.lexer.begin('INITIAL')
+    return t"""
 
 lexer = lex.lex()
 
-
+for linha in sys.stdin:
+    lexer.input(linha)
+    tok = lexer.token()
+    while tok:
+        print(tok)
+        tok = lexer.token()
