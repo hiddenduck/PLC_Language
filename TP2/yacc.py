@@ -4,7 +4,7 @@ from lex import tokens
 
 table = dict()
 swich_table = dict()
-#++ x = (tipo, classe, endereço, dimenção)
+#++ x = (tipo, classe, localidade, endereço, dimenção)
 
 def p_axiom_code(p):
     "Axiom : Axiom Code"
@@ -226,8 +226,8 @@ def p_opplus_sub(p):
     p[0] = p[1]
 
 
-def p_opmult_mult(p):
-    "OpMult: MULT"
+def p_opmult_mul(p):
+    "OpMult: MUL"
     p[0] = p[1]
 
 
@@ -239,8 +239,3 @@ def p_opmult_div(p):
 def p_oppow(p):
     "OpPow: POW"
     p[0] = p[1]
-
-
-
-
-
