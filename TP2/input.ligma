@@ -15,3 +15,10 @@ f : x,y->z {
     z <-------------> x+y;
     y -> who knows
 }
+
+x[y<-10] sad
+
+y <- 10;
+
+int x[9];
+int x[y];
