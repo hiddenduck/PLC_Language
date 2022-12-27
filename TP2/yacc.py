@@ -8,7 +8,7 @@ type_table = {int}
 id_table = dict()
 id_local_table = dict()
 label_table = dict()
-scope = 0
+scope = 0 #0->global; 1+->local
 #++ x = (tipo, classe, localidade, endereço, dimenção)
 
 def p_axiom_code(p):
@@ -58,22 +58,38 @@ def p_body_block(p):
 def p_body_code(p):
     "Body : '{' Code '}'"
 
+def p_if_scope(p):
+    "IfScope : IF"
+    scope += 1
 
 def p_if(p):
-    "If : IF Exp Body"
+    "If : IfScope Exp Body"
+    scope -= 1
 
+def p_else_scope(p):
+    "ElseScope : ELSE"
+    #limpar scope anterior (if anterior)
 
 def p_ielsef(p):
-    "IfElse : IF Exp Body ELSE Body"
+    "IfElse : IfScope Exp Body ElseScope Body"
+    scope -= 1
 
+def p_while_scope(p):
+    "WhileScope : WHILE"
+    scope += 1
 
 def p_while(p):
-    "While : WHILE Exp Body"
+    "While : WhileScope Exp Body"
+    scope -= 1
+
+def p_switch_scope(p):
+    "SwitchScope : SWITCH"
+    scope += 1
 
 
 def p_switch(p):
-    "Switch : SWITCH Conds '{' Cases '}' "
-
+    "Switch : SwitchScope Conds '{' Cases '}'"
+    scope -= 1
 
 def p_conds_rec(p):
     "Conds : Conds ',' ID '(' Exp ')' "
@@ -106,6 +122,20 @@ def p_exp_op(p):
 def p_exp_decl(p):
     "Exp: Decl" 
 
+def p_declarray_name(p):
+    "DeclArray : ID ArraySize"
+
+def p_arraysize_num(p):
+    "ArraySize : ArraySize '[' NUM ']'"
+
+def p_arraysize_Atrib(p):
+    "ArraySize : ArraySize '[' Atrib ']'"
+
+def p_arraysize_Op(p):
+    "ArraySize : ArraySize '[' Op ']'"
+
+def p_arraysize_Id(p):
+    "ArraySize : ArraySize '[' ID ']'"
 
 def p_decl(p):
     "Decl: ID ID"
