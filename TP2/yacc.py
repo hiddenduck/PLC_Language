@@ -158,20 +158,23 @@ def p_decl(p):
     if p[t] not in type_table:
         t,v = 2,1
         if p[t] not in type_table:
-            print("Semantic error. Neither %s nor %s included in typing set." % (p[1],p[2]))
+            print("ERROR: Neither %s nor %s included in typing set." % (p[1],p[2]))
             #invoke error?
     #Conseguir redeclarar dentro de um local scope e depois recuperar as declarações
-    if p[v] in id_table:
-        print("Semantic error. ID %s already included in global typing." % p[v])
+    #if p[v] in id_table:
+    #    print("Semantic error. ID %s already included in global typing." % p[v])
         #invoke error?
-    if p[v] in id_local_table:
-       print("Semantic error. ID %s already included in local typing." % p[v])
+    #if p[v] in id_local_table:
+    #   print("Semantic error. ID %s already included in local typing." % p[v])
+
+    table = p.parser.id_table_stack[-1]
+    if v in table:
+        print("ERROR: %s already declared in local typing." % v)
+        #invoke error
+    table[v] = {'classe' : 'var', 'endereco' : len(table), 'scope' : p.parser.scope, 'level' : p.parser.scope_level}
 
     p[0] = r"pushi 0\n"
-    p.parser.id_table[p[v]] = {'classe' : 'var', 'endereco' : p.parser.n_local_vars, 'scope' : p.parser.scope, 'level' : p.parser.scope_level}
-    p.parser.id_local_stack.append(p[v])
-    p.parser.n_local_vars += 1
-
+    
 
 def gen_atrib_code(p, id, exp):
     s = ""
@@ -236,6 +239,7 @@ def p_opuno_neg(p):
 def p_opuno_index(p):
     "OpUno: ID '[' Exp ']'"
 
+def p_opuno_index(p):
 
 def p_opbin_rec(p):
     "OpBin: OpBin OpLogic TermPlus"
@@ -357,9 +361,7 @@ parser = yacc.yacc()
 #0->global; 1+->local
 #++ x = (tipo, classe, localidade, endereço, dimenção)
 parser.type_table = {'int'}
-parser.id_table = dict()
-parser.id_local_stack = list()
+parser.id_table_stack = list()
 parser.label_table = dict()
 parser.scope_level = 0
 parser.scope = 0
-p.parser.n_local_vars = 0
