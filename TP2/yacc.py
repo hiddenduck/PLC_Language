@@ -9,7 +9,6 @@ def p_axiom_code(p):
     "Axiom : Axiom Code"
     p[0] = p[1] + p[2]
 
-
 def p_axiom_empty(p):
     "Axiom : "
     p[0] = ""
@@ -99,7 +98,6 @@ def p_switch_scope(p):
     p.parser.id_table_stack.append(dict())
     p.parser.scope_level += 1
 
-
 def p_switch(p):
     "Switch : SwitchScope Conds '{' Cases '}'"
     p.parser.id_table_stack.pop()
@@ -145,24 +143,52 @@ def p_exp_declatrib(p):
 
 def p_declarray_name(p):
     "DeclArray : ID ID ArraySize"
+    t, v = 1,2
+    if p[t] not in type_table:
+        t,v = 2,1
+        if p[t] not in type_table:
+            print("ERROR: Neither %s nor %s included in typing set." % (p[1],p[2]))
+            #invoke error?
+    #Conseguir redeclarar dentro de um local scope e depois recuperar as declarações
+    #if p[v] in id_table:
+    #    print("Semantic error. ID %s already included in global typing." % p[v])
+        #invoke error?
+    #if p[v] in id_local_table:
+    #   print("Semantic error. ID %s already included in local typing." % p[v]) 
+    table = p.parser.id_table_stack[-1]
+    n_vars = p.parser.scope_n_vars.pop()
+
+    if v in table:
+        print("ERROR: %s already declared in local typing." % v)
+        #invoke error
+    table[v] = {'classe' : 'array', 'n_dimensao' : len(p[3]), 'tamanho' : p[3], 'endereco' : n_vars, 
+                'scope' : p.parser.scope, 'level' : p.parser.scope_level, 'tipo' : t}
+
+    p.parser.scope_n_vars.append(n_vars+1)
 
 def p_arraysize_base(p):
     "ArraySize : "
+    p[0] = []
 
 def p_arraysize_rec(p):
     "ArraySize : ArraySize ArrayType"
+    p[0] = p[1] + [ p[2] ]
 
 def p_arraytype_num(p):
     "ArrayType : '[' NUM ']'"
+    p[0] = p[2]
 
 def p_arraytype_Atrib(p):
     "ArrayType : '[' Atrib ']'"
+    p[0] = p[2]
 
 def p_arraytype_Op(p):
     "ArrayType : '[' Op ']'"
+    p[0] = p[2]
 
 def p_arraytype_Id(p):
     "ArrayType : '[' ID ']'"
+    p[0] = p[2]
 
 def p_atribarray_LeftOP(p):
     "AtribArray : ID ArraySize LARROW Op"
@@ -201,7 +227,7 @@ def p_decl(p):
     if v in table:
         print("ERROR: %s already declared in local typing." % v)
         #invoke error
-    table[v] = {'classe' : 'var', 'endereco' : len(table), 'scope' : p.parser.scope, 'level' : p.parser.scope_level}
+    table[v] = {'classe' : 'var', 'endereco' : len(table), 'scope' : p.parser.scope, 'level' : p.parser.scope_level, 'tipo' : t}
 
     p[0] = r"pushi 0\n"
     
@@ -269,10 +295,12 @@ def p_opuno_neg(p):
     "OpUno: NEG Exp"
     p[0] = p[2] + 'not\n'
 
-def p_opuno_index(p):
-    "OpUno: ID '[' Exp ']'"
+def p_opuno_accessarray(p):
+    "OpUno: AccessArray"
 
-def p_opuno_index(p):
+def p_accessarray(p):
+    "AccessArray: ID ArraySize"
+
 
 def p_opbin_rec(p):
     "OpBin: OpBin OpLogic TermPlus"
@@ -395,6 +423,7 @@ parser = yacc.yacc()
 #++ x = (tipo, classe, localidade, endereço, dimenção)
 parser.type_table = {'int'}
 parser.id_table_stack = list()
+parser.scope_n_vars = list()
 parser.label_table_stack = list()
 parser.scope_level = 0
 parser.scope = 0
