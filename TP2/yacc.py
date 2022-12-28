@@ -85,6 +85,7 @@ def p_switch_scope(p):
 
 def p_switch(p):
     "Switch : SwitchScope Conds '{' Cases '}'"
+
     p.parser.scope_level -= 1
 
 def p_conds_rec(p):
@@ -177,7 +178,7 @@ def gen_atrib_code(p, id, exp):
     elif p.parser.id_table[id]['scope'] == p.parser.scope:
         s = exp + "storel %d\n" % p.parser.id_table[id]['endereco']
     else:
-        print("ERROR: Name %s defined elsewhere in program, not defined in local scope." % id)
+        print("ERROR: Name %s defined elsewhere in program, not defined in local or global scope." % id)
         #invoke error
     return s
 
@@ -201,13 +202,13 @@ def p_atrib_equiv(p):
     if s1 == 0: s1 = "g"
     elif s1 == p.parser.scope: s1 = "l"
     else:
-        print("ERROR: Name %s defined elsewhere in program, not defined in local scope." % p[1])
+        print("ERROR: Name %s defined elsewhere in program, not defined in local or global scope." % p[1])
         #invoke error
     s3 = p.parser.id_table[p[3]]['scope']
     if s3 == 0: s3 = "g"
     elif s3 == p.parser.scope: s3 = "l"
     else:
-        print("ERROR: Name %s defined elsewhere in program, not defined in local scope." % p[3])
+        print("ERROR: Name %s defined elsewhere in program, not defined in local or global scope." % p[3])
         #invoke error
     s1 += " %d" % (p.parser.id_table[p[1]]['endereco'])
     s3 += " %d" % (p.parser.id_table[p[3]]['endereco'])
@@ -278,7 +279,7 @@ def p_base_id(p):
     elif p.parser.id_table[p[1]]['scope'] == p.parser.scope:
         p[0] = exp + "pushl %d\n" % p.parser.id_table[p[1]]['endereco']
     else:
-        print("ERROR: Name %s defined elsewhere in program, not defined in local scope." % p[1])
+        print("ERROR: Name %s defined elsewhere in program, not defined in local or global scope." % p[1])
         #invoke error
 
 
@@ -288,7 +289,7 @@ def p_base_id(p):
     #pensar que se deve colocar no topo da stack o valor no ID para se conseguir fazer a operação
         p[0] = "pushl %d\n" % p[1]['endereco']
     elif p[1]['scope'] != p.parser.scope:
-        print("Name %s defined elsewhere in program, not defined in local scope." % p[1])
+        print("Name %s defined elsewhere in program, not defined in local or global scope." % p[1])
 
 def p_base_num(p):
     "Base: NUM"
