@@ -56,36 +56,44 @@ def p_body_code(p):
 
 def p_if_scope(p):
     "IfScope : IF"
+    p.parser.id_table_stack.append(dict())
     p.parser.scope_level += 1
 
 def p_if(p):
     "If : IfScope Exp Body"
+    p.parser.id_table_stack.pop()
     p.parser.scope_level -= 1
 
 def p_else_scope(p):
     "ElseScope : ELSE"
+    p.parser.id_table_stack.pop()
+    p.parser.id_table_stack.append(dict())
     #limpar scope anterior (if anterior)
 
 def p_ielsef(p):
     "IfElse : IfScope Exp Body ElseScope Body"
+    p.parser.id_table_stack.pop()
     p.parser.scope_level -= 1
 
 def p_while_scope(p):
     "WhileScope : WHILE"
+    p.parser.id_table_stack.append(dict())
     p.parser.scope_level += 1
 
 def p_while(p):
     "While : WhileScope Exp Body"
+    p.parser.id_table_stack.pop()
     p.parser.scope_level -= 1
 
 def p_switch_scope(p):
     "SwitchScope : SWITCH"
+    p.parser.id_table_stack.append(dict())
     p.parser.scope_level += 1
 
 
 def p_switch(p):
     "Switch : SwitchScope Conds '{' Cases '}'"
-
+    p.parser.id_table_stack.pop()
     p.parser.scope_level -= 1
 
 def p_conds_rec(p):
@@ -94,7 +102,7 @@ def p_conds_rec(p):
 
 def p_conds_base(p):
     "Conds : ID '(' Exp ')'"
-
+    
 
 def p_cases_rec(p):
     "Cases : Cases Case "
@@ -124,6 +132,7 @@ def p_exp_decl(p):
 
 def p_exp_declatrib(p):
     "Exp: DeclAtrib"
+    p[0] = p[1]
 
 def p_declarray_name(p):
     "DeclArray : ID ID ArraySize"
@@ -362,6 +371,6 @@ parser = yacc.yacc()
 #++ x = (tipo, classe, localidade, endereço, dimenção)
 parser.type_table = {'int'}
 parser.id_table_stack = list()
-parser.label_table = dict()
+parser.lable_table_stack = list()
 parser.scope_level = 0
 parser.scope = 0
