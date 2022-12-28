@@ -126,19 +126,25 @@ def p_exp_declatrib(p):
     "Exp: DeclAtrib"
 
 def p_declarray_name(p):
-    "DeclArray : ID ArraySize"
+    "DeclArray : ID ID ArraySize"
 
-def p_arraysize_num(p):
-    "ArraySize : ArraySize '[' NUM ']'"
+def p_arraysize_base(p):
+    "ArraySize : "
 
-def p_arraysize_Atrib(p):
-    "ArraySize : ArraySize '[' Atrib ']'"
+def p_arraysize_rec(p):
+    "ArraySize : ArraySize ArrayType"
 
-def p_arraysize_Op(p):
-    "ArraySize : ArraySize '[' Op ']'"
+def p_arraytype_num(p):
+    "ArrayType : '[' NUM ']'"
 
-def p_arraysize_Id(p):
-    "ArraySize : ArraySize '[' ID ']'"
+def p_arraytype_Atrib(p):
+    "ArrayType : '[' Atrib ']'"
+
+def p_arraytype_Op(p):
+    "ArrayType : '[' Op ']'"
+
+def p_arraytype_Id(p):
+    "ArrayType : '[' ID ']'"
 
 def p_declatrib(p):
     "DeclAtrib : ID ID LARROW Exp"
