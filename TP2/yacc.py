@@ -90,6 +90,9 @@ def p_while(p):
     "While : WhileScope Exp Body"
     p.parser.id_table_stack.pop()
     p.parser.scope_level -= 1
+    l = p.parser.internal_label
+    p[0] = "loop" + l + ":\n" + p[2] + "jz end" + (l + 1) + "\n" + p[3] + "jump loop" + l + "\nend" + (l + 1) + ":\n"
+    p.parser.internal_label += 2
 
 def p_switch_scope(p):
     "SwitchScope : SWITCH"
