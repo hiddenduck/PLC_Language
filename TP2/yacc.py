@@ -4,12 +4,6 @@ from lex import tokens
 
 #YOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO provavelmente o lex deu asneira por causa das labels
 
-type_table = {int}
-id_table = dict()
-id_local_table = dict()
-label_table = dict()
-scope = 0 #0->global; 1+->local
-#++ x = (tipo, classe, localidade, endereço, dimenção)
 
 def p_axiom_code(p):
     "Axiom : Axiom Code"
@@ -60,11 +54,11 @@ def p_body_code(p):
 
 def p_if_scope(p):
     "IfScope : IF"
-    scope += 1
+    p.parser.scope_level += 1
 
 def p_if(p):
     "If : IfScope Exp Body"
-    scope -= 1
+    p.parser.scope_level -= 1
 
 def p_else_scope(p):
     "ElseScope : ELSE"
@@ -72,24 +66,24 @@ def p_else_scope(p):
 
 def p_ielsef(p):
     "IfElse : IfScope Exp Body ElseScope Body"
-    scope -= 1
+    p.parser.scope_level -= 1
 
 def p_while_scope(p):
     "WhileScope : WHILE"
-    scope += 1
+    p.parser.scope_level += 1
 
 def p_while(p):
     "While : WhileScope Exp Body"
-    scope -= 1
+    p.parser.scope_level -= 1
 
 def p_switch_scope(p):
     "SwitchScope : SWITCH"
-    scope += 1
+    p.parser.scope_level += 1
 
 
 def p_switch(p):
     "Switch : SwitchScope Conds '{' Cases '}'"
-    scope -= 1
+    p.parser.scope_level -= 1
 
 def p_conds_rec(p):
     "Conds : Conds ',' ID '(' Exp ')' "
@@ -122,6 +116,9 @@ def p_exp_op(p):
 def p_exp_decl(p):
     "Exp: Decl" 
 
+def p_exp_declatrib(p):
+    "Exp: DeclAtrib"
+
 def p_declarray_name(p):
     "DeclArray : ID ArraySize"
 
@@ -137,20 +134,31 @@ def p_arraysize_Op(p):
 def p_arraysize_Id(p):
     "ArraySize : ArraySize '[' ID ']'"
 
+def p_declatrib(p):
+    "DeclAtrib : ID ID LARROW Exp"
+
+def p_declatrib(p):
+    "DeclAtrib : Exp RARROW ID ID"
+
 def p_decl(p):
     "Decl: ID ID"
-    if p[1] not in type_table:
-        print("Semantic error. Type %s not included in typing set." % p[1])
-        #invoke error?
+    t, v = 1,2
+    if p[t] not in type_table:
+        t,v = 2,1
+        if p[t] not in type_table:
+            print("Semantic error. Neither %s nor %s included in typing set." % (p[1],p[2]))
+            #invoke error?
     #Conseguir redeclarar dentro de um local scope e depois recuperar as declarações
-    if p[2] in id_table:
-        print("Semantic error. ID %s already included in global typing." % p[2])
+    if p[v] in id_table:
+        print("Semantic error. ID %s already included in global typing." % p[v])
         #invoke error?
-    if p[2] in id_local_table:
-       print("Semantic error. ID %s already included in local typing." % p[2])
+    if p[v] in id_local_table:
+       print("Semantic error. ID %s already included in local typing." % p[v])
 
     p[0] = r"pushi 0\n"
-    id_local_table[p[2]] = {'classe' : 'var', 'endereco' : length(id_local_table), 'scope' : scope}
+    p.parser.id_table[p[v]] = {'classe' : 'var', 'endereco' : p.parser.n_local_vars, 'scope' : p.parser.scope, 'level' : p.parser.scope_level}
+    p.parser.id_local_stack.append(p[v])
+    p.parser.n_local_vars += 1
 
 
 def p_atrib_left(p):
@@ -286,3 +294,15 @@ def p_opmult_div(p):
 def p_oppow(p):
     "OpPow: POW"
     p[0] = p[1]
+
+parser = yacc.yacc()
+
+#0->global; 1+->local
+#++ x = (tipo, classe, localidade, endereço, dimenção)
+parser.type_table = {'int'}
+parser.id_table = dict()
+parser.id_local_stack = list()
+parser.label_table = dict()
+parser.scope_level = 0
+parser.scope = 0
+p.parser.n_local_vars = 0
