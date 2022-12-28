@@ -161,6 +161,18 @@ def p_arraytype_Op(p):
 def p_arraytype_Id(p):
     "ArrayType : '[' ID ']'"
 
+def p_atribarray_LeftOP(p):
+    "AtribArray : ID ArraySize LARROW Op"
+
+def p_atribarray_LeftAtrib(p):
+    "AtribArray : ID ArraySize LARROW Atrib"
+
+def p_atribarray_RightOp(p):
+    "AtribArray : Op RARROW ID ArraySize"
+
+def p_atribarray_RightAtrib(p):
+    "AtribArray : Atrib RARROW ID ArraySize"
+
 def p_declatrib(p):
     "DeclAtrib : ID ID LARROW Exp"
 
@@ -237,6 +249,9 @@ def p_atrib_equiv(p):
     s1 += " %d" % (p.parser.id_table[p[1]]['endereco'])
     s3 += " %d" % (p.parser.id_table[p[3]]['endereco'])
     p[0] = "push" + s3 + "\npush" + s1 + "\nstore" + s3 + "\nstore" + s1 + "\n"
+
+def p_atrib_array(p):
+    "Atrib : ID AtribArray"
 
 def p_op_opuno(p):
     "Op: OpUno"
