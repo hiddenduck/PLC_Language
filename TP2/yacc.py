@@ -198,19 +198,20 @@ def p_atrib_equiv(p):
         print("ERROR: Name %s not defined." % p[3])
         #invoke error
     s1 = p.parser.id_table[p[1]]['scope']
-    s3 = p.parser.id_table[p[3]]['scope']
     if s1 == 0: s1 = "g"
     elif s1 == p.parser.scope: s1 = "l"
     else:
         print("ERROR: Name %s defined elsewhere in program, not defined in local scope." % p[1])
         #invoke error
+    s3 = p.parser.id_table[p[3]]['scope']
     if s3 == 0: s3 = "g"
     elif s3 == p.parser.scope: s3 = "l"
     else:
         print("ERROR: Name %s defined elsewhere in program, not defined in local scope." % p[3])
         #invoke error
-    p[0] = "push" + s3 + p.parser.id_table[p[3]]['endereco'] + "\npush" + s1 + p.parser.id_table[p[1]]['endereco'] 
-    + "\nstore" + s1 + p.parser.id_table[p[1]]['endereco'] + "\nstore" + s3 + p.parser.id_table[p[3]]['endereco'] + "\n"
+    s1 += " %d" % (p.parser.id_table[p[1]]['endereco'])
+    s3 += " %d" % (p.parser.id_table[p[3]]['endereco'])
+    p[0] = "push" + s3 + "\npush" + s1 + "\nstore" + s3 + "\nstore" + s1 + "\n"
 
 def p_op_opuno(p):
     "Op: OpUno"
