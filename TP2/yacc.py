@@ -288,15 +288,6 @@ def p_base_id(p):
         print("ERROR: Name %s defined elsewhere in program, not defined in local or global scope." % p[1])
         #invoke error
 
-
-    if p[1] not in p.parser.id_table:
-        print("Name %s not defined." % p[1])
-    if p[1]['scope'] == 0:
-    #pensar que se deve colocar no topo da stack o valor no ID para se conseguir fazer a operação
-        p[0] = "pushl %d\n" % p[1]['endereco']
-    elif p[1]['scope'] != p.parser.scope:
-        print("Name %s defined elsewhere in program, not defined in local or global scope." % p[1])
-
 def p_base_num(p):
     "Base: NUM"
     p[0] = "pushi %d\n" % p[1]
