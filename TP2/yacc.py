@@ -58,11 +58,14 @@ def p_if_scope(p):
     "IfScope : IF"
     p.parser.id_table_stack.append(dict())
     p.parser.scope_level += 1
+    p[0] = p[1]
 
 def p_if(p):
     "If : IfScope Exp Body"
     p.parser.id_table_stack.pop()
     p.parser.scope_level -= 1
+    p[0] = p[2] + "jz end" + p.parser.internal_label + "\n" + p[3] + "end" + p.parser.internal_label + ":\n"
+    p.parser.internal_label += 1
 
 def p_else_scope(p):
     "ElseScope : ELSE"
@@ -74,6 +77,9 @@ def p_ielsef(p):
     "IfElse : IfScope Exp Body ElseScope Body"
     p.parser.id_table_stack.pop()
     p.parser.scope_level -= 1
+    p[0] = p[2] + "jz else" + p.parser.internal_label + "\n" + p[3] + "jump end" + (p.parser.internal_label + 1) 
+    + "\nelse" + p.parser.internal_label + ":\n" + p[5] + "end" + (p.parser.internal_label + 1) + ":\n"
+    p.parser.internal_label += 2
 
 def p_while_scope(p):
     "WhileScope : WHILE"
@@ -98,19 +104,19 @@ def p_switch(p):
 
 def p_conds_rec(p):
     "Conds : Conds ',' ID '(' Exp ')' "
-
+    p[0] = p[1] + p[5]
 
 def p_conds_base(p):
     "Conds : ID '(' Exp ')'"
-    
+    p[0] = p[3]
 
 def p_cases_rec(p):
     "Cases : Cases Case "
-
+    p[0] = p[1] + p[2]
 
 def p_cases_base(p):
     "Cases : Case"
-
+    p[0] = p[1]
 
 def p_case(p):
     "Case: ID ':' Body"
@@ -371,6 +377,7 @@ parser = yacc.yacc()
 #++ x = (tipo, classe, localidade, endereço, dimenção)
 parser.type_table = {'int'}
 parser.id_table_stack = list()
-parser.lable_table_stack = list()
+parser.label_table_stack = list()
 parser.scope_level = 0
 parser.scope = 0
+parser.internal_label = 0
