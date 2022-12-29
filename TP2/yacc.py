@@ -12,6 +12,10 @@ def p_axiom_code(p):
     p[0] = p[1] + p[2]
 
 
+def p_axiom_function(p):
+    "Axiom : Function"
+
+
 def p_axiom_empty(p):
     "Axiom : "
     p[0] = ""
@@ -20,10 +24,6 @@ def p_axiom_empty(p):
 def p_code_block(p):
     "Code : Code Block"
     p[0] = p[1] + p[2]
-
-
-def p_code_function(p):
-    "Code : Function"
 
 
 def p_code_empty(p):
@@ -72,7 +72,7 @@ def p_body_code(p):
 
 
 def p_function(p):
-    "Function : ID ':' FunCases '{' Block '}'"
+    "Function : ID ':' FunCases '{' Body '}'"
 
 
 def p_funcases_funextra_rarrow(p):
@@ -226,15 +226,15 @@ def p_decl(p):
         if v in table:
             print("ERROR: %s already declared in local typing." % v)
             # invoke error
-        #o endereço pode não ser o tamanho da tabela: arrays estragam a brincadeira
-        table[v] = {'classe': 'var', 'endereco': len(table), 
+        # o endereço pode não ser o tamanho da tabela: arrays estragam a brincadeira
+        table[v] = {'classe': 'var', 'endereco': len(table),
                     'scope': p.parser.scope, 'level': p.parser.scope_level, 'tipo': t}
 
         p[0] = r"pushi 0\n"
 
 
 def p_declarray(p):
-    "DeclArray : ID ID ArraySize"
+    "DeclArray : ID ID DeclArraySize"
     t, v = 1, 2
     if p[t] not in type_table:
         t, v = 2, 1
@@ -254,20 +254,16 @@ def p_declarray(p):
     p.parser.scope_n_vars.append(n_vars+1)
 
 
-def p_atribarray_LeftOP(p):
-    "AtribArray : ID ArraySize LARROW Op"
+def p_declarraysize_rec(p):
+    "DeclArraySize '[' NUM ']'"
 
 
-def p_atribarray_LeftAtrib(p):
-    "AtribArray : ID ArraySize LARROW Atrib"
+def p_atribarray_Leftatribop(p):
+    "AtribArray : ID ArraySize LARROW AtribOp"
 
 
-def p_atribarray_RightOp(p):
-    "AtribArray : Op RARROW ID ArraySize"
-
-
-def p_atribarray_RightAtrib(p):
-    "AtribArray : Atrib RARROW ID ArraySize"
+def p_atribarray_Rightatribop(p):
+    "AtribArray : AtribOp RARROW ID ArraySize"
 
 
 def p_arraysize_rec(p):
@@ -278,6 +274,7 @@ def p_arraysize_rec(p):
 def p_arraysize_empty(p):
     "ArraySize : "
     p[0] = []
+
 
 def p_declatrib_left(p):
     "DeclAtrib : ID ID LARROW AtribOp"
@@ -406,8 +403,7 @@ def p_base_exp(p):
 
 def p_base_id(p):
     "Base: ID"
-    s = ""
-    for i in range(len(p.id_table_stack),0,-1):
+    for i in range(len(p.id_table_stack), 0, -1):
         if p[1] in p.id_table_stack[i]:
             p[0] = "pushl %d\n" % p.id_table_stack[i][p[1]]['endereco']
             return
@@ -441,10 +437,12 @@ def p_funarg_empty(p):
 
 def p_funrec_rec(p):
     "FunRec : FunRec ',' AtribOp"
+    p[0]
 
 
 def p_funrec_base(p):
     "FunRec : AtribOp"
+    p[0] = p[1]
 
 
 def p_oplogico_and(p):
@@ -531,14 +529,16 @@ def gen_atrib_code_stack(p, id, atribop):
     s = ""
     for tamanho in range(len(p.id_table_stack)-1, 0, -1):
         if id in p.parser.id_table_stack[tamanho]:
-            s = atribop + "storel %d\n" % p.parser.id_table_stack[tamanho][id]['endereco']
+            s = atribop + \
+                "storel %d\n" % p.parser.id_table_stack[tamanho][id]['endereco']
             break
     else:
         if id not in p.parser.id_table_stack[0]:
             print("ERROR: Name %s not defined." % id)
             # invoke error
         else:
-            s = atribop + "storeg %d\n" % p.parser.id_table_stack[0][id]['endereco']
+            s = atribop + \
+                "storeg %d\n" % p.parser.id_table_stack[0][id]['endereco']
     return s
 
 
