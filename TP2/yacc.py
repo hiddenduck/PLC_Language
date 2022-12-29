@@ -425,24 +425,29 @@ def p_base_funcall(p):
 
 def p_funcall(p):
     "FunCall : ID '(' FunArg ')'"
+    s = ""
+    for vars in p[3]:
+       s +=  
 
 
 def p_funarg_funrec(p):
     "FunArg : FunRec"
+    p[0] = p[1]
 
 
 def p_funarg_empty(p):
     "FunArg : "
+    p[0] = list()
 
 
 def p_funrec_rec(p):
-    "FunRec : FunRec ',' AtribOp"
-    p[0]
+    "FunRec : FunRec ',' :wAtribOp"
+    p[0] = p[1] + list(p[3])
 
 
 def p_funrec_base(p):
     "FunRec : AtribOp"
-    p[0] = p[1]
+    p[0] = list(p[1])
 
 
 def p_oplogico_and(p):

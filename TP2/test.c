@@ -2,7 +2,7 @@
 
 
 int main () {
-    int x[30];
+    int x[*];
     int y;
     x[y = 20] = 0;
     printf("%d. %d", y, x[y]);
