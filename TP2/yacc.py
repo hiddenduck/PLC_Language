@@ -217,20 +217,15 @@ def p_decl(p):
         if p[t] not in type_table:
             print("ERROR: Neither %s nor %s included in typing set." %
                   (p[1], p[2]))
-        # invoke error?
-        # Conseguir redeclarar dentro de um local scope e depois recuperar as declarações
-        # if p[v] in id_table:
-        #    print("Semantic error. ID %s already included in global typing." % p[v])
-        # invoke error?
-        # if p[v] in id_local_table:
-        #   print("Semantic error. ID %s already included in local typing." % p[v])
+            # invoke error?
 
         table = p.parser.id_table_stack[-1]
         if v in table:
             print("ERROR: %s already declared in local typing." % v)
-        # invoke error
-        table[v] = {'classe': 'var', 'endereco': len(
-            table), 'scope': p.parser.scope, 'level': p.parser.scope_level, 'tipo': t}
+            # invoke error
+        #o endereço pode não ser o tamanho da tabela: arrays estragam a brincadeira
+        table[v] = {'classe': 'var', 'endereco': len(table), 
+                    'scope': p.parser.scope, 'level': p.parser.scope_level, 'tipo': t}
 
         p[0] = r"pushi 0\n"
 
@@ -243,19 +238,13 @@ def p_declarray(p):
     if p[t] not in type_table:
         print("ERROR: Neither %s nor %s included in typing set." %
               (p[1], p[2]))
-    # invoke error?
-    # Conseguir redeclarar dentro de um local scope e depois recuperar as declarações
-    # if p[v] in id_table:
-    #    print("Semantic error. ID %s already included in global typing." % p[v])
-    # invoke error?
-    # if p[v] in id_local_table:
-    #   print("Semantic error. ID %s already included in local typing." % p[v])
+        # invoke error?
     table = p.parser.id_table_stack[-1]
     n_vars = p.parser.scope_n_vars.pop()
 
     if v in table:
         print("ERROR: %s already declared in local typing." % v)
-    # invoke error
+        # invoke error
     table[v] = {'classe': 'array', 'n_dimensao': len(p[3]), 'tamanho': p[3], 'endereco': n_vars,
                 'scope': p.parser.scope, 'level': p.parser.scope_level, 'tipo': t}
 
@@ -432,10 +421,10 @@ def p_base_id(p):
         # pensar que se deve colocar no topo da stack o valor no ID para se conseguir fazer a operação
         p[0] = "pushg %d\n" % p.parser.id_table[p[1]]['endereco']
     elif p.parser.id_table[p[1]]['scope'] == p.parser.scope:
-        p[0] = exp + "pushl %d\n" % p.parser.id_table[p[1]]['endereco']
+        p[0] = "pushl %d\n" % p.parser.id_table[p[1]]['endereco']
     else:
-        print(
-            "ERROR: Name %s defined elsewhere in program, not defined in local or global scope." % p[1])
+        print("ERROR: Name %s defined elsewhere in program, not defined in local or global scope." 
+        % p[1])
         # invoke error
 
 
