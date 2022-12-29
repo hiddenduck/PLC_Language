@@ -406,18 +406,16 @@ def p_base_exp(p):
 
 def p_base_id(p):
     "Base: ID"
-    if p[1] not in p.parser.id_table:
-        print("ERROR: Name %s not defined." % p[1])
-        # invoke error
-    elif p.parser.id_table[p[1]]['scope'] == 0:
-        # pensar que se deve colocar no topo da stack o valor no ID para se conseguir fazer a operação
-        p[0] = "pushg %d\n" % p.parser.id_table[p[1]]['endereco']
-    elif p.parser.id_table[p[1]]['scope'] == p.parser.scope:
-        p[0] = "pushl %d\n" % p.parser.id_table[p[1]]['endereco']
+    s = ""
+    for i in range(len(p.id_table_stack),0,-1):
+        if p[1] in p.id_table_stack[i]:
+            p[0] = "pushl %d\n" % p.id_table_stack[i][p[1]]['endereco']
+            return
+    if p[1] not in p.id_table_stack[0]:
+        print("ERROR: variable not in scope")
     else:
-        print("ERROR: Name %s defined elsewhere in program, not defined in local or global scope." 
-        % p[1])
-        # invoke error
+        p[0] = "pushg %d\n" % p.id.id_table_stack[i][p[1]]['endereco']
+    return
 
 
 def p_base_num(p):
@@ -528,9 +526,10 @@ def gen_atrib_code(p, id, exp):
         # invoke error
         return s
 
-def gen_atrib_code_stack(p,id,atribop):
+
+def gen_atrib_code_stack(p, id, atribop):
     s = ""
-    for tamanho in range(len(p.id_table_stack)-1,0,-1):
+    for tamanho in range(len(p.id_table_stack)-1, 0, -1):
         if id in p.parser.id_table_stack[tamanho]:
             s = atribop + "storel %d\n" % p.parser.id_table_stack[tamanho][id]['endereco']
             break
@@ -540,8 +539,8 @@ def gen_atrib_code_stack(p,id,atribop):
             # invoke error
         else:
             s = atribop + "storeg %d\n" % p.parser.id_table_stack[0][id]['endereco']
-    
     return s
+
 
 parser = yacc.yacc()
 

@@ -1,0 +1,65 @@
+START
+pushi 4 //n
+pushi 7 //x <-end=1
+pushi 2 
+pushn 2 //x[7][2]
+pushn 2
+pushn 2
+pushn 2
+pushn 2
+pushn 2
+pushn 2
+
+//n = 4
+
+//x[n][0]
+
+
+
+
+pushfp
+pushi 1 //end x
+
+pushi 2 //inicio do array  -push da dimençao do array
+
+add
+
+
+//aritmetica de acesso ao array
+pushl 2 // endereço do array (segunda dimençao do array)
+pushl 0 // valor dado (n)
+mul
+pushi 0 //push do outro valor dado
+add
+//
+
+
+
+add
+
+padd
+
+pushi 9
+
+store 0
+
+
+
+x[5][7][3]
+
+
+x[4][3][2]
+
+(2*3 + 3) * 7 + 4
+
+
+
+
+
+
+
+
+
+
+
+stop
