@@ -271,7 +271,7 @@ def p_atribarray_RightAtrib(p):
 
 
 def p_arraysize_rec(p):
-    "ArraySize : ArraySize ArrayType"
+    "ArraySize : ArraySize '[' AtribOp ']'"
     p[0] = p[1] + [p[2]]
 
 
@@ -279,32 +279,21 @@ def p_arraysize_empty(p):
     "ArraySize : "
     p[0] = []
 
-
-def p_arraytype_Atrib(p):
-    "ArrayType : '[' Atrib ']'"
-    p[0] = p[2]
-
-
-def p_arraytype_Op(p):
-    "ArrayType : '[' Op ']'"
-    p[0] = p[2]
-
-
 def p_declatrib_left(p):
-    "DeclAtrib : ID ID LARROW Exp"
+    "DeclAtrib : ID ID LARROW AtribOp"
 
 
 def p_declatrib_right(p):
-    "DeclAtrib : Exp RARROW ID ID"
+    "DeclAtrib : AtribOp RARROW ID ID"
 
 
 def p_atrib_left(p):
-    "Atrib: ID LARROW Exp"
+    "Atrib: ID LARROW AtribOp"
     p[0] = gen_atrib_code(p, p[1], p[3])
 
 
 def p_atrib_right(p):
-    "Atrib: Exp RARROW ID"
+    "Atrib: AtribOp RARROW ID"
     p[0] = gen_atrib_code(p, p[3], p[1])
 
 
@@ -354,7 +343,7 @@ def p_op_opbin(p):
 
 
 def p_opuno_neg(p):
-    "OpUno: NEG Exp"
+    "OpUno: NEG AtribOp"
     p[0] = p[2] + 'not\n'
 
 
@@ -411,7 +400,7 @@ def p_termpow_base(p):
 
 
 def p_base_exp(p):
-    "Base: '(' Exp ')'"
+    "Base: '(' AtribOp ')'"
     p[0] = p[2]
 
 
