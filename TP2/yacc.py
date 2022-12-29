@@ -185,13 +185,8 @@ def p_case(p):
     "Case: ID ':' Body"
 
 
-def p_exp_atrib(p):
-    "Exp: Atrib"
-    p[0] = p[1]
-
-
-def p_exp_op(p):
-    "Exp: Op"
+def p_exp_atribop(p):
+    "Exp: AtribOp"
     p[0] = p[1]
 
 
@@ -207,6 +202,14 @@ def p_exp_declarray(p):
 def p_exp_declatrib(p):
     "Exp: DeclAtrib"
     p[0] = p[1]
+
+
+def p_atribop_atrib(p):
+    "AtribOp : Atrib"
+
+
+def p_atribop_op(p):
+    "AtribOp : Op"
 
 
 def p_decl(p):
@@ -413,7 +416,7 @@ def p_termpow_rec(p):
     p[0] = p[1] + p[3] + p[2]
 
 
-def p_termmult_base(p):
+def p_termpow_base(p):
     "TermPow: Base"
     p[0] = p[1]
 
@@ -442,6 +445,30 @@ def p_base_id(p):
 def p_base_num(p):
     "Base: NUM"
     p[0] = "pushi %d\n" % p[1]
+
+
+def p_base_funcall(p):
+    "Base : FunCall"
+
+
+def p_funcall(p):
+    "FunCall : ID '(' FunArg ')'"
+
+
+def p_funarg_funrec(p):
+    "FunArg : FunRec"
+
+
+def p_funarg_empty(p):
+    "FunArg : "
+
+
+def p_funrec_rec(p):
+    "FunRec : FunRec ',' AtribOp"
+
+
+def p_funrec_base(p):
+    "FunRec : AtribOp"
 
 
 def p_oplogico_and(p):
