@@ -528,6 +528,20 @@ def gen_atrib_code(p, id, exp):
         # invoke error
         return s
 
+def gen_atrib_code_stack(p,id,atribop):
+    s = ""
+    for tamanho in range(len(p.id_table_stack)-1,0,-1):
+        if id in p.parser.id_table_stack[tamanho]:
+            s = atribop + "storel %d\n" % p.parser.id_table_stack[tamanho][id]['endereco']
+            break
+    else:
+        if id not in p.parser.id_table_stack[0]:
+            print("ERROR: Name %s not defined." % id)
+            # invoke error
+        else:
+            s = atribop + "storeg %d\n" % p.parser.id_table_stack[0][id]['endereco']
+    
+    return s
 
 parser = yacc.yacc()
 
