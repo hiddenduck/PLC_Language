@@ -352,8 +352,8 @@ def p_opuno_accessarray(p):
 
 
 def p_opuno_minus(p):
-    "OpUno: MINUS ID"
-
+    "OpUno: SUB ID"
+    
 
 def p_accessarray(p):
     "AccessArray: ID ArraySize"

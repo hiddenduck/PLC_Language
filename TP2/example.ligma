@@ -48,3 +48,54 @@ z <- x <- 3
 x <-> z
 
 ?z
+
+x[a][b]
+
+x[1][2]
+
+x + 2 + 1*b
+
+int z -> endereço
+int x[a][b][c] -> endereço de inicio! o tamanho nao sabemos em compile time c:
+int y -> endereço???????????????
+
+pushi 0
+-> c vezes
+pushi c
+dupn 
+-> b vezes
+pushi C
+pushi b
+mul
+dupn 
+-> a vezes
+
+OU
+
+pushi a
+pushi b
+pushi c
+mul
+mul
+pushi 0
+-> a*b*c vezes
+
+
+jz end:
+loop:
+pushi 0
+
+pushi 1
+sub
+jump loop
+end:
+
+?x[1][2][3]
+
+x + 1*b*c + 2*b + 3
+
+x + 3 + c*(2 + b*(1))
+
+1
+1*c + 2
+(1*c + 2)*b + 3
