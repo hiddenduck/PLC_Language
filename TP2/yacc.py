@@ -9,7 +9,7 @@ from lex import tokens
 
 def p_axiom_code(p):
     "Axiom : Axiom Code"
-    p[0] = p[1] + p[2]
+    p[0] = "\n".join(p.parser.function_buffer) + "start" + p[1] + p[2] + "stop"
 
 
 def p_axiom_function(p):
@@ -72,71 +72,114 @@ def p_body_code(p):
 
 
 def p_function(p):
-    "Function : ID ':' FunCases '{' Body '}'"
+    "Function : ID FunScope FunCases  Body"
+    label = p.parser.internal_label
+    p.parser.parser.function_table[p[1]] = {'num_args': len(p[3][1]),
+                                     'return': p[3][0],
+                                     'label': f"F{label}"}
+
+    p.parser.function_buffer.append(f"F{label}:\n" + p[4] + "return\n")
+    p[0] = ""
+    p.parser.internal_label += 1
+
+
+def p_funscope(p):
+    "FunScope : ':'"
+    p.parser.id_table_stack.append(dict())
+    p[0] = p[1]
 
 
 def p_funcases_funextra_rarrow(p):
     "FunCases : FunExtra ID RARROW ID"
+    p.parser.id_table_stack[-1][p[4]] = {'classe': 'var',
+                                         'endereco': 0,
+                                         'tamanho': 1,
+                                         'tipo': 'int'}
+
+    for i in range(1, len(p[1])+1):
+        p.parser.id_table_stack[-1][p[1][-i]] = {'classe': 'var',
+                                                 'endereco': -i,
+                                                 'tamanho': 1,
+                                                 'tipo': 'int'}
+    p[0] = (True, [1])
+    p.parser.local_adress = 1
 
 
 def p_funcases_rarrow(p):
     "FunCases : RARROW ID"
+    p.parser.id_table_stack[-1][p[2]] = {'classe': 'var',
+                                         'endereco': 0,
+                                         'tamanho': 1,
+                                         'tipo': 'int'}
+    p[0] = (True, [])
+    p.parser.local_adress = 1
 
 
 def p_funcases_funextra(p):
     "FunCases : FunExtra ID"
+    p[0] = (False, p[1].append(p[2]))
 
 
 def p_funcases_empty(p):
     "FunCases : "
+    p[0] = (False, [])
 
 
 def p_funextra_rec(p):
     "FunExtra : ID ','"
+    p[0] = [p[1]]
 
 
 def p_funextra_empty(p):
     "FunExtra : "
+    p[0] = []
 
 
 def p_if_scope(p):
     "IfScope : IF"
     p.parser.id_table_stack.append(dict())
-    p.parser.scope_level += 1
     p[0] = p[1]
 
 
 def p_if(p):
     "If : IfScope Exp Body"
-    p.parser.id_table_stack.pop()
-    p.parser.scope_level -= 1
-    p[0] = p[2] + "jz end" + p.parser.internal_label + \
-        "\n" + p[3] + "end" + p.parser.internal_label + ":\n"
+    label = p, parser.id_table_stack
+    p[0] = p[2] + \
+        f"jz I{label}\n" + \
+        p[3] + \
+        f"I{label}:\n"
     p.parser.internal_label += 1
+
+    p[0] += pop_local_vars(p)
 
 
 def p_else_scope(p):
     "ElseScope : ELSE"
-    p.parser.id_table_stack.pop()
+    pop_local_vars(p)  # pop do if
     p.parser.id_table_stack.append(dict())
     # limpar scope anterior (if anterior)
+    p[0] = p[1]
 
 
 def p_ifelse(p):
     "IfElse : IfScope Exp Body ElseScope Body"
-    p.parser.id_table_stack.pop()
-    p.parser.scope_level -= 1
-    p[0] = p[2] + "jz else" + p.parser.internal_label + "\n" + \
-        p[3] + "jump end" + (p.parser.internal_label + 1)
-    + "\nelse" + p.parser.internal_label + ":\n" + \
-        p[5] + "end" + (p.parser.internal_label + 1) + ":\n"
-    p.parser.internal_label += 2
+
+    label = p, parser.id_table_stack
+    p[0] = p[2] + f"jz I{label}\n" + \
+        p[3] + \
+        f"jump E{label}\n" + \
+        f"I{label}:\n" + \
+        p[5] + \
+        f"E{label}:\n"
+    p.parser.internal_label += 1
+
+    p[0] += pop_local_vars(p)  # pop do else
 
 
 def p_while_scope(p):
     "WhileScope : WHILE"
     p.parser.id_table_stack.append(dict())
-    p.parser.scope_level += 1
+    p[0] = p[1]
 
 
 def p_while(p):
@@ -152,15 +195,7 @@ def p_while(p):
 
     p.parser.internal_label += 1
 
-    min = int("inf")
-    for var in p.parser.id_table_stack[-1]:
-        if (n := p.parser.id_table_stack[-1][var]['endereco']) < min:
-            min = n
-    if min != int("inf"):
-        p.parser.id_table_stack = min
-
-    p[0] += "pop %d\n" % len(p.parser.id_table_stack)
-    p.parser.id_table_stack.pop()
+    p[0] += pop_local_vars(p)
 
 
 def p_switch_scope(p):
@@ -556,9 +591,12 @@ def p_base_funcall(p):
 def p_funcall(p):
     "FunCall : ID '(' FunArg ')'"
     s = ""
-    s += p[3] + "pusha " + p.id_table_stack[0][p[1]]['label'] + "\n"
-    s += "CALL\n"
-    p[0] = s
+    label = p.parser.function_table[p[1]]['label']
+    var_num = p.parser.function_table[p[1]]['num_args']
+    p[0] = p[3] + \
+        f"pusha {label}\n" + \
+        "call\n" + \
+        f"pop {var_num-1}\n" 
 
 
 def p_funarg_funrec(p):
@@ -638,27 +676,20 @@ def p_opmult_div(p):
 
 def p_oppow(p):
     "OpPow: POW"
-    p[0] = p[1]
+
+    fp_pow = open("pow.vm", "r")  # retorna erro se ficheiro nao existir
+
+    pow_function_string = fp_pow.read()
+
+    if p.parser.pow_flag:
+        # adiciona ao buffer mas nao ´a tabela
+        p.parser.function_buffer.append(pow_function_string)
+        p.parser.pow_flag = False
+    p[0] = "pusha P\ncall\npop 1\n"
 
 
 # eu pus este codigo aqui em baixo para nao misturar
 # as cenas da gramatica com outro codigo
-
-
-def gen_atrib_code(p, id, exp):
-    s = ""
-    if id not in p.parser.id_table:
-        print("ERROR: Name %s not defined." % id)
-        # invoke error
-    elif p.parser.id_table[id]['scope'] == 0:
-        # pensar que se deve colocar no topo da stack o valor no ID para se conseguir fazer a operação
-        s = exp + "storeg %d\n" % p.parser.id_table[id]['endereco']
-    elif p.parser.id_table[id]['scope'] == p.parser.scope:
-        s = exp + "storel %d\n" % p.parser.id_table[id]['endereco']
-    else:
-        print("ERROR: Name %s defined elsewhere in program, not defined in local or global scope." % id)
-        # invoke error
-        return s
 
 
 def gen_atrib_code_stack(p, id, atribop):
@@ -676,14 +707,30 @@ def gen_atrib_code_stack(p, id, atribop):
     return s
 
 
+def pop_local_vars(p):
+    s = ""
+    min = int("inf")
+    for var in p.parser.id_table_stack[-1]:
+        if (n := p.parser.id_table_stack[-1][var]['endereco']) < min:
+            min = n
+    if min != int("inf"):
+        p.parser.id_table_stack = min
+
+    s += "pop %d\n" % len(p.parser.id_table_stack)
+    p.parser.id_table_stack.pop()
+    return s
+
+
 parser = yacc.yacc()
 
 # 0->global; 1+->local
 # ++ x = (tipo, classe, localidade, endereço, dimenção)
 parser.type_table = {'int'}
 parser.id_table_stack = list()
-parser.scope_n_vars = list()
 parser.label_table_stack = list()
+parser.parser.function_table = list()
+parser.pow_flag = True  # leia-se ´e preciso por o texto do pow?
 parser.internal_label = 0
 parser.global_adress = 0
 parser.local_adress = 0
+parser.function_buffer = []

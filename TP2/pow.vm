@@ -1,0 +1,17 @@
+P:
+pushi 1
+P1:
+pushl -1
+jz P2
+pushl -2 
+pushl 0 
+mul 
+storel 0 
+pushl -1
+pushi 1
+sub 
+storel -1	
+jump P1
+P2:
+storel -2
+return
