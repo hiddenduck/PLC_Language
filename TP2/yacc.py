@@ -185,9 +185,13 @@ def p_case(p):
     "Case: ID ':' Body"
 
 
-def p_exp_atribop(p):
-    "Exp: AtribOp"
+def p_exp_atrib(p):
+    "Exp: Atrib"
     p[0] = p[1]
+
+
+def p_exp_op(p):
+    "Exp; Op"
 
 
 def p_exp_decl(p):
@@ -204,8 +208,8 @@ def p_exp_declatrib(p):
     p[0] = p[1]
 
 
-def p_atribop_atrib(p):
-    "AtribOp : Atrib"
+def p_atribop_atribnum(p):
+    "AtribOp : AtribNum"
 
 
 def p_atribop_op(p):
@@ -282,51 +286,66 @@ def p_declatrib_left(p):
 
 def p_declatrib_right(p):
     "DeclAtrib : AtribOp RARROW ID ID"
+    # 7+5 -> int  INT Int iNt x? #####vao permitir isto???#####
+    if p[3] not in p.type_table:
+        print("ERROR: invalid type")
+    else:
+
+
+
+
+def p_atribnum_left(p):
+    "AtribNum : ID LARROW AtribOp"
+    p[0] = p[3] + "dup 1\n" + gen_atrib_code_stack(p, p[1])
+
+
+def p_atribnum_right(p):
+    "AtribNum : AtribOp LARROW ID"
+    # 2+4->x++
+    p[0] = p[1] + "dup 1\n" + gen_atrib_code_stack(p, p[3])
+
+
+def p_atribnum_array(p):
+    "AtribNum : AtribArray"
+    p[0] = p[1]
 
 
 def p_atrib_left(p):
     "Atrib: ID LARROW AtribOp"
-    p[0] = gen_atrib_code(p, p[1], p[3])
+    p[0] = p[3] + gen_atrib_code_stack(p, p[1])
 
 
 def p_atrib_right(p):
     "Atrib: AtribOp RARROW ID"
-    p[0] = gen_atrib_code(p, p[3], p[1])
+    p[0] = p[1] + gen_atrib_code_stack(p, p[3])
 
 
 def p_atrib_equiv(p):
     "Atrib: ID SWAP ID"
-    if p[1] not in p.parser.id_table:
-        print("ERROR: Name %s not defined." % p[1])
-        # invoke error
-    if p[3] not in p.parser.id_table:
-        print("ERROR: Name %s not defined." % p[3])
-        # invoke error
-    s1 = p.parser.id_table[p[1]]['scope']
-    if s1 == 0:
-        s1 = "g"
-    elif s1 == p.parser.scope:
-        s1 = "l"
+    flag1 = flag2 = True
+    for i in range(len(p.id_table_stack)-1, 0, -1):
+
+        if p[1] in p.id_table_stack[i] and flag1:
+            end1 = p.id_table_stack[i][p[1]]['endereco']
+            flag1 = False
+        if p[3] in p.id_table_stack[i] and flag2:
+            end2 = p.id_table_stack[i][p[3]]['endereco']
+            flag2 = False
+        if not (flag1 or flag2):
+            p[0] = f"pushl {end1}\npushl {end2}\nstorel {end1}\nstorel {end2}\n"
+            return
+
+    if p[1] not in p.id_table_stack[0] or p[3] not in p.id_table_stack[0]:
+        # depois podemos por para dizer qual foi a gaja
+        print("ERROR: one of the variables not in scope")
     else:
-        print(
-            "ERROR: Name %s defined elsewhere in program, not defined in local or global scope." % p[1])
-        # invoke error
-    s3 = p.parser.id_table[p[3]]['scope']
-    if s3 == 0:
-        s3 = "g"
-    elif s3 == p.parser.scope:
-        s3 = "l"
-    else:
-        print(
-            "ERROR: Name %s defined elsewhere in program, not defined in local or global scope." % p[3])
-        # invoke error
-    s1 += " %d" % (p.parser.id_table[p[1]]['endereco'])
-    s3 += " %d" % (p.parser.id_table[p[3]]['endereco'])
-    p[0] = "push" + s3 + "\npush" + s1 + "\nstore" + s3 + "\nstore" + s1 + "\n"
+        p[0] = f"pushg {end1}\npushg {end2}\nstoreg {end1}\nstoreg {end2}\n"
+    return
 
 
 def p_atrib_array(p):
-    "Atrib : ID AtribArray"
+    "Atrib : AtribArray"
+    p[0] = p[1]
 
 
 def p_op_opuno(p):
@@ -346,14 +365,27 @@ def p_opuno_neg(p):
 
 def p_opuno_accessarray(p):
     "OpUno: AccessArray"
+    p[0] = p[1]
 
 
 def p_opuno_minus(p):
-    "OpUno: SUB ID"
-    
+    "OpUno: SUB AtribOp"
+    p[0] = "pushi 0\n" + p[2] + "sub\n"
+
 
 def p_accessarray(p):
     "AccessArray: ID ArraySize"
+    for i in range(len(p.id_table_stack)-1, 0, -1):
+        if p[1] in p.id_table_stack[i]:
+            end = p.id_table_stack[i][p[1]]['endereco']
+            p[0] = f"pushl {end}\n" + p[2] + "loadn\n"
+            return
+    if p[1] not in p.id_table_stack[0]:
+        print("ERROR: variable not in scope")
+    else:
+        end = p.id_table_stack[0][p[1]]['endereco']
+        p[0] = f"pushg {end}\n" + p[2] + "loadn\n"
+    return
 
 
 def p_opbin_rec(p):
@@ -403,7 +435,7 @@ def p_base_exp(p):
 
 def p_base_id(p):
     "Base: ID"
-    for i in range(len(p.id_table_stack), 0, -1):
+    for i in range(len(p.id_table_stack)-1, 0, -1):
         if p[1] in p.id_table_stack[i]:
             p[0] = "pushl %d\n" % p.id_table_stack[i][p[1]]['endereco']
             return
@@ -421,13 +453,15 @@ def p_base_num(p):
 
 def p_base_funcall(p):
     "Base : FunCall"
+    p[0] = p[1]
 
 
 def p_funcall(p):
     "FunCall : ID '(' FunArg ')'"
     s = ""
-    for vars in p[3]:
-       s +=  
+    s += p[3] + "pusha " + p.id_table_stack[0][p[1]]['label'] + "\n"
+    s += "CALL\n"
+    p[0] = s
 
 
 def p_funarg_funrec(p):
@@ -437,17 +471,17 @@ def p_funarg_funrec(p):
 
 def p_funarg_empty(p):
     "FunArg : "
-    p[0] = list()
+    p[0] = ""
 
 
 def p_funrec_rec(p):
-    "FunRec : FunRec ',' :wAtribOp"
-    p[0] = p[1] + list(p[3])
+    "FunRec : FunRec ',' AtribOp"
+    p[0] = p[1] + p[3]
 
 
 def p_funrec_base(p):
     "FunRec : AtribOp"
-    p[0] = list(p[1])
+    p[0] = p[1]
 
 
 def p_oplogico_and(p):
@@ -534,16 +568,14 @@ def gen_atrib_code_stack(p, id, atribop):
     s = ""
     for tamanho in range(len(p.id_table_stack)-1, 0, -1):
         if id in p.parser.id_table_stack[tamanho]:
-            s = atribop + \
-                "storel %d\n" % p.parser.id_table_stack[tamanho][id]['endereco']
+            s = "storel %d\n" % p.parser.id_table_stack[tamanho][id]['endereco']
             break
     else:
         if id not in p.parser.id_table_stack[0]:
             print("ERROR: Name %s not defined." % id)
             # invoke error
         else:
-            s = atribop + \
-                "storeg %d\n" % p.parser.id_table_stack[0][id]['endereco']
+            s = "storeg %d\n" % p.parser.id_table_stack[0][id]['endereco']
     return s
 
 
