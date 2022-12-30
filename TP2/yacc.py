@@ -141,12 +141,26 @@ def p_while_scope(p):
 
 def p_while(p):
     "While : WhileScope Exp Body"
+
+    lable_num = p.parser.internal_label
+    p[0] = f"W{lable_num}:\n" + \
+        p[2] + \
+        f"jz WE{lable_num}" + \
+        p[3] + \
+        f"jump W{lable_num}" + \
+        f"WE{lable_num}:\n"
+
+    p.parser.internal_label += 1
+
+    min = int("inf")
+    for var in p.parser.id_table_stack[-1]:
+        if (n := p.parser.id_table_stack[-1][var]['endereco']) < min:
+            min = n
+    if min != int("inf"):
+        p.parser.id_table_stack = min
+
+    p[0] += "pop %d\n" % len(p.parser.id_table_stack)
     p.parser.id_table_stack.pop()
-    p.parser.scope_level -= 1
-    l = p.parser.internal_label
-    p[0] = "loop" + l + ":\n" + p[2] + "jz end" + \
-        (l + 1) + "\n" + p[3] + "jump loop" + l + "\nend" + (l + 1) + ":\n"
-    p.parser.internal_label += 2
 
 
 def p_switch_scope(p):
@@ -191,7 +205,8 @@ def p_exp_atrib(p):
 
 
 def p_exp_op(p):
-    "Exp; Op"
+    "Exp: Op"
+    p[0] = p[1]
 
 
 def p_exp_decl(p):
@@ -201,6 +216,7 @@ def p_exp_decl(p):
 
 def p_exp_declarray(p):
     "Exp: DeclArray"
+    p[0] = p[1]
 
 
 def p_exp_declatrib(p):
@@ -210,88 +226,169 @@ def p_exp_declatrib(p):
 
 def p_atribop_atribnum(p):
     "AtribOp : AtribNum"
+    p[0] = p[1]
 
 
 def p_atribop_op(p):
     "AtribOp : Op"
+    p[0] = p[1]
 
 
 def p_decl(p):
     "Decl: ID ID"
-    t, v = 1, 2
-    if p[t] not in type_table:
-        t, v = 2, 1
-        if p[t] not in type_table:
-            print("ERROR: Neither %s nor %s included in typing set." %
-                  (p[1], p[2]))
-            # invoke error?
-
-        table = p.parser.id_table_stack[-1]
-        if v in table:
-            print("ERROR: %s already declared in local typing." % v)
-            # invoke error
-        # o endereço pode não ser o tamanho da tabela: arrays estragam a brincadeira
-        table[v] = {'classe': 'var', 'endereco': len(table),
-                    'scope': p.parser.scope, 'level': p.parser.scope_level, 'tipo': t}
-
-        p[0] = r"pushi 0\n"
+    if p[1].lower() not in p.type_table:
+        print("ERROR: invalid type")
+    else:
+        p[0] = "pushi 0\n"
+        if len(p.id_table_stack) == 1:
+            p.id_table_stack[0][p[2]] = {'classe': 'var',
+                                         'endereco': p.global_adress,
+                                         'tamanho': 1,
+                                         'tipo': p[1]}
+            p.global_adress += 1
+        else:
+            p.id_table_stack[-1][p[2]] = {'classe': 'array',
+                                          'endereco': p.local_adress,
+                                          'tamanho': 1,
+                                          'tipo': p[1]}
+            p.local_adress += 1
 
 
 def p_declarray(p):
     "DeclArray : ID ID DeclArraySize"
-    t, v = 1, 2
-    if p[t] not in type_table:
-        t, v = 2, 1
-    if p[t] not in type_table:
-        print("ERROR: Neither %s nor %s included in typing set." %
-              (p[1], p[2]))
-        # invoke error?
-    table = p.parser.id_table_stack[-1]
-    n_vars = p.parser.scope_n_vars.pop()
-
-    if v in table:
-        print("ERROR: %s already declared in local typing." % v)
-        # invoke error
-    table[v] = {'classe': 'array', 'n_dimensao': len(p[3]), 'tamanho': p[3], 'endereco': n_vars,
-                'scope': p.parser.scope, 'level': p.parser.scope_level, 'tipo': t}
-
-    p.parser.scope_n_vars.append(n_vars+1)
+    # int x[1][1][2]
+    if p[1].lower() not in p.type_table:
+        print("ERROR: invalid type")
+    else:
+        res = 1
+        for s in p[3]:
+            res *= s
+        p[0] = f"pushn {res}\n"
+        if len(p.id_table_stack) == 1:
+            p.id_table_stack[0][p[2]] = {'classe': 'array',
+                                         'endereco': p.global_adress,
+                                         'tamanho': p[3][1:],
+                                         'tipo': p[1]}
+            p.global_adress += res
+        else:
+            p.id_table_stack[-1][p[2]] = {'classe': 'array',
+                                          'endereco': p.local_adress,
+                                          'tamanho': p[3][1:],
+                                          'tipo': p[1]}
+            p.local_adress += res
 
 
 def p_declarraysize_rec(p):
-    "DeclArraySize '[' NUM ']'"
+    "DeclArraySize : DeclArraySize '[' NUM ']'"
+    p[0] = p[1].append(p[2])
+
+
+def p_declarraysize_empty(p):
+    "DeclArraySize : "
+    p[0] = p[2]
 
 
 def p_atribarray_Leftatribop(p):
     "AtribArray : ID ArraySize LARROW AtribOp"
+    for i in range(len(p.id_table_stack)-1, 0, -1):
+        if p[1] in p.id_table_stack[i]:
+            s = "pushfp\n"
+            # tamanho nao guarda o primeiro!!"!"!!!!!""!"!"!"!"!"!"
+            sizes = p.id_table_stack[i][p[1]]['tamanho']
+            break
+    else:
+        if p[1] in p.id_table_stack[0]:
+            s = "pushgp\n"
+            # tamanho nao guarda o primeiro!!"!"!!!!!""!"!"!"!"!"!"
+            sizes = p.id_table_stack[0][p[1]]['tamanho']
+        else:
+            print("ERROR: variable not in scope")
+            return
+    s += p[2]
+    for size in sizes:
+        s += f"pushi {size}\nmul\nadd\n"
+
+    p[0] = s + p[4] + "storen\n"
 
 
 def p_atribarray_Rightatribop(p):
     "AtribArray : AtribOp RARROW ID ArraySize"
+    # 5+7 <--- x[2][5][4]
+    # X[a][b][c]
+    # X[x][y][z]
+    # X + (x*c + y)*b + z
+    # coloca o valor do atribop no topo da stack
+    for i in range(len(p.id_table_stack)-1, 0, -1):
+        if p[3] in p.id_table_stack[i]:
+            s = "pushfp\n"
+            # tamanho nao guarda o primeiro!!"!"!!!!!""!"!"!"!"!"!"
+            sizes = p.id_table_stack[i][p[3]]['tamanho']
+            break
+    else:
+        if p[3] in p.id_table_stack[0]:
+            s = "pushgp\n"
+            # tamanho nao guarda o primeiro!!"!"!!!!!""!"!"!"!"!"!"
+            sizes = p.id_table_stack[0][p[3]]['tamanho']
+        else:
+            print("ERROR: variable not in scope")
+            return
+    s += p[4]
+    for size in sizes:
+        s += f"pushi {size}\nmul\nadd\n"
+
+    p[0] = s + p[1] + "storen\n"
 
 
 def p_arraysize_rec(p):
     "ArraySize : ArraySize '[' AtribOp ']'"
-    p[0] = p[1] + [p[2]]
+    p[0] = p[2] + p[1]  # array nao ´e uma lista
 
 
 def p_arraysize_empty(p):
     "ArraySize : "
-    p[0] = []
+    p[0] = ""
 
 
 def p_declatrib_left(p):
     "DeclAtrib : ID ID LARROW AtribOp"
+    # int x <--------------------- 5+8
+    if p[1].lower() not in p.type_table:
+        print("ERROR: invalid type")
+    else:
+        p[0] = p[4]
+        if len(p.id_table_stack) == 1:
+            p.id_table_stack[0][p[2]] = {'classe': 'var',
+                                         'endereco': p.global_adress,
+                                         'tamanho': 1,
+                                         'tipo': p[1]}
+            p.global_adress += 1
+        else:
+            p.id_table_stack[-1][p[2]] = {'classe': 'var',
+                                          'endereco': p.local_adress,
+                                          'tamanho': 1,
+                                          'tipo': p[1]}
+            p.local_adress += 1
 
 
 def p_declatrib_right(p):
     "DeclAtrib : AtribOp RARROW ID ID"
     # 7+5 -> int  INT Int iNt x? #####vao permitir isto???#####
-    if p[3] not in p.type_table:
+    if p[3].lower() not in p.type_table:
         print("ERROR: invalid type")
     else:
-
-
+        p[0] = p[1]
+        if len(p.id_table_stack) == 1:
+            p.id_table_stack[0][p[4]] = {'classe': 'var',
+                                         'endereco': p.global_adress,
+                                         'tamanho': 1,
+                                         'tipo': p[3]}
+            p.global_adress += 1
+        else:
+            p.id_table_stack[-1][p[4]] = {'classe': 'var',
+                                          'endereco': p.local_adress,
+                                          'tamanho': 1,
+                                          'tipo': p[3]}
+            p.local_adress += 1
 
 
 def p_atribnum_left(p):
@@ -325,10 +422,10 @@ def p_atrib_equiv(p):
     flag1 = flag2 = True
     for i in range(len(p.id_table_stack)-1, 0, -1):
 
-        if p[1] in p.id_table_stack[i] and flag1:
+        if flag1 and p[1] in p.id_table_stack[i]:
             end1 = p.id_table_stack[i][p[1]]['endereco']
             flag1 = False
-        if p[3] in p.id_table_stack[i] and flag2:
+        if flag2 and p[3] in p.id_table_stack[i]:
             end2 = p.id_table_stack[i][p[3]]['endereco']
             flag2 = False
         if not (flag1 or flag2):
@@ -587,6 +684,6 @@ parser.type_table = {'int'}
 parser.id_table_stack = list()
 parser.scope_n_vars = list()
 parser.label_table_stack = list()
-parser.scope_level = 0
-parser.scope = 0
 parser.internal_label = 0
+parser.global_adress = 0
+parser.local_adress = 0
