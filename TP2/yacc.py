@@ -74,11 +74,13 @@ def p_body_code(p):
 def p_function(p):
     "Function : ID FunScope FunCases  Body"
     label = p.parser.internal_label
-    p.parser.parser.function_table[p[1]] = {'num_args': len(p[3][1]),
-                                     'return': p[3][0],
-                                     'label': f"F{label}"}
+    num_args = len(p[3][1])
+    p.parser.parser.function_table[p[1]] = {'num_args': num_args,
+                                            'return': p[3][0],
+                                            'label': f"F{label}"}
 
-    p.parser.function_buffer.append(f"F{label}:\n" + p[4] + "return\n")
+    p.parser.function_buffer.append(
+        f"F{label}:\n" + p[4] + f"storel {num_args}" + "return\n")
     p[0] = ""
     p.parser.internal_label += 1
 
@@ -201,37 +203,94 @@ def p_while(p):
 def p_switch_scope(p):
     "SwitchScope : SWITCH"
     p.parser.id_table_stack.append(dict())
-    p.parser.scope_level += 1
+    p.parser.label_table_stack.append(
+        (  # -----isto ´e um tuplo
+            {':': list()},
+            {':': list()}
+        )  # -----
+    )  # cond,cases
+    # inicializar com o caracter especial e uma lista vazia
 
 
 def p_switch(p):
+    # aqui eu ja tenho as duas tabelas
+    # acho que nao vai ser preciso o Conds
     "Switch : SwitchScope Conds '{' Cases '}'"
-    p.parser.id_table_stack.pop()
-    p.parser.scope_level -= 1
+
+    cond_table = p.parser.label_table_stack[-1][0]
+    case_table = p.parser.label_table_stack[-1][1]
+
+    # testes de integridade das tabelas
+    if cond_table.keys() != case_table.keys():
+        print("ERROR")  # pode ser feito melhor
+    if len(cond_table[':']) != len(case_table[':']):
+        # estou a fazer com que todas as condiçoes apareçam e sejam chamadas uma vez (pode ser mudado)
+        print("ERROR")
+
+    p[0] = ""
+
+    for label in p[4]:  # percorrer ap[0]chamadas
+        lab_num = p.parser.internal_label
+        if label == ':':
+            cond = cond_table[':'].pop()
+            case = case_table[':'].pop()
+
+        else:
+            cond = cond_table[label]
+            case = case_table[label]
+
+        p[0] += cond + f"jz {lab_num}\n" + case + f"S{lab_num}:\n"
+        p.parser.internal_label += 1
+
+    p[0] += pop_local_vars(p)
+    p.parser.label_table_stack.pop()  # tirar as duas tabelas da stack
 
 
+# nas conds passar para cima um par (conds_com_lable (dict?), conds_sem_lable (lista?))
 def p_conds_rec(p):
-    "Conds : Conds ',' ID '(' Exp ')' "
-    p[0] = p[1] + p[5]
+    "Conds : Conds ',' Cond"
+    p[0] = p[1].append(p[3])
 
 
 def p_conds_base(p):
-    "Conds : ID '(' Exp ')'"
-    p[0] = p[3]
+    "Conds : Cond"
+    p[0] = list(p[1])
+
+
+def p_cond_id(p):
+    "Cond : ID '(' AtribOp ')'"
+    p.parser.label_table_stack[-1][0][p[1]] = p[3]
+    p[0] = p[1]
+
+
+def p_cond_empty(p):
+    "Cond : '(' AtribOp ')'"
+    p.parser.label_table_stack[-1][0][':'].append(p[2])
+    p[0] = ':'
 
 
 def p_cases_rec(p):
     "Cases : Cases Case "
-    p[0] = p[1] + p[2]
+    p[0] = p[1].append(p[2])
 
 
 def p_cases_base(p):
     "Cases : Case"
-    p[0] = p[1]
+    p[0] = list(p[1])
 
 
-def p_case(p):
+def p_case_id(p):
     "Case: ID ':' Body"
+    # preciso ver se ja tem la para dar erro
+    p.parser.label_table_stack[-1][1][p[1]] = p[3]
+    p[0] = p[1]  # ~acho que podemos ignorar isto mas whatever
+
+
+def p_case_empty(p):
+    "Case: ':' Body"
+    # o par no label stack seria cond,case
+    p.parser.label_table_stack[-1][1][':'].append(p[2])
+    p[0] = ':'
 
 
 def p_exp_atrib(p):
@@ -590,13 +649,12 @@ def p_base_funcall(p):
 
 def p_funcall(p):
     "FunCall : ID '(' FunArg ')'"
-    s = ""
     label = p.parser.function_table[p[1]]['label']
     var_num = p.parser.function_table[p[1]]['num_args']
     p[0] = p[3] + \
         f"pusha {label}\n" + \
         "call\n" + \
-        f"pop {var_num-1}\n" 
+        f"pop {var_num-1}\n"  # Nao esquecer de por o return em cima da primeira variavel
 
 
 def p_funarg_funrec(p):
@@ -727,10 +785,13 @@ parser = yacc.yacc()
 # ++ x = (tipo, classe, localidade, endereço, dimenção)
 parser.type_table = {'int'}
 parser.id_table_stack = list()
-parser.label_table_stack = list()
+parser.label_table_stack = list()  # isto vai ser uma lista de pares
 parser.parser.function_table = list()
 parser.pow_flag = True  # leia-se ´e preciso por o texto do pow?
 parser.internal_label = 0
 parser.global_adress = 0
 parser.local_adress = 0
 parser.function_buffer = []
+# a ideia era a cond ter [label:cond ...] e a case ter [lable:body ...]
+# ambas tem uma chave special ":" onde pomos numa lista todas as conds e bodies sem lables
+# na label_table_stack podemos por o par
