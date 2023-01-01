@@ -235,8 +235,8 @@ def p_switch(p):
     for label in p[4]:  # percorrer ap[0]chamadas
         lab_num = p.parser.internal_label
         if label == ':':
-            cond = cond_table[':'].pop()
-            case = case_table[':'].pop()
+            cond = cond_table[':'].pop(0)
+            case = case_table[':'].pop(0)
 
         else:
             cond = cond_table[label]
