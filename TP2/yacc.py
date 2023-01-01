@@ -227,6 +227,9 @@ def p_switch(p):
         # estou a fazer com que todas as condiçoes apareçam e sejam chamadas uma vez (pode ser mudado)
         print("ERROR")
 
+    end_label_num = p.parser.internal_label
+    p.parser.internal_label += 1
+
     p[0] = ""
 
     for label in p[4]:  # percorrer ap[0]chamadas
@@ -239,9 +242,11 @@ def p_switch(p):
             cond = cond_table[label]
             case = case_table[label]
 
-        p[0] += cond + f"jz {lab_num}\n" + case + f"S{lab_num}:\n"
+        p[0] += cond + f"jz S{lab_num}\n" + case + \
+            f"jump SE{end_label_num}\n" + f"S{lab_num}:\n"
         p.parser.internal_label += 1
 
+    p[0] += f"SE{end_label_num}:\n"
     p[0] += pop_local_vars(p)
     p.parser.label_table_stack.pop()  # tirar as duas tabelas da stack
 
