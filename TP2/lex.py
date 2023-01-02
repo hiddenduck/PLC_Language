@@ -17,8 +17,6 @@ tokens = (
 'ELSE',
 'WHILE',
 'SWITCH',
-'FUNC',
-'RETURN',
 'NEG',
 'AND',
 'OR',
@@ -45,16 +43,6 @@ reserved = {
     'switch' : 'SWITCH'
 }
 
-def t_ID(t):
-    '[a-zA-Z]\w*' # \w contém o _ e não queremos vars a começar por _
-    t.type = reserved.get(t.value, 'ID')
-    return t
-
-def t_NUM(t):
-    r'-?[0-9]+'
-    t.value = int(t.value)
-    return t
-
 t_RARROW = '-+>'
 
 t_LARROW = '<-+'
@@ -79,6 +67,7 @@ t_EQUAL = '=+'
 
 t_ADD = '\+'
 
+#O lex não consegue apanhar o a -1 porque acha que (-1) é um número oops
 t_SUB = '-'
 
 t_MUL = '\*'
@@ -86,7 +75,6 @@ t_MUL = '\*'
 t_DIV = '/'
 
 t_POW = '\^'
-
 
 def t_ANY_error(t):
     print('Illegal character: %s', t.value[0])
@@ -100,6 +88,16 @@ def t_FUNC(t):
 def t_Funcao_RETURN(t):
     r'rekt'
     t.lexer.begin('INITIAL')
+    return t
+
+def t_ID(t):
+    '[a-zA-Z]\w*' # \w contém o _ e não queremos vars a começar por _
+    t.type = reserved.get(t.value, 'ID')
+    return t
+
+def t_NUM(t):
+    r'-?[0-9]+'
+    t.value = int(t.value)
     return t
 
 #Isto vai dar barraco 100% -> tentar fazer vários estados para ter LABELS e IDS
@@ -125,9 +123,9 @@ def t_Cond(t):
 
 lexer = lex.lex()
 
-for linha in sys.stdin:
-    lexer.input(linha)
-    tok = lexer.token()
-    while tok:
-        print(tok)
-        tok = lexer.token()
+#for linha in sys.stdin:
+#    lexer.input(linha)
+#    tok = lexer.token()
+#    while tok:
+#        print(tok)
+#        tok = lexer.token()

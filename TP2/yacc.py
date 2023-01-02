@@ -6,14 +6,20 @@ from lex import tokens
 # Está pela ordem que aparecce na gramatica
 # tem dois \n entre as funçoes para os pitoninhos nao gritarem comigo
 
+def p_start(p):
+    "Start : Axiom"
+    p.parser.final_code = "start\n" + p[1] + "stop\n" + "\n".join(p.parser.function_buffer)
 
 def p_axiom_code(p):
     "Axiom : Axiom Code"
-    p[0] = "\n".join(p.parser.function_buffer) + "start" + p[1] + p[2] + "stop"
+    #p[0] = "\n".join(p.parser.function_buffer) + "start" + p[1] + p[2] + "stop"
+    p[0] = p[1] + p[2]
 
 
 def p_axiom_function(p):
-    "Axiom : Function"
+    "Axiom : Axiom Function"
+    #p.parser.function_buffer
+    p[0] = p[1]
 
 
 def p_axiom_empty(p):
@@ -27,8 +33,8 @@ def p_code_block(p):
 
 
 def p_code_empty(p):
-    "Code : "
-    p[0] = ""
+    "Code : Block"
+    p[0] = p[1]
 
 
 def p_block_exp(p):
@@ -56,10 +62,13 @@ def p_block_switch(p):
     p[0] = p[1]
 
 
-def p_block_empty(p):
-    "Block : "
-    p[0] = ""
+#def p_block_empty(p):
+#    "Block : "
+#    p[0] = ""
 
+def p_body_empty(p):
+    "Body : '{' '}'"
+    p[0] = ""
 
 def p_body_block(p):
     "Body : Block"
@@ -72,15 +81,17 @@ def p_body_code(p):
 
 
 def p_function(p):
-    "Function : ID FunScope FunCases  Body"
+    "Function : ID FunScope FunCases Body"
     label = p.parser.internal_label
     num_args = len(p[3][1])
-    p.parser.parser.function_table[p[1]] = {'num_args': num_args,
-                                            'return': p[3][0],
-                                            'label': f"F{label}"}
+    p.parser.function_table[p[1]] = {'num_args': num_args,
+                                     'return': p[3][0],
+                                     'label': f"F{label}"}
 
     p.parser.function_buffer.append(
-        f"F{label}:\n" + p[4] + f"storel {num_args}" + "return\n")
+        f"F{label}:\n" + p[4] + f"storel {num_args}\n" + "return\n")
+    #isto está a guardar onde? Devia ser negativo?
+    #Não está a terminar a sua localidade direito
     p[0] = ""
     p.parser.internal_label += 1
 
@@ -92,8 +103,8 @@ def p_funscope(p):
 
 
 def p_funcases_funextra_rarrow(p):
-    "FunCases : FunExtra ID RARROW ID"
-    p.parser.id_table_stack[-1][p[4]] = {'classe': 'var',
+    "FunCases : FunExtra RARROW ID"
+    p.parser.id_table_stack[-1][p[3]] = {'classe': 'var',
                                          'endereco': 0,
                                          'tamanho': 1,
                                          'tipo': 'int'}
@@ -103,7 +114,7 @@ def p_funcases_funextra_rarrow(p):
                                                  'endereco': -i,
                                                  'tamanho': 1,
                                                  'tipo': 'int'}
-    p[0] = (True, [1])
+    p[0] = (True, p[1])
     p.parser.local_adress = 1
 
 
@@ -118,8 +129,8 @@ def p_funcases_rarrow(p):
 
 
 def p_funcases_funextra(p):
-    "FunCases : FunExtra ID"
-    p[0] = (False, p[1].append(p[2]))
+    "FunCases : FunExtra"
+    p[0] = (False, p[1])
 
 
 def p_funcases_empty(p):
@@ -128,13 +139,14 @@ def p_funcases_empty(p):
 
 
 def p_funextra_rec(p):
-    "FunExtra : ID ','"
-    p[0] = [p[1]]
+    "FunExtra : FunExtra ',' ID"
+    p[0] = p[1]
+    p[0].append(p[3])
 
 
 def p_funextra_empty(p):
-    "FunExtra : "
-    p[0] = []
+    "FunExtra : ID"
+    p[0] = [p[1]]
 
 
 def p_if_scope(p):
@@ -185,18 +197,17 @@ def p_while_scope(p):
 
 
 def p_while(p):
-    "While : WhileScope Exp Body"
+    "While : WhileScope '(' Exp ')' Body"
 
     lable_num = p.parser.internal_label
     p[0] = f"W{lable_num}:\n" + \
-        p[2] + \
-        f"jz WE{lable_num}" + \
         p[3] + \
-        f"jump W{lable_num}" + \
+        f"jz WE{lable_num}\n" + \
+        p[5] + \
+        f"jump W{lable_num}\n" + \
         f"WE{lable_num}:\n"
 
     p.parser.internal_label += 1
-
     p[0] += pop_local_vars(p)
 
 
@@ -285,41 +296,41 @@ def p_cases_base(p):
 
 
 def p_case_id(p):
-    "Case: ID ':' Body"
+    "Case : ID ':' Body"
     # preciso ver se ja tem la para dar erro
     p.parser.label_table_stack[-1][1][p[1]] = p[3]
     p[0] = p[1]  # ~acho que podemos ignorar isto mas whatever
 
 
 def p_case_empty(p):
-    "Case: ':' Body"
+    "Case : ':' Body"
     # o par no label stack seria cond,case
     p.parser.label_table_stack[-1][1][':'].append(p[2])
     p[0] = ':'
 
 
 def p_exp_atrib(p):
-    "Exp: Atrib"
+    "Exp : Atrib"
     p[0] = p[1]
 
 
 def p_exp_op(p):
-    "Exp: Op"
+    "Exp : Op"
     p[0] = p[1]
 
 
 def p_exp_decl(p):
-    "Exp: Decl"
+    "Exp : Decl"
     p[0] = p[1]
 
 
 def p_exp_declarray(p):
-    "Exp: DeclArray"
+    "Exp : DeclArray"
     p[0] = p[1]
 
 
 def p_exp_declatrib(p):
-    "Exp: DeclAtrib"
+    "Exp : DeclAtrib"
     p[0] = p[1]
 
 
@@ -334,47 +345,47 @@ def p_atribop_op(p):
 
 
 def p_decl(p):
-    "Decl: ID ID"
-    if p[1].lower() not in p.type_table:
-        print("ERROR: invalid type")
+    "Decl : ID ID"
+    if p[1].lower() not in p.parser.type_table:
+        print("ERROR : invalid type")
     else:
         p[0] = "pushi 0\n"
-        if len(p.id_table_stack) == 1:
-            p.id_table_stack[0][p[2]] = {'classe': 'var',
-                                         'endereco': p.global_adress,
-                                         'tamanho': 1,
-                                         'tipo': p[1]}
-            p.global_adress += 1
+        if len(p.parser.id_table_stack) == 1:
+            p.parser.id_table_stack[0][p[2]] = {'classe' : 'var',
+                                         'endereco' : p.parser.global_adress,
+                                         'tamanho' : 1,
+                                         'tipo' : p[1]}
+            p.parser.global_adress += 1
         else:
-            p.id_table_stack[-1][p[2]] = {'classe': 'array',
-                                          'endereco': p.local_adress,
-                                          'tamanho': 1,
-                                          'tipo': p[1]}
-            p.local_adress += 1
+            p.parser.id_table_stack[-1][p[2]] = {'classe' : 'array',
+                                          'endereco' : p.parser.local_adress,
+                                          'tamanho' : 1,
+                                          'tipo' : p[1]}
+            p.parser.local_adress += 1
 
 
 def p_declarray(p):
     "DeclArray : ID ID DeclArraySize"
     # int x[1][1][2]
-    if p[1].lower() not in p.type_table:
+    if p[1].lower() not in p.parser.type_table:
         print("ERROR: invalid type")
     else:
         res = 1
         for s in p[3]:
             res *= s
         p[0] = f"pushn {res}\n"
-        if len(p.id_table_stack) == 1:
-            p.id_table_stack[0][p[2]] = {'classe': 'array',
-                                         'endereco': p.global_adress,
+        if len(p.parser.id_table_stack) == 1:
+            p.parser.id_table_stack[0][p[2]] = {'classe': 'array',
+                                         'endereco': p.parser.global_adress,
                                          'tamanho': p[3][1:],
                                          'tipo': p[1]}
-            p.global_adress += res
+            p.parser.global_adress += res
         else:
-            p.id_table_stack[-1][p[2]] = {'classe': 'array',
-                                          'endereco': p.local_adress,
+            p.parser.id_table_stack[-1][p[2]] = {'classe': 'array',
+                                          'endereco': p.parser.local_adress,
                                           'tamanho': p[3][1:],
                                           'tipo': p[1]}
-            p.local_adress += res
+            p.parser.local_adress += res
 
 
 def p_declarraysize_rec(p):
@@ -389,17 +400,17 @@ def p_declarraysize_empty(p):
 
 def p_atribarray_Leftatribop(p):
     "AtribArray : ID ArraySize LARROW AtribOp"
-    for i in range(len(p.id_table_stack)-1, 0, -1):
-        if p[1] in p.id_table_stack[i]:
+    for i in range(len(p.parser.id_table_stack)-1, 0, -1):
+        if p[1] in p.parser.id_table_stack[i]:
             s = "pushfp\n"
             # tamanho nao guarda o primeiro!!"!"!!!!!""!"!"!"!"!"!"
-            sizes = p.id_table_stack[i][p[1]]['tamanho']
+            sizes = p.parser.id_table_stack[i][p[1]]['tamanho']
             break
     else:
-        if p[1] in p.id_table_stack[0]:
+        if p[1] in p.parser.id_table_stack[0]:
             s = "pushgp\n"
             # tamanho nao guarda o primeiro!!"!"!!!!!""!"!"!"!"!"!"
-            sizes = p.id_table_stack[0][p[1]]['tamanho']
+            sizes = p.parser.id_table_stack[0][p[1]]['tamanho']
         else:
             print("ERROR: variable not in scope")
             return
@@ -417,17 +428,17 @@ def p_atribarray_Rightatribop(p):
     # X[x][y][z]
     # X + (x*c + y)*b + z
     # coloca o valor do atribop no topo da stack
-    for i in range(len(p.id_table_stack)-1, 0, -1):
-        if p[3] in p.id_table_stack[i]:
+    for i in range(len(p.parser.id_table_stack)-1, 0, -1):
+        if p[3] in p.parser.id_table_stack[i]:
             s = "pushfp\n"
             # tamanho nao guarda o primeiro!!"!"!!!!!""!"!"!"!"!"!"
-            sizes = p.id_table_stack[i][p[3]]['tamanho']
+            sizes = p.parser.id_table_stack[i][p[3]]['tamanho']
             break
     else:
-        if p[3] in p.id_table_stack[0]:
+        if p[3] in p.parser.id_table_stack[0]:
             s = "pushgp\n"
             # tamanho nao guarda o primeiro!!"!"!!!!!""!"!"!"!"!"!"
-            sizes = p.id_table_stack[0][p[3]]['tamanho']
+            sizes = p.parser.id_table_stack[0][p[3]]['tamanho']
         else:
             print("ERROR: variable not in scope")
             return
@@ -444,50 +455,50 @@ def p_arraysize_rec(p):
 
 
 def p_arraysize_empty(p):
-    "ArraySize : "
-    p[0] = ""
+    "ArraySize : '[' AtribOp ']'"
+    p[0] = p[2]
 
 
 def p_declatrib_left(p):
     "DeclAtrib : ID ID LARROW AtribOp"
     # int x <--------------------- 5+8
-    if p[1].lower() not in p.type_table:
+    if p[1].lower() not in p.parser.type_table:
         print("ERROR: invalid type")
     else:
         p[0] = p[4]
-        if len(p.id_table_stack) == 1:
-            p.id_table_stack[0][p[2]] = {'classe': 'var',
-                                         'endereco': p.global_adress,
+        if len(p.parser.id_table_stack) == 1:
+            p.parser.id_table_stack[0][p[2]] = {'classe': 'var',
+                                         'endereco': p.parser.local_adress,
                                          'tamanho': 1,
                                          'tipo': p[1]}
-            p.global_adress += 1
+            p.parser.global_adress += 1
         else:
-            p.id_table_stack[-1][p[2]] = {'classe': 'var',
-                                          'endereco': p.local_adress,
+            p.parser.id_table_stack[-1][p[2]] = {'classe': 'var',
+                                          'endereco': p.parser.local_adress,
                                           'tamanho': 1,
                                           'tipo': p[1]}
-            p.local_adress += 1
+            p.parser.local_adress += 1
 
 
 def p_declatrib_right(p):
     "DeclAtrib : AtribOp RARROW ID ID"
     # 7+5 -> int  INT Int iNt x? #####vao permitir isto???#####
-    if p[3].lower() not in p.type_table:
+    if p[3].lower() not in p.parser.type_table:
         print("ERROR: invalid type")
     else:
         p[0] = p[1]
-        if len(p.id_table_stack) == 1:
-            p.id_table_stack[0][p[4]] = {'classe': 'var',
-                                         'endereco': p.global_adress,
+        if len(p.parser.id_table_stack) == 1:
+            p.parser.id_table_stack[0][p[4]] = {'classe': 'var',
+                                         'endereco': p.parser.global_adress,
                                          'tamanho': 1,
                                          'tipo': p[3]}
-            p.global_adress += 1
+            p.parser.global_adress += 1
         else:
-            p.id_table_stack[-1][p[4]] = {'classe': 'var',
-                                          'endereco': p.local_adress,
+            p.parser.id_table_stack[-1][p[4]] = {'classe': 'var',
+                                          'endereco': p.parser.local_adress,
                                           'tamanho': 1,
                                           'tipo': p[3]}
-            p.local_adress += 1
+            p.parser.local_adress += 1
 
 
 def p_atribnum_left(p):
@@ -507,31 +518,31 @@ def p_atribnum_array(p):
 
 
 def p_atrib_left(p):
-    "Atrib: ID LARROW AtribOp"
-    p[0] = p[3] + gen_atrib_code_stack(p, p[1])
+    "Atrib : ID LARROW AtribOp"
+    p[0] = p[3] + gen_atrib_code_stack(p, p[1], p[3])
 
 
 def p_atrib_right(p):
-    "Atrib: AtribOp RARROW ID"
-    p[0] = p[1] + gen_atrib_code_stack(p, p[3])
+    "Atrib : AtribOp RARROW ID"
+    p[0] = p[1] + gen_atrib_code_stack(p, p[1], p[3])
 
 
 def p_atrib_equiv(p):
-    "Atrib: ID SWAP ID"
+    "Atrib : ID SWAP ID"
     flag1 = flag2 = True
-    for i in range(len(p.id_table_stack)-1, 0, -1):
+    for i in range(len(p.parser.id_table_stack)-1, 0, -1):
 
-        if flag1 and p[1] in p.id_table_stack[i]:
-            end1 = p.id_table_stack[i][p[1]]['endereco']
+        if flag1 and p[1] in p.parser.id_table_stack[i]:
+            end1 = p.parser.id_table_stack[i][p[1]]['endereco']
             flag1 = False
-        if flag2 and p[3] in p.id_table_stack[i]:
-            end2 = p.id_table_stack[i][p[3]]['endereco']
+        if flag2 and p[3] in p.parser.id_table_stack[i]:
+            end2 = p.parser.id_table_stack[i][p[3]]['endereco']
             flag2 = False
         if not (flag1 or flag2):
             p[0] = f"pushl {end1}\npushl {end2}\nstorel {end1}\nstorel {end2}\n"
             return
 
-    if p[1] not in p.id_table_stack[0] or p[3] not in p.id_table_stack[0]:
+    if p[1] not in p.parser.id_table_stack[0] or p[3] not in p.parser.id_table_stack[0]:
         # depois podemos por para dizer qual foi a gaja
         print("ERROR: one of the variables not in scope")
     else:
@@ -545,105 +556,105 @@ def p_atrib_array(p):
 
 
 def p_op_opuno(p):
-    "Op: OpUno"
+    "Op : OpUno"
     p[0] = p[1]
 
 
 def p_op_opbin(p):
-    "Op: OpBin"
+    "Op : OpBin"
     p[0] = p[1]
 
 
 def p_opuno_neg(p):
-    "OpUno: NEG AtribOp"
+    "OpUno : NEG AtribOp"
     p[0] = p[2] + 'not\n'
 
 
 def p_opuno_accessarray(p):
-    "OpUno: AccessArray"
+    "OpUno : AccessArray"
     p[0] = p[1]
 
 
 def p_opuno_minus(p):
-    "OpUno: SUB AtribOp"
+    "OpUno : SUB AtribOp"
     p[0] = "pushi 0\n" + p[2] + "sub\n"
 
 
 def p_accessarray(p):
-    "AccessArray: ID ArraySize"
-    for i in range(len(p.id_table_stack)-1, 0, -1):
-        if p[1] in p.id_table_stack[i]:
-            end = p.id_table_stack[i][p[1]]['endereco']
+    "AccessArray : ID ArraySize"
+    for i in range(len(p.parser.id_table_stack)-1, 0, -1):
+        if p[1] in p.parser.id_table_stack[i]:
+            end = p.parser.id_table_stack[i][p[1]]['endereco']
             p[0] = f"pushl {end}\n" + p[2] + "loadn\n"
             return
-    if p[1] not in p.id_table_stack[0]:
+    if p[1] not in p.parser.id_table_stack[0]:
         print("ERROR: variable not in scope")
     else:
-        end = p.id_table_stack[0][p[1]]['endereco']
+        end = p.parser.id_table_stack[0][p[1]]['endereco']
         p[0] = f"pushg {end}\n" + p[2] + "loadn\n"
     return
 
 
 def p_opbin_rec(p):
-    "OpBin: OpBin OpLogic TermPlus"
+    "OpBin : OpBin OpLogico TermPlus"
     p[0] = p[1] + p[3] + p[2]
 
 
 def p_opbin_base(p):
-    "OpBin: TermPlus"
+    "OpBin : TermPlus"
     p[0] = p[1]
 
 
 def p_termplus_rec(p):
-    "TermPlus: TermPlus OpPlus TermMult"
+    "TermPlus : TermPlus OpPlus TermMult"
     p[0] = p[1] + p[3] + p[2]
 
 
 def p_termplus_base(p):
-    "TermPlus: TermMult"
+    "TermPlus : TermMult"
     p[0] = p[1]
 
 
 def p_termmult_rec(p):
-    "TermMult: TermMult OpMult TermPow"
+    "TermMult : TermMult OpMult TermPow"
     p[0] = p[1] + p[3] + p[2]
 
 
 def p_termmult_base(p):
-    "TermMult: TermPow"
+    "TermMult : TermPow"
     p[0] = p[1]
 
 
 def p_termpow_rec(p):
-    "TermPow: TermPow OpPow Base"
+    "TermPow : TermPow OpPow Base"
     p[0] = p[1] + p[3] + p[2]
 
 
 def p_termpow_base(p):
-    "TermPow: Base"
+    "TermPow : Base"
     p[0] = p[1]
 
 
 def p_base_exp(p):
-    "Base: '(' AtribOp ')'"
+    "Base : '(' AtribOp ')'"
     p[0] = p[2]
 
 
 def p_base_id(p):
-    "Base: ID"
-    for i in range(len(p.id_table_stack)-1, 0, -1):
-        if p[1] in p.id_table_stack[i]:
-            p[0] = "pushl %d\n" % p.id_table_stack[i][p[1]]['endereco']
+    "Base : ID"
+    for i in range(len(p.parser.id_table_stack)-1, 0, -1):
+        if p[1] in p.parser.id_table_stack[i]:
+            p[0] = "pushl %d\n" % p.parser.id_table_stack[i][p[1]]['endereco']
             return
-    if p[1] not in p.id_table_stack[0]:
+    if p[1] not in p.parser.id_table_stack[0]:
         print("ERROR: variable not in scope")
     else:
-        p[0] = "pushg %d\n" % p.id.id_table_stack[i][p[1]]['endereco']
+        p[0] = "pushg %d\n" % p.parser.id_table_stack[0][p[1]]['endereco']
     return
 
 
 def p_base_num(p):
-    "Base: NUM"
+    "Base : NUM"
     p[0] = "pushi %d\n" % p[1]
 
 
@@ -659,7 +670,8 @@ def p_funcall(p):
     p[0] = p[3] + \
         f"pusha {label}\n" + \
         "call\n" + \
-        f"pop {var_num-1}\n"  # Nao esquecer de por o return em cima da primeira variavel
+        f"pop {var_num-1}\n"  # Nao esquecer de por o return em cima da primeira variavelF
+    
 
 
 def p_funarg_funrec(p):
@@ -683,62 +695,62 @@ def p_funrec_base(p):
 
 
 def p_oplogico_and(p):
-    "OpLogico: AND"
+    "OpLogico : AND"
     p[0] = "and\n"
 
 
 def p_oplogico_or(p):
-    "OpLogico: OR"
+    "OpLogico : OR"
     p[0] = "or\n"
 
 
 def p_oplogico_lesser(p):
-    "OpLogico: LESSER"
+    "OpLogico : LESSER"
     p[0] = "inf\n"
 
 
 def p_oplogico_greater(p):
-    "OpLogico: GREATER"
+    "OpLogico : GREATER"
     p[0] = "sup\n"
 
 
 def p_oplogico_leq(p):
-    "OpLogico: LEQ"
+    "OpLogico : LEQ"
     p[0] = "infeq\n"
 
 
 def p_oplogico_geq(p):
-    "OpLogico: GEQ"
+    "OpLogico : GEQ"
     p[0] = "supeq\n"
 
 
 def p_oplogico_equal(p):
-    "OpLogico: EQUAL"
+    "OpLogico : EQUAL"
     p[0] = "equal\n"
 
 
 def p_opplus_add(p):
-    "OpPlus: ADD"
+    "OpPlus : ADD"
     p[0] = "add\n"
 
 
 def p_opplus_sub(p):
-    "OpPlus: SUB"
+    "OpPlus : SUB"
     p[0] = "sub\n"
 
 
 def p_opmult_mul(p):
-    "OpMult: MUL"
+    "OpMult : MUL"
     p[0] = "mul\n"
 
 
 def p_opmult_div(p):
-    "OpMult: DIV"
+    "OpMult : DIV"
     p[0] = "div\n"
 
 
 def p_oppow(p):
-    "OpPow: POW"
+    "OpPow : POW"
 
     fp_pow = open("pow.vm", "r")  # retorna erro se ficheiro nao existir
 
@@ -750,6 +762,17 @@ def p_oppow(p):
         p.parser.pow_flag = False
     p[0] = "pusha P\ncall\npop 1\n"
 
+def p_error(p):
+    print("Syntax error!")
+    print(p)
+    # get formatted representation of stack
+    stack_state_str = ' '.join([symbol.type for symbol in parser.symstack][1:])
+
+    print('Syntax error in input! Parser State: {} {}\n . {}\n'
+          .format(parser.state,
+                  stack_state_str,
+                  p))
+
 
 # eu pus este codigo aqui em baixo para nao misturar
 # as cenas da gramatica com outro codigo
@@ -757,7 +780,7 @@ def p_oppow(p):
 
 def gen_atrib_code_stack(p, id, atribop):
     s = ""
-    for tamanho in range(len(p.id_table_stack)-1, 0, -1):
+    for tamanho in range(len(p.parser.id_table_stack)-1, 0, -1):
         if id in p.parser.id_table_stack[tamanho]:
             s = "storel %d\n" % p.parser.id_table_stack[tamanho][id]['endereco']
             break
@@ -772,31 +795,42 @@ def gen_atrib_code_stack(p, id, atribop):
 
 def pop_local_vars(p):
     s = ""
-    min = int("inf")
+    min = float("inf")
     for var in p.parser.id_table_stack[-1]:
         if (n := p.parser.id_table_stack[-1][var]['endereco']) < min:
             min = n
-    if min != int("inf"):
+    if min != float("inf"):
         p.parser.id_table_stack = min
-
-    s += "pop %d\n" % len(p.parser.id_table_stack)
+    s += "pop %d\n" % len(p.parser.id_table_stack[-1])
     p.parser.id_table_stack.pop()
     return s
 
 
-parser = yacc.yacc()
+parser = yacc.yacc(debugfile="yacc.debug")
 
 # 0->global; 1+->local
 # ++ x = (tipo, classe, localidade, endereço, dimenção)
 parser.type_table = {'int'}
 parser.id_table_stack = list()
+parser.id_table_stack.append(dict())
 parser.label_table_stack = list()  # isto vai ser uma lista de pares
-parser.parser.function_table = list()
-parser.pow_flag = True  # leia-se ´e preciso por o texto do pow?
+parser.function_table = dict()
+parser.pow_flag = True  # leia-se ´e preciso por o texto do pow? Devia começar a false?
 parser.internal_label = 0
 parser.global_adress = 0
 parser.local_adress = 0
 parser.function_buffer = []
+parser.final_code = ""
 # a ideia era a cond ter [label:cond ...] e a case ter [lable:body ...]
 # ambas tem uma chave special ":" onde pomos numa lista todas as conds e bodies sem lables
 # na label_table_stack podemos por o par
+
+f = open("test1.ligma", "r")
+ligma_code = f.read()
+
+parser.parse(ligma_code, debug = 0)
+
+f.close()
+
+f = open("test1.vm", "w")
+f.write(parser.final_code)
