@@ -411,8 +411,8 @@ def p_declarraysize_rec(p):
 
 
 def p_declarraysize_empty(p):
-    "DeclArraySize : "
-    p[0] = p[2]
+    "DeclArraySize : '[' NUM ']'"
+    p[0] = list(p[2])
 
 
 def p_atribarray_Leftatribop(p):
