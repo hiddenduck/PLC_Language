@@ -6,9 +6,12 @@ from lex import tokens
 # Está pela ordem que aparecce na gramatica
 # tem dois \n entre as funçoes para os pitoninhos nao gritarem comigo
 
+
 def p_start(p):
     "Start : Axiom"
-    p.parser.final_code = "start\n" + p[1] + "stop\n" + "\n".join(p.parser.function_buffer)
+    p.parser.final_code = "start\n" + \
+        p[1] + "stop\n" + "\n".join(p.parser.function_buffer)
+
 
 def p_axiom_code(p):
     "Axiom : Axiom Code"
@@ -18,7 +21,7 @@ def p_axiom_code(p):
 
 def p_axiom_function(p):
     "Axiom : Axiom Function"
-    #p.parser.function_buffer
+    # p.parser.function_buffer
     p[0] = p[1]
 
 
@@ -62,13 +65,14 @@ def p_block_switch(p):
     p[0] = p[1]
 
 
-#def p_block_empty(p):
+# def p_block_empty(p):
 #    "Block : "
 #    p[0] = ""
 
 def p_body_empty(p):
     "Body : '{' '}'"
     p[0] = ""
+
 
 def p_body_block(p):
     "Body : Block"
@@ -88,10 +92,22 @@ def p_function(p):
                                      'return': p[3][0],
                                      'label': f"F{label}"}
 
-    p.parser.function_buffer.append(
-        f"F{label}:\n" + p[4] + f"storel {num_args}\n" + "return\n")
-    #isto está a guardar onde? Devia ser negativo?
-    #Não está a terminar a sua localidade direito
+    s = ""
+
+    p.parser.local_adress = 0
+
+    s += "pop %d\n" % (len(p.parser.id_table_stack[-1])-int(num_args))
+    p.parser.id_table_stack.pop()
+
+    if p[3][0]:
+        p.parser.function_buffer.append(
+            f"F{label}:\n" + "pushi 0\n" + p[4] + f"pushl 0\nstorel {-num_args}\n" + s + "return\n")
+
+    else:
+        p.parser.function_buffer.append(
+            f"F{label}:\n" + p[4] + f"storel {-num_args}\n" + s + "return\n")
+    # isto está a guardar onde? Devia ser negativo?--------sim
+    # Não está a terminar a sua localidade direito
     p[0] = ""
     p.parser.internal_label += 1
 
@@ -351,16 +367,16 @@ def p_decl(p):
     else:
         p[0] = "pushi 0\n"
         if len(p.parser.id_table_stack) == 1:
-            p.parser.id_table_stack[0][p[2]] = {'classe' : 'var',
-                                         'endereco' : p.parser.global_adress,
-                                         'tamanho' : 1,
-                                         'tipo' : p[1]}
+            p.parser.id_table_stack[0][p[2]] = {'classe': 'var',
+                                                'endereco': p.parser.global_adress,
+                                                'tamanho': 1,
+                                                'tipo': p[1]}
             p.parser.global_adress += 1
         else:
-            p.parser.id_table_stack[-1][p[2]] = {'classe' : 'array',
-                                          'endereco' : p.parser.local_adress,
-                                          'tamanho' : 1,
-                                          'tipo' : p[1]}
+            p.parser.id_table_stack[-1][p[2]] = {'classe': 'array',
+                                                 'endereco': p.parser.local_adress,
+                                                 'tamanho': 1,
+                                                 'tipo': p[1]}
             p.parser.local_adress += 1
 
 
@@ -376,15 +392,15 @@ def p_declarray(p):
         p[0] = f"pushn {res}\n"
         if len(p.parser.id_table_stack) == 1:
             p.parser.id_table_stack[0][p[2]] = {'classe': 'array',
-                                         'endereco': p.parser.global_adress,
-                                         'tamanho': p[3][1:],
-                                         'tipo': p[1]}
+                                                'endereco': p.parser.global_adress,
+                                                'tamanho': p[3][1:],
+                                                'tipo': p[1]}
             p.parser.global_adress += res
         else:
             p.parser.id_table_stack[-1][p[2]] = {'classe': 'array',
-                                          'endereco': p.parser.local_adress,
-                                          'tamanho': p[3][1:],
-                                          'tipo': p[1]}
+                                                 'endereco': p.parser.local_adress,
+                                                 'tamanho': p[3][1:],
+                                                 'tipo': p[1]}
             p.parser.local_adress += res
 
 
@@ -468,15 +484,15 @@ def p_declatrib_left(p):
         p[0] = p[4]
         if len(p.parser.id_table_stack) == 1:
             p.parser.id_table_stack[0][p[2]] = {'classe': 'var',
-                                         'endereco': p.parser.local_adress,
-                                         'tamanho': 1,
-                                         'tipo': p[1]}
+                                                'endereco': p.parser.local_adress,
+                                                'tamanho': 1,
+                                                'tipo': p[1]}
             p.parser.global_adress += 1
         else:
             p.parser.id_table_stack[-1][p[2]] = {'classe': 'var',
-                                          'endereco': p.parser.local_adress,
-                                          'tamanho': 1,
-                                          'tipo': p[1]}
+                                                 'endereco': p.parser.local_adress,
+                                                 'tamanho': 1,
+                                                 'tipo': p[1]}
             p.parser.local_adress += 1
 
 
@@ -489,15 +505,15 @@ def p_declatrib_right(p):
         p[0] = p[1]
         if len(p.parser.id_table_stack) == 1:
             p.parser.id_table_stack[0][p[4]] = {'classe': 'var',
-                                         'endereco': p.parser.global_adress,
-                                         'tamanho': 1,
-                                         'tipo': p[3]}
+                                                'endereco': p.parser.global_adress,
+                                                'tamanho': 1,
+                                                'tipo': p[3]}
             p.parser.global_adress += 1
         else:
             p.parser.id_table_stack[-1][p[4]] = {'classe': 'var',
-                                          'endereco': p.parser.local_adress,
-                                          'tamanho': 1,
-                                          'tipo': p[3]}
+                                                 'endereco': p.parser.local_adress,
+                                                 'tamanho': 1,
+                                                 'tipo': p[3]}
             p.parser.local_adress += 1
 
 
@@ -579,9 +595,11 @@ def p_opuno_minus(p):
     "OpUno : SUB AtribOp"
     p[0] = "pushi 0\n" + p[2] + "sub\n"
 
+
 def p_opuno_print(p):
     "OpUno : '?' AtribOp"
-    p[0] = p[2] + "writei\n" + 'pushs "\n"writes' # funciona para tudo que não seja array
+    # funciona para tudo que não seja array
+    p[0] = p[2] + "writei\n" + r'pushs "\n"' + "\nwrites\n"
 
 
 def p_accessarray(p):
@@ -666,9 +684,11 @@ def p_base_funcall(p):
     "Base : FunCall"
     p[0] = p[1]
 
+
 def p_base_read(p):
     "Base : '¿'"
     p[0] = "read\natoi\n"
+
 
 def p_funcall(p):
     "FunCall : ID '(' FunArg ')'"
@@ -678,7 +698,6 @@ def p_funcall(p):
         f"pusha {label}\n" + \
         "call\n" + \
         f"pop {var_num-1}\n"  # Nao esquecer de por o return em cima da primeira variavelF
-    
 
 
 def p_funarg_funrec(p):
@@ -769,6 +788,7 @@ def p_oppow(p):
         p.parser.pow_flag = False
     p[0] = "pusha P\ncall\npop 1\n"
 
+
 def p_error(p):
     print("Syntax error!")
     print(p)
@@ -807,7 +827,7 @@ def pop_local_vars(p):
         if (n := p.parser.id_table_stack[-1][var]['endereco']) < min:
             min = n
     if min != float("inf"):
-        p.parser.id_table_stack = min
+        p.parser.local_adress = min
     s += "pop %d\n" % len(p.parser.id_table_stack[-1])
     p.parser.id_table_stack.pop()
     return s
@@ -835,7 +855,7 @@ parser.final_code = ""
 f = open("test1.ligma", "r")
 ligma_code = f.read()
 
-parser.parse(ligma_code, debug = 0)
+parser.parse(ligma_code, debug=0)
 
 f.close()
 
