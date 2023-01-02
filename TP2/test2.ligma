@@ -1,9 +1,11 @@
-h : x,z --> z {
-    int x <- 0;
-    int x;
-    int x;
-    (1->x)->z;
+h : x,z --> y {
+    if (x > z?)
+        (x+z)->y;
+    else {
+        y <- -2;
+    }
 }
 
-int z <- h(1,2);
-?z;
+int z <- h(1,2)?;
+z?;
+¿?;

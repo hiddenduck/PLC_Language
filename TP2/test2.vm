@@ -1,9 +1,13 @@
 start
 pushi 1
 pushi 2
-pusha F0
+pusha F1
 call
 pop 1
+dup 1
+writei
+pushs "\n"
+writes
 pushg 0
 dup 1
 writei
@@ -11,16 +15,27 @@ pushs "\n"
 writes
 pop 1
 stop
-F0:
+F1:
 pushi 0
-pushi 0
-pushi 0
-pushi 0
-pushi 1
+pushl -2
+pushl -1
 dup 1
-storel 1
-storel -1
+writei
+pushs "\n"
+writes
+sup
+jz I0
+pushl -2
+pushl -1
+add
+storel 0
+jump E0
+I0:
+pushi -2
+storel 0
+E0:
+pop 0
 pushl 0
 storel -2
-pop 0
+pop 1
 return

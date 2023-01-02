@@ -127,10 +127,14 @@ def p_funcases_funextra_rarrow(p):
                                          'tipo': 'int'}
 
     for i in range(1, len(p[1])+1):
-        p.parser.id_table_stack[-1][p[1][-i]] = {'classe': 'var',
-                                                 'endereco': -i,
-                                                 'tamanho': 1,
-                                                 'tipo': 'int'}
+        if p[1][-i] not in p.parser.id_table_stack[-1]:
+            p.parser.id_table_stack[-1][p[1][-i]] = {'classe': 'var',
+                                                     'endereco': -i,
+                                                     'tamanho': 1,
+                                                     'tipo': 'int'}
+        else:
+            print("ERROR: Variable %s already declared locally." % p[1][-i])
+            p_error(p)
     p[0] = (True, p[1])
     p.parser.local_adress = 1
 
@@ -174,7 +178,7 @@ def p_if_scope(p):
 
 def p_if(p):
     "If : IfScope AtribOp Body"
-    label = p, parser.id_table_stack
+    label = p.parser.internal_label
     p[0] = p[2] + \
         f"jz I{label}\n" + \
         p[3] + \
@@ -195,7 +199,7 @@ def p_else_scope(p):
 def p_ifelse(p):
     "IfElse : IfScope AtribOp Body ElseScope Body"
 
-    label = p, parser.id_table_stack
+    label = p.parser.internal_label
     p[0] = p[2] + f"jz I{label}\n" + \
         p[3] + \
         f"jump E{label}\n" + \
@@ -382,7 +386,8 @@ def p_decl(p):
                                                  'tipo': p[1]}
             p.parser.local_adress += 1
         else:
-            print("ERROR : Variable %s already declared." % p[2])
+            print("ERROR : Variable %s already declared locally." % p[2])
+            p_error(p)
 
 
 def p_declarray(p):
@@ -577,9 +582,9 @@ def p_atrib_array(p):
     p[0] = p[1]
 
 
-def p_op_opuno(p):
-    "Op : OpUno"
-    p[0] = p[1]
+#def p_op_opuno(p):
+#    "Op : OpUno"
+#    p[0] = p[1]
 
 
 def p_op_opbin(p):
@@ -588,7 +593,7 @@ def p_op_opbin(p):
 
 
 def p_opuno_neg(p):
-    "OpUno : NEG AtribOp"
+    "OpUno : NEG Base"
     p[0] = p[2] + 'not\n'
 
 
@@ -598,14 +603,14 @@ def p_opuno_accessarray(p):
 
 
 def p_opuno_minus(p):
-    "OpUno : SUB AtribOp"
+    "OpUno : SUB Base"
     p[0] = "pushi 0\n" + p[2] + "sub\n"
 
 
 def p_opuno_print(p):
-    "OpUno : '?' AtribOp"
+    "OpUno : Base '?'"
     # funciona para tudo que não seja array
-    p[0] = p[2] + "dup 1\n" + "writei\n" + r'pushs "\n"' + "\nwrites\n"
+    p[0] = p[1] + "dup 1\n" + "writei\n" + r'pushs "\n"' + "\nwrites\n"
 
 
 def p_accessarray(p):
@@ -662,6 +667,9 @@ def p_termpow_base(p):
     "TermPow : Base"
     p[0] = p[1]
 
+def p_base_opuno(p):
+    "Base : OpUno"
+    p[0] = p[1]
 
 def p_base_exp(p):
     "Base : '(' AtribOp ')'"
@@ -807,6 +815,7 @@ def p_error(p):
           .format(parser.state,
                   stack_state_str,
                   p))
+    raise SyntaxError
 
 
 # eu pus este codigo aqui em baixo para nao misturar
