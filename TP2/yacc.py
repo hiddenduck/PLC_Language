@@ -579,6 +579,10 @@ def p_opuno_minus(p):
     "OpUno : SUB AtribOp"
     p[0] = "pushi 0\n" + p[2] + "sub\n"
 
+def p_opuno_print(p):
+    "OpUno : '?' AtribOp"
+    p[0] = p[2] + "writei\n" + 'pushs "\n"writes' # funciona para tudo que não seja array
+
 
 def p_accessarray(p):
     "AccessArray : ID ArraySize"
@@ -662,6 +666,9 @@ def p_base_funcall(p):
     "Base : FunCall"
     p[0] = p[1]
 
+def p_base_read(p):
+    "Base : '¿'"
+    p[0] = "read\natoi\n"
 
 def p_funcall(p):
     "FunCall : ID '(' FunArg ')'"
