@@ -4,38 +4,30 @@ pushi 2
 pusha F1
 call
 pop 1
-pushi 1
-pushi 2
-pusha F1
-call
-pop 1
 stop
 F1:
+pushi 0
 pushi 1
 pushi 2
 W0:
 pushl -1
-pushi 0
-supeq
+pushi 5
+infeq
 jz WE0
-pushl 0
 pushl 1
-add
-storel 0
-pushl 1
-pushl 2
-mul
-storel 1
-pushl -2
-pushl 2
-add
-storel 2
+dup 1
+writei
+pushs "\n"
+writes
+pop 1
 pushl -1
 pushi 1
-sub
+add
 storel -1
 jump W0
 WE0:
 pop 0
-storel 2
+pushl 0
+storel -2
+pop 3
 return

@@ -1,13 +1,10 @@
-f : x,n -> z {
+f: x,n -> z {
     int a <- 1;
     2 -> int b;
-    while (n >= 0) {
-        z <- z + a;
-        a <- a * b;
-        b <- x+ b;
-        n <- n - 1;
-    }
+    while (n <= 5) {
+        ?a;
+        n + 1 ---> n;
+}
 }
 
-f(1,2);
 int z <- f(1,2);

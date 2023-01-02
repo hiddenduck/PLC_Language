@@ -88,6 +88,7 @@ def p_function(p):
     "Function : ID FunScope FunCases Body"
     label = p.parser.internal_label
     num_args = len(p[3][1])
+    print(p[1])
     p.parser.function_table[p[1]] = {'num_args': num_args,
                                      'return': p[3][0],
                                      'label': f"F{label}"}
@@ -172,7 +173,7 @@ def p_if_scope(p):
 
 
 def p_if(p):
-    "If : IfScope Exp Body"
+    "If : IfScope AtribOp Body"
     label = p, parser.id_table_stack
     p[0] = p[2] + \
         f"jz I{label}\n" + \
@@ -192,7 +193,7 @@ def p_else_scope(p):
 
 
 def p_ifelse(p):
-    "IfElse : IfScope Exp Body ElseScope Body"
+    "IfElse : IfScope AtribOp Body ElseScope Body"
 
     label = p, parser.id_table_stack
     p[0] = p[2] + f"jz I{label}\n" + \
@@ -213,7 +214,7 @@ def p_while_scope(p):
 
 
 def p_while(p):
-    "While : WhileScope '(' Exp ')' Body"
+    "While : WhileScope '(' AtribOp ')' Body"
 
     lable_num = p.parser.internal_label
     p[0] = f"W{lable_num}:\n" + \
@@ -332,7 +333,7 @@ def p_exp_atrib(p):
 
 def p_exp_op(p):
     "Exp : Op"
-    p[0] = p[1]
+    p[0] = p[1] + "pop 1\n"
 
 
 def p_exp_decl(p):
@@ -519,13 +520,13 @@ def p_declatrib_right(p):
 
 def p_atribnum_left(p):
     "AtribNum : ID LARROW AtribOp"
-    p[0] = p[3] + "dup 1\n" + gen_atrib_code_stack(p, p[1])
+    p[0] = p[3] + "dup 1\n" + gen_atrib_code_stack(p, p[1], p[3])
 
 
 def p_atribnum_right(p):
     "AtribNum : AtribOp LARROW ID"
     # 2+4->x++
-    p[0] = p[1] + "dup 1\n" + gen_atrib_code_stack(p, p[3])
+    p[0] = p[1] + "dup 1\n" + gen_atrib_code_stack(p, p[3], p[1])
 
 
 def p_atribnum_array(p):
@@ -540,7 +541,7 @@ def p_atrib_left(p):
 
 def p_atrib_right(p):
     "Atrib : AtribOp RARROW ID"
-    p[0] = p[1] + gen_atrib_code_stack(p, p[1], p[3])
+    p[0] = p[1] + gen_atrib_code_stack(p, p[3], p[1])
 
 
 def p_atrib_equiv(p):
@@ -599,7 +600,7 @@ def p_opuno_minus(p):
 def p_opuno_print(p):
     "OpUno : '?' AtribOp"
     # funciona para tudo que não seja array
-    p[0] = p[2] + "writei\n" + r'pushs "\n"' + "\nwrites\n"
+    p[0] = p[2] + "dup 1\n" + "writei\n" + r'pushs "\n"' + "\nwrites\n"
 
 
 def p_accessarray(p):
@@ -692,12 +693,14 @@ def p_base_read(p):
 
 def p_funcall(p):
     "FunCall : ID '(' FunArg ')'"
+    print(p.parser.function_table)
+    print(p[1])
     label = p.parser.function_table[p[1]]['label']
     var_num = p.parser.function_table[p[1]]['num_args']
     p[0] = p[3] + \
         f"pusha {label}\n" + \
         "call\n" + \
-        f"pop {var_num-1}\n"  # Nao esquecer de por o return em cima da primeira variavelF
+        f"pop {var_num-int(p.parser.function_table[p[1]]['return'])}\n"  # Nao esquecer de por o return em cima da primeira variavelF
 
 
 def p_funarg_funrec(p):
