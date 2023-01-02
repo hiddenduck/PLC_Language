@@ -1,0 +1,9 @@
+h : x,z --> z {
+    int x <- 0;
+    int x;
+    int x;
+    (1->x)->z;
+}
+
+int z <- h(1,2);
+?z;

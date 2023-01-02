@@ -1,0 +1,26 @@
+start
+pushi 1
+pushi 2
+pusha F0
+call
+pop 1
+pushg 0
+dup 1
+writei
+pushs "\n"
+writes
+pop 1
+stop
+F0:
+pushi 0
+pushi 0
+pushi 0
+pushi 0
+pushi 1
+dup 1
+storel 1
+storel -1
+pushl 0
+storel -2
+pop 0
+return

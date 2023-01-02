@@ -282,7 +282,8 @@ def p_switch(p):
 # nas conds passar para cima um par (conds_com_lable (dict?), conds_sem_lable (lista?))
 def p_conds_rec(p):
     "Conds : Conds ',' Cond"
-    p[0] = p[1].append(p[3])
+    p[0] = p[3]
+    p[0].append(p[1])
 
 
 def p_conds_base(p):
@@ -304,7 +305,8 @@ def p_cond_empty(p):
 
 def p_cases_rec(p):
     "Cases : Cases Case "
-    p[0] = p[1].append(p[2])
+    p[0] = p[2]
+    p[0].append(p[1])
 
 
 def p_cases_base(p):
@@ -373,12 +375,14 @@ def p_decl(p):
                                                 'tamanho': 1,
                                                 'tipo': p[1]}
             p.parser.global_adress += 1
-        else:
+        elif p[2] not in p.parser.id_table_stack[-1]:
             p.parser.id_table_stack[-1][p[2]] = {'classe': 'array',
                                                  'endereco': p.parser.local_adress,
                                                  'tamanho': 1,
                                                  'tipo': p[1]}
             p.parser.local_adress += 1
+        else:
+            print("ERROR : Variable %s already declared." % p[2])
 
 
 def p_declarray(p):
@@ -407,7 +411,8 @@ def p_declarray(p):
 
 def p_declarraysize_rec(p):
     "DeclArraySize : DeclArraySize '[' NUM ']'"
-    p[0] = p[1].append(p[2])
+    p[0] = p[2]
+    p[0].append(p[1])
 
 
 def p_declarraysize_empty(p):
@@ -524,7 +529,7 @@ def p_atribnum_left(p):
 
 
 def p_atribnum_right(p):
-    "AtribNum : AtribOp LARROW ID"
+    "AtribNum : AtribOp RARROW ID"
     # 2+4->x++
     p[0] = p[1] + "dup 1\n" + gen_atrib_code_stack(p, p[3], p[1])
 
@@ -855,12 +860,12 @@ parser.final_code = ""
 # ambas tem uma chave special ":" onde pomos numa lista todas as conds e bodies sem lables
 # na label_table_stack podemos por o par
 
-f = open("test1.ligma", "r")
+f = open("test2.ligma", "r")
 ligma_code = f.read()
 
-parser.parse(ligma_code, debug=0)
+parser.parse(ligma_code, debug=1)
 
 f.close()
 
-f = open("test1.vm", "w")
+f = open("test2.vm", "w")
 f.write(parser.final_code)
