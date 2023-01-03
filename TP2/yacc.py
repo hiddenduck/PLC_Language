@@ -416,13 +416,13 @@ def p_declarray(p):
 
 def p_declarraysize_rec(p):
     "DeclArraySize : DeclArraySize '[' NUM ']'"
-    p[0] = p[2]
-    p[0].append(p[1])
+    p[0] = p[1]
+    p[0].append(p[3])
 
 
 def p_declarraysize_empty(p):
     "DeclArraySize : '[' NUM ']'"
-    p[0] = list(p[2])
+    p[0] = [p[2]]
 
 
 def p_atribarray_Leftatribop(p):
@@ -478,7 +478,7 @@ def p_atribarray_Rightatribop(p):
 
 def p_arraysize_rec(p):
     "ArraySize : ArraySize '[' AtribOp ']'"
-    p[0] = p[2] + p[1]  # array nao ´e uma lista
+    p[0] = p[3] + p[1]  # array nao ´e uma lista
 
 
 def p_arraysize_empty(p):
@@ -582,7 +582,7 @@ def p_atrib_array(p):
     p[0] = p[1]
 
 
-#def p_op_opuno(p):
+# def p_op_opuno(p):
 #    "Op : OpUno"
 #    p[0] = p[1]
 
@@ -667,9 +667,11 @@ def p_termpow_base(p):
     "TermPow : Base"
     p[0] = p[1]
 
+
 def p_base_opuno(p):
     "Base : OpUno"
     p[0] = p[1]
+
 
 def p_base_exp(p):
     "Base : '(' AtribOp ')'"
@@ -869,12 +871,12 @@ parser.final_code = ""
 # ambas tem uma chave special ":" onde pomos numa lista todas as conds e bodies sem lables
 # na label_table_stack podemos por o par
 
-f = open("test2.ligma", "r")
+f = open("test1.ligma", "r")
 ligma_code = f.read()
 
-parser.parse(ligma_code, debug=1)
+parser.parse(ligma_code, debug=0)
 
 f.close()
 
-f = open("test2.vm", "w")
+f = open("test1.vm", "w")
 f.write(parser.final_code)
