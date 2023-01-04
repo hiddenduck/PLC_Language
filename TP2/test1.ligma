@@ -2,9 +2,9 @@ f: x,n -> z {
     int a <- 1;
     2 -> int b;
     while (n <= 5) {
-        ?a;
+        a?;
         n + 1 ---> n;
-}
+    }
 }
 
 int z <- f(1,2);

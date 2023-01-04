@@ -10,7 +10,7 @@ from lex import tokens
 def p_start(p):
     "Start : Axiom"
     p.parser.final_code = "start\n" + \
-        p[1] + "stop\n" + "\n".join(p.parser.function_buffer)
+        p[1] + "stop\n" + "".join(p.parser.function_buffer)
 
 
 def p_axiom_code(p):
@@ -88,7 +88,6 @@ def p_function(p):
     "Function : ID FunScope FunCases Body"
     label = p.parser.internal_label
     num_args = len(p[3][1])
-    print(p[1])
     p.parser.function_table[p[1]] = {'num_args': num_args,
                                      'return': p[3][0],
                                      'label': f"F{label}"}
@@ -708,8 +707,7 @@ def p_base_read(p):
 
 def p_funcall(p):
     "FunCall : ID '(' FunArg ')'"
-    print(p.parser.function_table)
-    print(p[1])
+    #print(p.parser.function_table)
     label = p.parser.function_table[p[1]]['label']
     var_num = p.parser.function_table[p[1]]['num_args']
     p[0] = p[3] + \
@@ -871,12 +869,16 @@ parser.final_code = ""
 # ambas tem uma chave special ":" onde pomos numa lista todas as conds e bodies sem lables
 # na label_table_stack podemos por o par
 
-f = open("test1.ligma", "r")
+file_in = input()
+
+f = open(file_in, "r")
 ligma_code = f.read()
 
 parser.parse(ligma_code, debug=0)
 
 f.close()
 
-f = open("test1.vm", "w")
-f.write(parser.final_code)
+#f = open("test1.vm", "w")
+#f.write(parser.final_code)
+
+print(parser.final_code)
