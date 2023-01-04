@@ -7,10 +7,14 @@ from lex import tokens
 # tem dois \n entre as funçoes para os pitoninhos nao gritarem comigo
 
 
-def p_start(p):
+def p_start_axiom(p):
     "Start : Axiom"
     p.parser.final_code = "start\n" + \
         p[1] + "stop\n" + "".join(p.parser.function_buffer)
+
+def p_start_empty(p):
+    "Start : "
+    p.parser.fina_code = ""
 
 
 def p_axiom_code(p):
@@ -426,20 +430,25 @@ def p_declarraysize_empty(p):
 
 def p_atribarray_Leftatribop(p):
     "AtribArray : ID ArraySize LARROW AtribOp"
+    endereco = 0
     for i in range(len(p.parser.id_table_stack)-1, 0, -1):
         if p[1] in p.parser.id_table_stack[i]:
+            endereco = p.parser.id_table_stack[i][p[1]]['endereco']
             s = "pushfp\n"
             # tamanho nao guarda o primeiro!!"!"!!!!!""!"!"!"!"!"!"
             sizes = p.parser.id_table_stack[i][p[1]]['tamanho']
             break
     else:
         if p[1] in p.parser.id_table_stack[0]:
+            endereco = p.parser.id_table_stack[0][p[1]]['endereco']
             s = "pushgp\n"
             # tamanho nao guarda o primeiro!!"!"!!!!!""!"!"!"!"!"!"
             sizes = p.parser.id_table_stack[0][p[1]]['tamanho']
         else:
             print("ERROR: variable not in scope")
             return
+    if endereco != 0:
+        s += f"pushi {endereco}\npadd\n"
     s += p[2]
     for size in sizes:
         s += f"pushi {size}\nmul\nadd\n"
@@ -874,7 +883,7 @@ file_in = input()
 f = open(file_in, "r")
 ligma_code = f.read()
 
-parser.parse(ligma_code, debug=0)
+parser.parse(ligma_code, debug=1)
 
 f.close()
 
