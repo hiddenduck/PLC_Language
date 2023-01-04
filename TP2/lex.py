@@ -43,38 +43,38 @@ reserved = {
     'switch' : 'SWITCH'
 }
 
-t_RARROW = '-+>'
+t_RARROW = r'-+>'
 
-t_LARROW = '<-+'
+t_LARROW = r'<-+'
 
-t_SWAP = '<-+>'
+t_SWAP = r'<-+>'
 
-t_NEG = '~ | !'
+t_NEG = r'~ | !'
 
-t_AND = '&'
+t_AND = r'&'
 
-t_OR = '\|'
+t_OR = r'\|'
 
-t_LESSER = '<'
+t_LESSER = r'<'
 
-t_GREATER = '>'
+t_GREATER = r'>'
 
-t_LEQ = '<='
+t_LEQ = r'<='
 
-t_GEQ = '>='
+t_GEQ = r'>='
 
-t_EQUAL = '=+'
+t_EQUAL = r'=+'
 
-t_ADD = '\+'
+t_ADD = r'\+'
 
 #O lex não consegue apanhar o a -1 porque acha que (-1) é um número oops
-t_SUB = '-'
+t_SUB = r'-'
 
-t_MUL = '\*'
+t_MUL = r'\*'
 
-t_DIV = '/'
+t_DIV = r'/'
 
-t_POW = '\^'
+t_POW = r'\^'
 
 def t_ANY_error(t):
     print('Illegal character: %s', t.value[0])
@@ -91,7 +91,7 @@ def t_Funcao_RETURN(t):
     return t
 
 def t_ID(t):
-    '[a-zA-Z]\w*' # \w contém o _ e não queremos vars a começar por _
+    r'[a-zA-Z]\w*' # \w contém o _ e não queremos vars a começar por _
     t.type = reserved.get(t.value, 'ID')
     return t
 
