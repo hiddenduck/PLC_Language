@@ -1,10 +1,14 @@
 #include "stdio.h"
 
+void f() {
+
+}
 
 int main () {
-    int x[*];
     int y;
-    x[y = 20] = 0;
-    printf("%d. %d", y, x[y]);
+    printf("%d", y);
+    f();
+    1 + f();
     return 0;
 }
+

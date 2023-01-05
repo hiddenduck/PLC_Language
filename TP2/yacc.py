@@ -18,7 +18,7 @@ def p_start_empty(p):
 
 
 def p_axiom_code(p):
-    "Axiom : Axiom Code"
+    "Axiom : Axiom Block"
     #p[0] = "\n".join(p.parser.function_buffer) + "start" + p[1] + p[2] + "stop"
     p[0] = p[1] + p[2]
 
@@ -99,8 +99,9 @@ def p_function(p):
     s = ""
 
     p.parser.local_adress = 0
-
-    s += "pop %d\n" % (len(p.parser.id_table_stack[-1])-int(num_args))
+    local_args = len(p.parser.id_table_stack[-1])-int(num_args)
+    if local_args > 0:
+        s += "pop %d\n" % (local_args)
     p.parser.id_table_stack.pop()
 
     if p[3][0]:
@@ -109,7 +110,7 @@ def p_function(p):
 
     else:
         p.parser.function_buffer.append(
-            f"F{label}:\n" + p[4] + f"storel {-num_args}\n" + s + "return\n")
+            f"F{label}:\n" + p[4] + s + "return\n")
     # isto está a guardar onde? Devia ser negativo?--------sim
     # Não está a terminar a sua localidade direito
     p[0] = ""
@@ -154,6 +155,15 @@ def p_funcases_rarrow(p):
 
 def p_funcases_funextra(p):
     "FunCases : FunExtra"
+    for i in range(1, len(p[1])+1):
+        if p[1][-i] not in p.parser.id_table_stack[-1]:
+            p.parser.id_table_stack[-1][p[1][-i]] = {'classe': 'var',
+                                                     'endereco': -i,
+                                                     'tamanho': 1,
+                                                     'tipo': 'int'}
+        else:
+            print("ERROR: Variable %s already declared locally." % p[1][-i])
+            p_error(p)
     p[0] = (False, p[1])
 
 
@@ -335,6 +345,13 @@ def p_case_empty(p):
     p[0] = ':'
 
 
+"""def p_exp_funcall(p):
+    "Exp : FunCall"
+    if p[1][1]:
+        p[0] = p[1][0] + "pop 1\n"
+    else:
+        p[0] = p[1][0]"""
+
 def p_exp_atrib(p):
     "Exp : Atrib"
     p[0] = p[1]
@@ -430,23 +447,30 @@ def p_declarraysize_empty(p):
 
 def p_atribarray_Leftatribop(p):
     "AtribArray : ID ArraySize LARROW AtribOp"
-    endereco = 0
     for i in range(len(p.parser.id_table_stack)-1, 0, -1):
         if p[1] in p.parser.id_table_stack[i]:
-            endereco = p.parser.id_table_stack[i][p[1]]['endereco']
-            s = "pushfp\n"
-            # tamanho nao guarda o primeiro!!"!"!!!!!""!"!"!"!"!"!"
-            sizes = p.parser.id_table_stack[i][p[1]]['tamanho']
-            break
+            if p.parser.id_table_stack[i][p[1]]['classe'] == 'array':
+                endereco = p.parser.id_table_stack[i][p[1]]['endereco']
+                s = "pushfp\n"
+                # tamanho nao guarda o primeiro!!"!"!!!!!""!"!"!"!"!"!"
+                sizes = p.parser.id_table_stack[i][p[1]]['tamanho']
+                break
+            else:
+                print("ERROR: Variable %s is not of array type" % p[1])
+                p_error(p)
     else:
         if p[1] in p.parser.id_table_stack[0]:
-            endereco = p.parser.id_table_stack[0][p[1]]['endereco']
-            s = "pushgp\n"
-            # tamanho nao guarda o primeiro!!"!"!!!!!""!"!"!"!"!"!"
-            sizes = p.parser.id_table_stack[0][p[1]]['tamanho']
+            if p.parser.id_table_stack[0][p[1]]['classe'] == 'array':
+                endereco = p.parser.id_table_stack[0][p[1]]['endereco']
+                s = "pushgp\n"
+                # tamanho nao guarda o primeiro!!"!"!!!!!""!"!"!"!"!"!"
+                sizes = p.parser.id_table_stack[0][p[1]]['tamanho']
+            else:
+                print("ERROR: Variable %s is not of array type" % p[1])
+                p_error(p)
         else:
             print("ERROR: variable not in scope")
-            return
+            p_error(p)
     if endereco != 0:
         s += f"pushi {endereco}\npadd\n"
     s += p[2]
@@ -706,7 +730,12 @@ def p_base_num(p):
 
 def p_base_funcall(p):
     "Base : FunCall"
-    p[0] = p[1]
+    if (p[1][1]):
+        p[0] = p[1][0]
+    else:
+        print("ERROR: Function %s doesn't return any value" % p[1][2] + \
+        " and is used in an operation.")
+        p_error(p)
 
 
 def p_base_read(p):
@@ -717,12 +746,22 @@ def p_base_read(p):
 def p_funcall(p):
     "FunCall : ID '(' FunArg ')'"
     #print(p.parser.function_table)
+    if p[1] not in p.parser.function_table:
+        print("ERROR: Function %s not defined" % p[1])
+        p_error(p)
     label = p.parser.function_table[p[1]]['label']
     var_num = p.parser.function_table[p[1]]['num_args']
-    p[0] = p[3] + \
+    if var_num == len(p[3]):
+        p[0] = ("".join(p[3]) + \
         f"pusha {label}\n" + \
         "call\n" + \
-        f"pop {var_num-int(p.parser.function_table[p[1]]['return'])}\n"  # Nao esquecer de por o return em cima da primeira variavelF
+        f"pop {var_num-int(p.parser.function_table[p[1]]['return'])}\n",
+        p.parser.function_table[p[1]]['return'],
+        p[1])  # Nao esquecer de por o return em cima da primeira variavelF
+    else:
+        print("ERROR: Number of arguments given %d is not equal to needed %d, for function %s"
+        % (len(p[3]), var_num, p[1]))
+        p_error(p)
 
 
 def p_funarg_funrec(p):
@@ -732,12 +771,13 @@ def p_funarg_funrec(p):
 
 def p_funarg_empty(p):
     "FunArg : "
-    p[0] = ""
+    p[0] = []
 
 
 def p_funrec_rec(p):
     "FunRec : FunRec ',' AtribOp"
-    p[0] = p[1] + p[3]
+    p[0] = [p[1]]
+    p[0].append(p[3])
 
 
 def p_funrec_base(p):
@@ -816,7 +856,7 @@ def p_oppow(p):
 
 def p_error(p):
     print("Syntax error!")
-    print(p)
+    #print(p)
     # get formatted representation of stack
     stack_state_str = ' '.join([symbol.type for symbol in parser.symstack][1:])
 
