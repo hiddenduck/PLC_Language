@@ -43,6 +43,12 @@ def p_code_empty(p):
     "Code : Block"
     p[0] = p[1]
 
+def p_block_funcall(p):
+    "Block : FunCall ';'"
+    if p[1][1]:
+        p[0] = p[1][0] + "pop 1\n"
+    else:
+        p[0] = p[1][0]
 
 def p_block_exp(p):
     "Block : Exp ';'"
@@ -602,7 +608,7 @@ def p_atrib_equiv(p):
             return
 
     if p[1] not in p.parser.id_table_stack[0] or p[3] not in p.parser.id_table_stack[0]:
-        # depois podemos por para dizer qual foi a gaja
+        #falta também ver se são vars normais, não temos swap para arrays?
         print("ERROR: one of the variables not in scope")
     else:
         p[0] = f"pushg {end1}\npushg {end2}\nstoreg {end1}\nstoreg {end2}\n"
@@ -650,13 +656,13 @@ def p_accessarray(p):
     for i in range(len(p.parser.id_table_stack)-1, 0, -1):
         if p[1] in p.parser.id_table_stack[i]:
             end = p.parser.id_table_stack[i][p[1]]['endereco']
-            p[0] = f"pushl {end}\n" + p[2] + "loadn\n"
+            p[0] = f"pushfp\npushi {end}\npadd\n" + p[2] + "loadn\n"
             return
     if p[1] not in p.parser.id_table_stack[0]:
         print("ERROR: variable not in scope")
     else:
         end = p.parser.id_table_stack[0][p[1]]['endereco']
-        p[0] = f"pushg {end}\n" + p[2] + "loadn\n"
+        p[0] = f"pushgp\npushi {end}\npadd\n" + p[2] + "loadn\n"
     return
 
 
