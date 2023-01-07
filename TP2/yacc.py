@@ -12,6 +12,7 @@ def p_start_axiom(p):
     p.parser.final_code = "start\n" + \
         p[1] + "stop\n" + "".join(p.parser.function_buffer)
 
+
 def p_start_empty(p):
     "Start : "
     p.parser.fina_code = ""
@@ -43,12 +44,14 @@ def p_code_empty(p):
     "Code : Block"
     p[0] = p[1]
 
+
 def p_block_funcall(p):
     "Block : FunCall ';'"
     if p[1][1]:
         p[0] = p[1][0] + "pop 1\n"
     else:
         p[0] = p[1][0]
+
 
 def p_block_exp(p):
     "Block : Exp ';'"
@@ -358,6 +361,7 @@ def p_case_empty(p):
     else:
         p[0] = p[1][0]"""
 
+
 def p_exp_atrib(p):
     "Exp : Atrib"
     p[0] = p[1]
@@ -595,6 +599,8 @@ def p_atrib_right(p):
 def p_atrib_equiv(p):
     "Atrib : ID SWAP ID"
     flag1 = flag2 = True
+    end1 = p.parser.id_table_stack[0][p[1]]['endereco']
+    end2 = p.parser.id_table_stack[0][p[3]]['endereco']
     for i in range(len(p.parser.id_table_stack)-1, 0, -1):
 
         if flag1 and p[1] in p.parser.id_table_stack[i]:
@@ -608,7 +614,7 @@ def p_atrib_equiv(p):
             return
 
     if p[1] not in p.parser.id_table_stack[0] or p[3] not in p.parser.id_table_stack[0]:
-        #falta também ver se são vars normais, não temos swap para arrays?
+        # falta também ver se são vars normais, não temos swap para arrays?
         print("ERROR: one of the variables not in scope")
     else:
         p[0] = f"pushg {end1}\npushg {end2}\nstoreg {end1}\nstoreg {end2}\n"
@@ -739,8 +745,8 @@ def p_base_funcall(p):
     if (p[1][1]):
         p[0] = p[1][0]
     else:
-        print("ERROR: Function %s doesn't return any value" % p[1][2] + \
-        " and is used in an operation.")
+        print("ERROR: Function %s doesn't return any value" % p[1][2] +
+              " and is used in an operation.")
         p_error(p)
 
 
@@ -751,22 +757,22 @@ def p_base_read(p):
 
 def p_funcall(p):
     "FunCall : ID '(' FunArg ')'"
-    #print(p.parser.function_table)
+    # print(p.parser.function_table)
     if p[1] not in p.parser.function_table:
         print("ERROR: Function %s not defined" % p[1])
         p_error(p)
     label = p.parser.function_table[p[1]]['label']
     var_num = p.parser.function_table[p[1]]['num_args']
     if var_num == len(p[3]):
-        p[0] = ("".join(p[3]) + \
-        f"pusha {label}\n" + \
-        "call\n" + \
-        f"pop {var_num-int(p.parser.function_table[p[1]]['return'])}\n",
-        p.parser.function_table[p[1]]['return'],
-        p[1])  # Nao esquecer de por o return em cima da primeira variavelF
+        p[0] = ("".join(p[3]) +
+                f"pusha {label}\n" +
+                "call\n" +
+                f"pop {var_num-int(p.parser.function_table[p[1]]['return'])}\n",
+                p.parser.function_table[p[1]]['return'],
+                p[1])  # Nao esquecer de por o return em cima da primeira variavelF
     else:
         print("ERROR: Number of arguments given %d is not equal to needed %d, for function %s"
-        % (len(p[3]), var_num, p[1]))
+              % (len(p[3]), var_num, p[1]))
         p_error(p)
 
 
@@ -862,7 +868,7 @@ def p_oppow(p):
 
 def p_error(p):
     print("Syntax error!")
-    #print(p)
+    # print(p)
     # get formatted representation of stack
     stack_state_str = ' '.join([symbol.type for symbol in parser.symstack][1:])
 
@@ -934,6 +940,6 @@ parser.parse(ligma_code, debug=1)
 f.close()
 
 #f = open("test1.vm", "w")
-#f.write(parser.final_code)
+# f.write(parser.final_code)
 
 print(parser.final_code)
