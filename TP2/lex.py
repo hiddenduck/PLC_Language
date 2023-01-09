@@ -29,12 +29,14 @@ tokens = (
 'SUB',
 'MUL',
 'DIV',
-'POW'
+'POW',
+'READ',
+'PRINT'
 )
 
 t_ANY_ignore = ' \n\t'
 
-literals = ['(',')','[',']','{','}',':',',',';','?','¿']
+literals = ['(',')','[',']','{','}',':',',',';']
 
 reserved = {
     'if' : 'IF',
@@ -76,6 +78,10 @@ t_DIV = r'/'
 
 t_POW = r'\^'
 
+t_PRINT = r'\>\?'
+
+t_READ = r'\<\?'
+
 def t_ANY_error(t):
     print('Illegal character: %s', t.value[0])
 
@@ -96,7 +102,7 @@ def t_ID(t):
     return t
 
 def t_NUM(t):
-    r'-?[0-9]+'
+    r'[0-9]+'
     t.value = int(t.value)
     return t
 

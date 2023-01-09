@@ -652,7 +652,7 @@ def p_opuno_minus(p):
 
 
 def p_opuno_print(p):
-    "OpUno : Base '?'"
+    "OpUno : Base PRINT"
     # funciona para tudo que não seja array
     p[0] = p[1] + "dup 1\n" + "writei\n" + r'pushs "\n"' + "\nwrites\n"
 
@@ -751,7 +751,7 @@ def p_base_funcall(p):
 
 
 def p_base_read(p):
-    "Base : '¿'"
+    "Base : READ"
     p[0] = "read\natoi\n"
 
 
