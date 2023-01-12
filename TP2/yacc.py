@@ -276,10 +276,10 @@ def p_switch(p):
 
     # testes de integridade das tabelas
     if cond_table.keys() != case_table.keys():
-        print("ERROR")  # pode ser feito melhor
+        print("ERROR: Condition labels don't match case labels")  # pode ser feito melhor
     if len(cond_table[':']) != len(case_table[':']):
         # estou a fazer com que todas as condiçoes apareçam e sejam chamadas uma vez (pode ser mudado)
-        print("ERROR")
+        print("ERROR: Number of unlabeled conditions doesn't match number of unlabeled cases")
 
     end_label_num = p.parser.internal_label
     p.parser.internal_label += 1
