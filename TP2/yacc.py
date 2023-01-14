@@ -253,15 +253,19 @@ def p_while(p):
     "While : WhileScope '(' AtribOp ')' Body"
 
     lable_num = p.parser.internal_label
+
+    pop_local = pop_local_vars(p)
+
     p[0] = f"W{lable_num}:\n" + \
         p[3] + \
         f"jz WE{lable_num}\n" + \
         p[5] + \
+        pop_local + \
         f"jump W{lable_num}\n" + \
-        f"WE{lable_num}:\n"
+        f"WE{lable_num}:\n" + \
+        pop_local
 
     p.parser.internal_label += 1
-    p[0] += pop_local_vars(p)
 
 
 def p_switch_scopecond(p):
