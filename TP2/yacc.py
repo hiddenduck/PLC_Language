@@ -438,6 +438,7 @@ def p_decl(p):
                                                 'tamanho': 1,
                                                 'tipo': p[1]}
             p.parser.global_adress += 1
+            p.parser.local_adress += 1
         elif p[2] not in p.parser.id_table_stack[-1]:
             p.parser.id_table_stack[-1][p[2]] = {'classe': 'array',
                                                  'endereco': p.parser.local_adress,
@@ -465,6 +466,7 @@ def p_declarray(p):
                                                 'tamanho': p[3][1:],
                                                 'tipo': p[1]}
             p.parser.global_adress += res
+            p.parser.local_adress += res
         else:
             p.parser.id_table_stack[-1][p[2]] = {'classe': 'array',
                                                  'endereco': p.parser.local_adress,
@@ -570,6 +572,7 @@ def p_declatrib_left(p):
                                                 'tamanho': 1,
                                                 'tipo': p[1]}
             p.parser.global_adress += 1
+            p.parser.local_adress += 1
         else:
             p.parser.id_table_stack[-1][p[2]] = {'classe': 'var',
                                                  'endereco': p.parser.local_adress,
@@ -591,6 +594,7 @@ def p_declatrib_right(p):
                                                 'tamanho': 1,
                                                 'tipo': p[3]}
             p.parser.global_adress += 1
+            p.parser.local_adress += 1
         else:
             p.parser.id_table_stack[-1][p[4]] = {'classe': 'var',
                                                  'endereco': p.parser.local_adress,
@@ -627,26 +631,43 @@ def p_atrib_right(p):
 
 def p_atrib_equiv(p):
     "Atrib : ID SWAP ID"
+
+
     flag1 = flag2 = True
-    end1 = p.parser.id_table_stack[0][p[1]]['endereco']
-    end2 = p.parser.id_table_stack[0][p[3]]['endereco']
+    
     for i in range(len(p.parser.id_table_stack)-1, 0, -1):
 
         if flag1 and p[1] in p.parser.id_table_stack[i]:
-            end1 = p.parser.id_table_stack[i][p[1]]['endereco']
+            end = p.parser.id_table_stack[i][p[1]]['endereco']
+            end1 = "pushl %d\n" % end
+            store1 = "storel %d\n" % end 
             flag1 = False
         if flag2 and p[3] in p.parser.id_table_stack[i]:
-            end2 = p.parser.id_table_stack[i][p[3]]['endereco']
+            end = p.parser.id_table_stack[i][p[3]]['endereco']
+            end2 = "pushl %d\n" % end
+            store2 = "storel %d\n" % end 
             flag2 = False
         if not (flag1 or flag2):
-            p[0] = f"pushl {end1}\npushl {end2}\nstorel {end1}\nstorel {end2}\n"
+            p[0] = end1 + end2 + store1 + store2
             return
 
-    if p[1] not in p.parser.id_table_stack[0] or p[3] not in p.parser.id_table_stack[0]:
-        # falta também ver se são vars normais, não temos swap para arrays?
-        print("ERROR: one of the variables not in scope")
-    else:
-        p[0] = f"pushg {end1}\npushg {end2}\nstoreg {end1}\nstoreg {end2}\n"
+    if flag1:
+        if p[1] in p.parser.id_table_stack[0]:
+            end = p.parser.id_table_stack[0][p[1]]['endereco']
+            end1 = "pushg %d\n" % end
+            store1 = "storeg %d\n" % end 
+        else:
+            print("ERROR: Variable %s not in scope" % p[1])    
+    if flag2: 
+        if p[3] in p.parser.id_table_stack[0]:
+            end = p.parser.id_table_stack[0][p[3]]['endereco']
+            end2 = "pushg %d\n" % end
+            store2 = "storeg %d\n" % end 
+        else:
+            print("ERROR: Variable %s not in scope" % p[3])
+    
+    p[0] = end1 + end2 + store1 + store2
+
     return
 
 
