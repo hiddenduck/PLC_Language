@@ -131,6 +131,7 @@ def p_function(p):
     p.parser.internal_label += 1
 
 
+
 def p_funscope(p):
     "FunScope : ':'"
     p.parser.id_table_stack.append(dict())
@@ -978,12 +979,14 @@ def gen_atrib_code_stack(p, id, atribop):
 def pop_local_vars(p):
     s = ""
     min = float("inf")
+    pop_size = 0
     for var in p.parser.id_table_stack[-1]:
+        pop_size += p.parser.id_table_stack[-1][var]['tamanho']
         if (n := p.parser.id_table_stack[-1][var]['endereco']) < min:
             min = n
     if min != float("inf"):
         p.parser.local_adress = min
-    s += "pop %d\n" % len(p.parser.id_table_stack[-1])
+    s += "pop %d\n" % pop_size
     p.parser.id_table_stack.pop()
     return s
 
