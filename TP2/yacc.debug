@@ -2,12 +2,12 @@ Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 
 Grammar
 
-Rule 0     S' -> Start
-Rule 1     Start -> Axiom
-Rule 2     Start -> <empty>
-Rule 3     Axiom -> Axiom Block
-Rule 4     Axiom -> Axiom Function
-Rule 5     Axiom -> <empty>
+Rule 0     S' -> Axiom
+Rule 1     Axiom -> Start
+Rule 2     Axiom -> <empty>
+Rule 3     Start -> Start Block
+Rule 4     Start -> Start Function
+Rule 5     Start -> <empty>
 Rule 6     Code -> Code Block
 Rule 7     Code -> Block
 Rule 8     Block -> FunCall ;
@@ -160,7 +160,7 @@ Atrib                : 43
 AtribArray           : 63 67
 AtribNum             : 48
 AtribOp              : 26 28 30 36 37 54 55 57 58 59 60 61 62 64 65 84 92 93
-Axiom                : 1 3 4
+Axiom                : 0
 Base                 : 69 71 72 81 82
 Block                : 3 6 7 15
 Body                 : 17 26 28 28 30 40 41
@@ -193,7 +193,7 @@ OpMult               : 79
 OpPlus               : 77
 OpPow                : 81
 OpUno                : 83
-Start                : 0
+Start                : 1 3 4
 Switch               : 13
 SwitchScope          : 33
 TermMod              : 73 74 75
@@ -207,43 +207,43 @@ Parsing method: LALR
 
 state 0
 
-    (0) S' -> . Start
-    (1) Start -> . Axiom
-    (2) Start -> .
-    (3) Axiom -> . Axiom Block
-    (4) Axiom -> . Axiom Function
-    (5) Axiom -> .
+    (0) S' -> . Axiom
+    (1) Axiom -> . Start
+    (2) Axiom -> .
+    (3) Start -> . Start Block
+    (4) Start -> . Start Function
+    (5) Start -> .
 
-  ! reduce/reduce conflict for $end resolved using rule 2 (Start -> .)
-    $end            reduce using rule 2 (Start -> .)
-    ID              reduce using rule 5 (Axiom -> .)
-    STRING          reduce using rule 5 (Axiom -> .)
-    IF              reduce using rule 5 (Axiom -> .)
-    WHILE           reduce using rule 5 (Axiom -> .)
-    SWITCHCOND      reduce using rule 5 (Axiom -> .)
-    SWITCHCASE      reduce using rule 5 (Axiom -> .)
-    (               reduce using rule 5 (Axiom -> .)
-    NUM             reduce using rule 5 (Axiom -> .)
-    READ            reduce using rule 5 (Axiom -> .)
-    NEG             reduce using rule 5 (Axiom -> .)
-    SUB             reduce using rule 5 (Axiom -> .)
+  ! reduce/reduce conflict for $end resolved using rule 2 (Axiom -> .)
+    $end            reduce using rule 2 (Axiom -> .)
+    ID              reduce using rule 5 (Start -> .)
+    STRING          reduce using rule 5 (Start -> .)
+    IF              reduce using rule 5 (Start -> .)
+    WHILE           reduce using rule 5 (Start -> .)
+    SWITCHCOND      reduce using rule 5 (Start -> .)
+    SWITCHCASE      reduce using rule 5 (Start -> .)
+    (               reduce using rule 5 (Start -> .)
+    NUM             reduce using rule 5 (Start -> .)
+    READ            reduce using rule 5 (Start -> .)
+    NEG             reduce using rule 5 (Start -> .)
+    SUB             reduce using rule 5 (Start -> .)
 
-  ! $end            [ reduce using rule 5 (Axiom -> .) ]
+  ! $end            [ reduce using rule 5 (Start -> .) ]
 
-    Start                          shift and go to state 1
-    Axiom                          shift and go to state 2
+    Axiom                          shift and go to state 1
+    Start                          shift and go to state 2
 
 state 1
 
-    (0) S' -> Start .
+    (0) S' -> Axiom .
 
 
 
 state 2
 
-    (1) Start -> Axiom .
-    (3) Axiom -> Axiom . Block
-    (4) Axiom -> Axiom . Function
+    (1) Axiom -> Start .
+    (3) Start -> Start . Block
+    (4) Start -> Start . Function
     (8) Block -> . FunCall ;
     (9) Block -> . Exp ;
     (10) Block -> . If
@@ -304,7 +304,7 @@ state 2
     (72) OpUno -> . Base PRINT
     (56) AccessArray -> . ID ArraySize
 
-    $end            reduce using rule 1 (Start -> Axiom .)
+    $end            reduce using rule 1 (Axiom -> Start .)
     ID              shift and go to state 11
     STRING          shift and go to state 13
     IF              shift and go to state 25
@@ -347,38 +347,38 @@ state 2
 
 state 3
 
-    (3) Axiom -> Axiom Block .
+    (3) Start -> Start Block .
 
-    ID              reduce using rule 3 (Axiom -> Axiom Block .)
-    STRING          reduce using rule 3 (Axiom -> Axiom Block .)
-    IF              reduce using rule 3 (Axiom -> Axiom Block .)
-    WHILE           reduce using rule 3 (Axiom -> Axiom Block .)
-    SWITCHCOND      reduce using rule 3 (Axiom -> Axiom Block .)
-    SWITCHCASE      reduce using rule 3 (Axiom -> Axiom Block .)
-    (               reduce using rule 3 (Axiom -> Axiom Block .)
-    NUM             reduce using rule 3 (Axiom -> Axiom Block .)
-    READ            reduce using rule 3 (Axiom -> Axiom Block .)
-    NEG             reduce using rule 3 (Axiom -> Axiom Block .)
-    SUB             reduce using rule 3 (Axiom -> Axiom Block .)
-    $end            reduce using rule 3 (Axiom -> Axiom Block .)
+    ID              reduce using rule 3 (Start -> Start Block .)
+    STRING          reduce using rule 3 (Start -> Start Block .)
+    IF              reduce using rule 3 (Start -> Start Block .)
+    WHILE           reduce using rule 3 (Start -> Start Block .)
+    SWITCHCOND      reduce using rule 3 (Start -> Start Block .)
+    SWITCHCASE      reduce using rule 3 (Start -> Start Block .)
+    (               reduce using rule 3 (Start -> Start Block .)
+    NUM             reduce using rule 3 (Start -> Start Block .)
+    READ            reduce using rule 3 (Start -> Start Block .)
+    NEG             reduce using rule 3 (Start -> Start Block .)
+    SUB             reduce using rule 3 (Start -> Start Block .)
+    $end            reduce using rule 3 (Start -> Start Block .)
 
 
 state 4
 
-    (4) Axiom -> Axiom Function .
+    (4) Start -> Start Function .
 
-    ID              reduce using rule 4 (Axiom -> Axiom Function .)
-    STRING          reduce using rule 4 (Axiom -> Axiom Function .)
-    IF              reduce using rule 4 (Axiom -> Axiom Function .)
-    WHILE           reduce using rule 4 (Axiom -> Axiom Function .)
-    SWITCHCOND      reduce using rule 4 (Axiom -> Axiom Function .)
-    SWITCHCASE      reduce using rule 4 (Axiom -> Axiom Function .)
-    (               reduce using rule 4 (Axiom -> Axiom Function .)
-    NUM             reduce using rule 4 (Axiom -> Axiom Function .)
-    READ            reduce using rule 4 (Axiom -> Axiom Function .)
-    NEG             reduce using rule 4 (Axiom -> Axiom Function .)
-    SUB             reduce using rule 4 (Axiom -> Axiom Function .)
-    $end            reduce using rule 4 (Axiom -> Axiom Function .)
+    ID              reduce using rule 4 (Start -> Start Function .)
+    STRING          reduce using rule 4 (Start -> Start Function .)
+    IF              reduce using rule 4 (Start -> Start Function .)
+    WHILE           reduce using rule 4 (Start -> Start Function .)
+    SWITCHCOND      reduce using rule 4 (Start -> Start Function .)
+    SWITCHCASE      reduce using rule 4 (Start -> Start Function .)
+    (               reduce using rule 4 (Start -> Start Function .)
+    NUM             reduce using rule 4 (Start -> Start Function .)
+    READ            reduce using rule 4 (Start -> Start Function .)
+    NEG             reduce using rule 4 (Start -> Start Function .)
+    SUB             reduce using rule 4 (Start -> Start Function .)
+    $end            reduce using rule 4 (Start -> Start Function .)
 
 
 state 5
@@ -4730,5 +4730,5 @@ WARNING: shift/reduce conflict for ELSE in state 105 resolved as shift
 WARNING: shift/reduce conflict for SUB in state 116 resolved as shift
 WARNING: shift/reduce conflict for RARROW in state 130 resolved as shift
 WARNING: shift/reduce conflict for RARROW in state 134 resolved as shift
-WARNING: reduce/reduce conflict in state 0 resolved using rule (Start -> <empty>)
-WARNING: rejected rule (Axiom -> <empty>) in state 0
+WARNING: reduce/reduce conflict in state 0 resolved using rule (Axiom -> <empty>)
+WARNING: rejected rule (Start -> <empty>) in state 0

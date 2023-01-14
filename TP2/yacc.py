@@ -1,6 +1,7 @@
 import ply.yacc as yacc
 import sys
 from lex import tokens
+from math import prod
 
 def p_axiom_start(p):
     "Axiom : Start"
@@ -129,7 +130,7 @@ def p_function(p):
 
     p[0] = ""
     p.parser.internal_label += 1
-
+    p.parser.local_adress = p.parser.global_adress
 
 
 def p_funscope(p):
@@ -142,14 +143,14 @@ def p_funcases_funextra_rarrow(p):
     "FunCases : FunExtra RARROW ID"
     p.parser.id_table_stack[-1][p[3]] = {'classe': 'var',
                                          'endereco': 0,
-                                         'tamanho': 1,
+                                         'tamanho': [1],
                                          'tipo': 'int'}
 
     for i in range(1, len(p[1])+1):
         if p[1][-i] not in p.parser.id_table_stack[-1]:
             p.parser.id_table_stack[-1][p[1][-i]] = {'classe': 'var',
                                                      'endereco': -i,
-                                                     'tamanho': 1,
+                                                     'tamanho': [1],
                                                      'tipo': 'int'}
         else:
             print("ERROR: Variable %s already declared locally." % p[1][-i],file=sys.stderr)
@@ -162,7 +163,7 @@ def p_funcases_rarrow(p):
     "FunCases : RARROW ID"
     p.parser.id_table_stack[-1][p[2]] = {'classe': 'var',
                                          'endereco': 0,
-                                         'tamanho': 1,
+                                         'tamanho': [1],
                                          'tipo': 'int'}
     p[0] = (True, [])
     p.parser.local_adress = 1
@@ -174,7 +175,7 @@ def p_funcases_funextra(p):
         if p[1][-i] not in p.parser.id_table_stack[-1]:
             p.parser.id_table_stack[-1][p[1][-i]] = {'classe': 'var',
                                                      'endereco': -i,
-                                                     'tamanho': 1,
+                                                     'tamanho': [1],
                                                      'tipo': 'int'}
         else:
             print("ERROR: Variable %s already declared locally." % p[1][-i],file=sys.stderr)
@@ -435,14 +436,14 @@ def p_decl(p):
         if len(p.parser.id_table_stack) == 1:
             p.parser.id_table_stack[0][p[2]] = {'classe': 'var',
                                                 'endereco': p.parser.global_adress,
-                                                'tamanho': 1,
+                                                'tamanho': [1],
                                                 'tipo': p[1]}
             p.parser.global_adress += 1
             p.parser.local_adress += 1
         elif p[2] not in p.parser.id_table_stack[-1]:
             p.parser.id_table_stack[-1][p[2]] = {'classe': 'array',
                                                  'endereco': p.parser.local_adress,
-                                                 'tamanho': 1,
+                                                 'tamanho': [1],
                                                  'tipo': p[1]}
             p.parser.local_adress += 1
         else:
@@ -593,14 +594,14 @@ def p_declatrib_left(p):
         if len(p.parser.id_table_stack) == 1:
             p.parser.id_table_stack[0][p[2]] = {'classe': 'var',
                                                 'endereco': p.parser.local_adress,
-                                                'tamanho': 1,
+                                                'tamanho': [1],
                                                 'tipo': p[1]}
             p.parser.global_adress += 1
             p.parser.local_adress += 1
         else:
             p.parser.id_table_stack[-1][p[2]] = {'classe': 'var',
                                                  'endereco': p.parser.local_adress,
-                                                 'tamanho': 1,
+                                                 'tamanho': [1],
                                                  'tipo': p[1]}
             p.parser.local_adress += 1
 
@@ -615,14 +616,14 @@ def p_declatrib_right(p):
         if len(p.parser.id_table_stack) == 1:
             p.parser.id_table_stack[0][p[4]] = {'classe': 'var',
                                                 'endereco': p.parser.global_adress,
-                                                'tamanho': 1,
+                                                'tamanho': [1],
                                                 'tipo': p[3]}
             p.parser.global_adress += 1
             p.parser.local_adress += 1
         else:
             p.parser.id_table_stack[-1][p[4]] = {'classe': 'var',
                                                  'endereco': p.parser.local_adress,
-                                                 'tamanho': 1,
+                                                 'tamanho': [1],
                                                  'tipo': p[3]}
             p.parser.local_adress += 1
 
@@ -981,7 +982,7 @@ def pop_local_vars(p):
     min = float("inf")
     pop_size = 0
     for var in p.parser.id_table_stack[-1]:
-        pop_size += p.parser.id_table_stack[-1][var]['tamanho']
+        pop_size += prod(p.parser.id_table_stack[-1][var]['tamanho'])
         if (n := p.parser.id_table_stack[-1][var]['endereco']) < min:
             min = n
     if min != float("inf"):
