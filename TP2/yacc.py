@@ -10,7 +10,8 @@ from lex import tokens
 def p_start_axiom(p):
     "Start : Axiom"
     p.parser.final_code = "start\n" + \
-        p[1] + "stop\n" + "".join(p.parser.function_buffer)
+        p[1] + pop_local_vars(p) + "stop\n" + \
+        "".join(p.parser.function_buffer)
 
 
 def p_start_empty(p):
