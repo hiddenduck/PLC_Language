@@ -47,6 +47,8 @@ reserved = {
     'switchcase' : 'SWITCHCASE'
 }
 
+t_STRING = r'"[^"\n]'
+
 t_RARROW = r'-+>'
 
 t_LARROW = r'<-+'
