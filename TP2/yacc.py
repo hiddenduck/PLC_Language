@@ -495,7 +495,7 @@ def p_atribarray_Leftatribop(p):
                 endereco = p.parser.id_table_stack[i][p[1]]['endereco']
                 s = "pushfp\n"
                 # tamanho nao guarda o primeiro!!"!"!!!!!""!"!"!"!"!"!"
-                sizes = p.parser.id_table_stack[i][p[1]]['tamanho'][:1]
+                sizes = p.parser.id_table_stack[i][p[1]]['tamanho'][1:]
                 break
             else:
                 print("ERROR: Variable %s is not of array type" % p[1],file=sys.stderr)
@@ -506,7 +506,7 @@ def p_atribarray_Leftatribop(p):
                 endereco = p.parser.id_table_stack[0][p[1]]['endereco']
                 s = "pushgp\n"
                 # tamanho nao guarda o primeiro!!"!"!!!!!""!"!"!"!"!"!"
-                sizes = p.parser.id_table_stack[0][p[1]]['tamanho'][:1]
+                sizes = p.parser.id_table_stack[0][p[1]]['tamanho'][1:]
             else:
                 print("ERROR: Variable %s is not of array type" % p[1],file=sys.stderr)
                 p_error(p)
@@ -533,7 +533,7 @@ def p_atribarray_Rightatribop(p):
         if p[3] in p.parser.id_table_stack[i]:
             s = "pushfp\n"
             # tamanho nao guarda o primeiro!!"!"!!!!!""!"!"!"!"!"!"
-            sizes = p.parser.id_table_stack[i][p[3]]['tamanho'][:1]
+            sizes = p.parser.id_table_stack[i][p[3]]['tamanho'][1:]
             break
     else:
         if p[3] in p.parser.id_table_stack[0]:
