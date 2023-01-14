@@ -702,12 +702,22 @@ def p_accessarray(p):
 
 
 def p_opbin_rec(p):
-    "OpBin : OpBin OpLogico TermPlus"
+    "OpBin : OpBin OpLogico TermMod"
     p[0] = p[1] + p[3] + p[2]
 
 
 def p_opbin_base(p):
-    "OpBin : TermPlus"
+    "OpBin : TermMod"
+    p[0] = p[1]
+
+
+def p_opmod_rec(p):
+    "TermMod : TermMod OpMod TermPlus"
+    p[0] = p[1] + p[3] + p[2]
+
+
+def p_opbin_base(p):
+    "TermMod : TermPlus"
     p[0] = p[1]
 
 
@@ -861,6 +871,9 @@ def p_oplogico_equal(p):
     "OpLogico : EQUAL"
     p[0] = "equal\n"
 
+def p_opmod_mod(p):
+    "OpMod : MOD"
+    p[0] = "mod\n"
 
 def p_opplus_add(p):
     "OpPlus : ADD"
