@@ -9,8 +9,9 @@ from lex import tokens
 
 def p_start_axiom(p):
     "Start : Axiom"
+    main = "pusha main\ncall\n" if p.parser.main else ""
     p.parser.final_code = "start\n" + \
-        p[1] + pop_local_vars(p) + "stop\n" + \
+        p[1] + main + pop_local_vars(p) + "stop\n" + \
         "".join(p.parser.function_buffer)
 
 
@@ -108,21 +109,28 @@ def p_function(p):
 
     s = ""
 
-    p.parser.local_adress = 0
     local_args = len(p.parser.id_table_stack[-1])-int(num_args)
     if local_args > 0:
         s += "pop %d\n" % (local_args)
+    p.parser.local_adress = 0
     p.parser.id_table_stack.pop()
+    #Se a função devolve ou não algo. p[3] é um tuplo.
+
+    s_label = f"F{label}:\n"
+
+    if p[1] == 'main':
+        p.parser.main = True
+        s_label = f"main:\n"
 
     if p[3][0]:
         p.parser.function_buffer.append(
-            f"F{label}:\n" + "pushi 0\n" + p[4] + f"pushl 0\nstorel {-num_args}\n" + s + "return\n")
-
+            s_label + "pushi 0\n" + p[4] + \
+            f"pushl 0\nstorel {-num_args}\n" + s + "return\n")
     else:
         p.parser.function_buffer.append(
-            f"F{label}:\n" + p[4] + s + "return\n")
-    # isto está a guardar onde? Devia ser negativo?--------sim
-    # Não está a terminar a sua localidade direito
+            s_label + p[4] + s + "return\n")
+
+
     p[0] = ""
     p.parser.internal_label += 1
 
@@ -495,7 +503,7 @@ def p_atribarray_Leftatribop(p):
                 print("ERROR: Variable %s is not of array type" % p[1])
                 p_error(p)
         else:
-            print("ERROR: variable not in scope")
+            print("ERROR: Variable %s not in scope" % p[1])
             p_error(p)
     if endereco != 0:
         s += f"pushi {endereco}\npadd\n"
@@ -525,7 +533,7 @@ def p_atribarray_Rightatribop(p):
             # tamanho nao guarda o primeiro!!"!"!!!!!""!"!"!"!"!"!"
             sizes = p.parser.id_table_stack[0][p[3]]['tamanho']
         else:
-            print("ERROR: variable not in scope")
+            print("ERROR: variable %s not in scope" % p[3])
             return
     s += p[4]
     for size in sizes:
@@ -681,7 +689,7 @@ def p_accessarray(p):
             p[0] = f"pushfp\npushi {end}\npadd\n" + p[2] + "loadn\n"
             return
     if p[1] not in p.parser.id_table_stack[0]:
-        print("ERROR: variable not in scope")
+        print("ERROR: Variable %s not in scope" % p[1])
     else:
         end = p.parser.id_table_stack[0][p[1]]['endereco']
         p[0] = f"pushgp\npushi {end}\npadd\n" + p[2] + "loadn\n"
@@ -745,7 +753,8 @@ def p_base_id(p):
             p[0] = "pushl %d\n" % p.parser.id_table_stack[i][p[1]]['endereco']
             return
     if p[1] not in p.parser.id_table_stack[0]:
-        print("ERROR: variable not in scope")
+        print("ERROR: variable %s not in scope" % p[1])
+        p_error(p)
     else:
         p[0] = "pushg %d\n" % p.parser.id_table_stack[0][p[1]]['endereco']
     return
@@ -804,13 +813,13 @@ def p_funarg_empty(p):
 
 def p_funrec_rec(p):
     "FunRec : FunRec ',' AtribOp"
-    p[0] = [p[1]]
+    p[0] = p[1]
     p[0].append(p[3])
 
 
 def p_funrec_base(p):
     "FunRec : AtribOp"
-    p[0] = p[1]
+    p[0] = [p[1]]
 
 
 def p_oplogico_and(p):
@@ -931,6 +940,7 @@ parser = yacc.yacc(debugfile="yacc.debug")
 
 # 0->global; 1+->local
 # ++ x = (tipo, classe, localidade, endereço, dimenção)
+parser.main = False
 parser.type_table = {'int'}
 parser.id_table_stack = list()
 parser.id_table_stack.append(dict())
