@@ -58,23 +58,23 @@ Rule 52    DeclArraySize -> DeclArraySize [ NUM ]
 Rule 53    DeclArraySize -> [ NUM ]
 Rule 54    AtribArray -> ID ArraySize LARROW AtribOp
 Rule 55    AtribArray -> AtribOp RARROW ID ArraySize
-Rule 56    ArraySize -> ArraySize [ AtribOp ]
-Rule 57    ArraySize -> [ AtribOp ]
-Rule 58    DeclAtrib -> ID ID LARROW AtribOp
-Rule 59    DeclAtrib -> AtribOp RARROW ID ID
-Rule 60    AtribNum -> ID LARROW AtribOp
-Rule 61    AtribNum -> AtribOp RARROW ID
-Rule 62    AtribNum -> AtribArray
-Rule 63    Atrib -> ID LARROW AtribOp
-Rule 64    Atrib -> AtribOp RARROW ID
-Rule 65    Atrib -> ID SWAP ID
-Rule 66    Atrib -> AtribArray
-Rule 67    Op -> OpBin
-Rule 68    OpUno -> NEG Base
-Rule 69    OpUno -> AccessArray
-Rule 70    OpUno -> SUB Base
-Rule 71    OpUno -> Base PRINT
-Rule 72    AccessArray -> ID ArraySize
+Rule 56    AccessArray -> ID ArraySize
+Rule 57    ArraySize -> ArraySize [ AtribOp ]
+Rule 58    ArraySize -> [ AtribOp ]
+Rule 59    DeclAtrib -> ID ID LARROW AtribOp
+Rule 60    DeclAtrib -> AtribOp RARROW ID ID
+Rule 61    AtribNum -> ID LARROW AtribOp
+Rule 62    AtribNum -> AtribOp RARROW ID
+Rule 63    AtribNum -> AtribArray
+Rule 64    Atrib -> ID LARROW AtribOp
+Rule 65    Atrib -> AtribOp RARROW ID
+Rule 66    Atrib -> ID SWAP ID
+Rule 67    Atrib -> AtribArray
+Rule 68    Op -> OpBin
+Rule 69    OpUno -> NEG Base
+Rule 70    OpUno -> AccessArray
+Rule 71    OpUno -> SUB Base
+Rule 72    OpUno -> Base PRINT
 Rule 73    OpBin -> OpBin OpLogico TermMod
 Rule 74    OpBin -> TermMod
 Rule 75    TermMod -> TermMod OpMod TermPlus
@@ -126,42 +126,42 @@ ELSE                 : 27
 EQUAL                : 101
 GEQ                  : 100
 GREATER              : 98
-ID                   : 17 19 20 23 24 36 40 50 50 51 51 54 55 58 58 59 59 60 61 63 64 65 65 72 85 89
+ID                   : 17 19 20 23 24 36 40 50 50 51 51 54 55 56 59 59 60 60 61 62 64 65 66 66 85 89
 IF                   : 25
-LARROW               : 54 58 60 63
+LARROW               : 54 59 61 64
 LEQ                  : 99
 LESSER               : 97
 MOD                  : 102
 MUL                  : 105
-NEG                  : 68
+NEG                  : 69
 NUM                  : 52 53 86
 OR                   : 96
 POW                  : 107
-PRINT                : 42 71
-RARROW               : 19 20 55 59 61 64
+PRINT                : 42 72
+RARROW               : 19 20 55 60 62 65
 READ                 : 88
 STRING               : 42
-SUB                  : 70 104
-SWAP                 : 65
+SUB                  : 71 104
+SWAP                 : 66
 SWITCHCASE           : 32
 SWITCHCOND           : 31
 WHILE                : 29
-[                    : 52 53 56 57
-]                    : 52 53 56 57
+[                    : 52 53 57 58
+]                    : 52 53 57 58
 error                : 
 {                    : 14 16 33
 }                    : 14 16 33
 
 Nonterminals, with rules where they appear
 
-AccessArray          : 69
-ArraySize            : 54 55 56 72
+AccessArray          : 70
+ArraySize            : 54 55 56 57
 Atrib                : 43
-AtribArray           : 62 66
+AtribArray           : 63 67
 AtribNum             : 48
-AtribOp              : 26 28 30 36 37 54 55 56 57 58 59 60 61 63 64 84 92 93
+AtribOp              : 26 28 30 36 37 54 55 57 58 59 60 61 62 64 65 84 92 93
 Axiom                : 1 3 4
-Base                 : 68 70 71 81 82
+Base                 : 69 71 72 81 82
 Block                : 3 6 7 15
 Body                 : 17 26 28 28 30 40 41
 Case                 : 38 39
@@ -186,7 +186,7 @@ If                   : 10
 IfElse               : 11
 IfScope              : 26 28
 Op                   : 44 49
-OpBin                : 67 73
+OpBin                : 68 73
 OpLogico             : 73
 OpMod                : 75
 OpMult               : 79
@@ -262,15 +262,15 @@ state 2
     (28) IfElse -> . IfScope AtribOp Body ElseScope Body
     (30) While -> . WhileScope ( AtribOp ) Body
     (33) Switch -> . SwitchScope Conds { Cases }
-    (63) Atrib -> . ID LARROW AtribOp
-    (64) Atrib -> . AtribOp RARROW ID
-    (65) Atrib -> . ID SWAP ID
-    (66) Atrib -> . AtribArray
-    (67) Op -> . OpBin
+    (64) Atrib -> . ID LARROW AtribOp
+    (65) Atrib -> . AtribOp RARROW ID
+    (66) Atrib -> . ID SWAP ID
+    (67) Atrib -> . AtribArray
+    (68) Op -> . OpBin
     (50) Decl -> . ID ID
     (51) DeclArray -> . ID ID DeclArraySize
-    (58) DeclAtrib -> . ID ID LARROW AtribOp
-    (59) DeclAtrib -> . AtribOp RARROW ID ID
+    (59) DeclAtrib -> . ID ID LARROW AtribOp
+    (60) DeclAtrib -> . AtribOp RARROW ID ID
     (25) IfScope -> . IF
     (29) WhileScope -> . WHILE
     (31) SwitchScope -> . SWITCHCOND
@@ -281,9 +281,9 @@ state 2
     (55) AtribArray -> . AtribOp RARROW ID ArraySize
     (73) OpBin -> . OpBin OpLogico TermMod
     (74) OpBin -> . TermMod
-    (60) AtribNum -> . ID LARROW AtribOp
-    (61) AtribNum -> . AtribOp RARROW ID
-    (62) AtribNum -> . AtribArray
+    (61) AtribNum -> . ID LARROW AtribOp
+    (62) AtribNum -> . AtribOp RARROW ID
+    (63) AtribNum -> . AtribArray
     (75) TermMod -> . TermMod OpMod TermPlus
     (76) TermMod -> . TermPlus
     (77) TermPlus -> . TermPlus OpPlus TermMult
@@ -298,11 +298,11 @@ state 2
     (86) Base -> . NUM
     (87) Base -> . FunCall
     (88) Base -> . READ
-    (68) OpUno -> . NEG Base
-    (69) OpUno -> . AccessArray
-    (70) OpUno -> . SUB Base
-    (71) OpUno -> . Base PRINT
-    (72) AccessArray -> . ID ArraySize
+    (69) OpUno -> . NEG Base
+    (70) OpUno -> . AccessArray
+    (71) OpUno -> . SUB Base
+    (72) OpUno -> . Base PRINT
+    (56) AccessArray -> . ID ArraySize
 
     $end            reduce using rule 1 (Start -> Axiom .)
     ID              shift and go to state 11
@@ -503,18 +503,18 @@ state 11
 
     (17) Function -> ID . FunScope FunCases Body
     (89) FunCall -> ID . ( FunArg )
-    (63) Atrib -> ID . LARROW AtribOp
-    (65) Atrib -> ID . SWAP ID
+    (64) Atrib -> ID . LARROW AtribOp
+    (66) Atrib -> ID . SWAP ID
     (50) Decl -> ID . ID
     (51) DeclArray -> ID . ID DeclArraySize
-    (58) DeclAtrib -> ID . ID LARROW AtribOp
+    (59) DeclAtrib -> ID . ID LARROW AtribOp
     (54) AtribArray -> ID . ArraySize LARROW AtribOp
-    (60) AtribNum -> ID . LARROW AtribOp
+    (61) AtribNum -> ID . LARROW AtribOp
     (85) Base -> ID .
-    (72) AccessArray -> ID . ArraySize
+    (56) AccessArray -> ID . ArraySize
     (18) FunScope -> . :
-    (56) ArraySize -> . ArraySize [ AtribOp ]
-    (57) ArraySize -> . [ AtribOp ]
+    (57) ArraySize -> . ArraySize [ AtribOp ]
+    (58) ArraySize -> . [ AtribOp ]
 
     (               shift and go to state 45
     LARROW          shift and go to state 46
@@ -548,10 +548,10 @@ state 12
     (84) Base -> ( . AtribOp )
     (48) AtribOp -> . AtribNum
     (49) AtribOp -> . Op
-    (60) AtribNum -> . ID LARROW AtribOp
-    (61) AtribNum -> . AtribOp RARROW ID
-    (62) AtribNum -> . AtribArray
-    (67) Op -> . OpBin
+    (61) AtribNum -> . ID LARROW AtribOp
+    (62) AtribNum -> . AtribOp RARROW ID
+    (63) AtribNum -> . AtribArray
+    (68) Op -> . OpBin
     (54) AtribArray -> . ID ArraySize LARROW AtribOp
     (55) AtribArray -> . AtribOp RARROW ID ArraySize
     (73) OpBin -> . OpBin OpLogico TermMod
@@ -570,12 +570,12 @@ state 12
     (86) Base -> . NUM
     (87) Base -> . FunCall
     (88) Base -> . READ
-    (68) OpUno -> . NEG Base
-    (69) OpUno -> . AccessArray
-    (70) OpUno -> . SUB Base
-    (71) OpUno -> . Base PRINT
+    (69) OpUno -> . NEG Base
+    (70) OpUno -> . AccessArray
+    (71) OpUno -> . SUB Base
+    (72) OpUno -> . Base PRINT
     (89) FunCall -> . ID ( FunArg )
-    (72) AccessArray -> . ID ArraySize
+    (56) AccessArray -> . ID ArraySize
 
     ID              shift and go to state 53
     (               shift and go to state 12
@@ -648,10 +648,10 @@ state 19
     (28) IfElse -> IfScope . AtribOp Body ElseScope Body
     (48) AtribOp -> . AtribNum
     (49) AtribOp -> . Op
-    (60) AtribNum -> . ID LARROW AtribOp
-    (61) AtribNum -> . AtribOp RARROW ID
-    (62) AtribNum -> . AtribArray
-    (67) Op -> . OpBin
+    (61) AtribNum -> . ID LARROW AtribOp
+    (62) AtribNum -> . AtribOp RARROW ID
+    (63) AtribNum -> . AtribArray
+    (68) Op -> . OpBin
     (54) AtribArray -> . ID ArraySize LARROW AtribOp
     (55) AtribArray -> . AtribOp RARROW ID ArraySize
     (73) OpBin -> . OpBin OpLogico TermMod
@@ -670,12 +670,12 @@ state 19
     (86) Base -> . NUM
     (87) Base -> . FunCall
     (88) Base -> . READ
-    (68) OpUno -> . NEG Base
-    (69) OpUno -> . AccessArray
-    (70) OpUno -> . SUB Base
-    (71) OpUno -> . Base PRINT
+    (69) OpUno -> . NEG Base
+    (70) OpUno -> . AccessArray
+    (71) OpUno -> . SUB Base
+    (72) OpUno -> . Base PRINT
     (89) FunCall -> . ID ( FunArg )
-    (72) AccessArray -> . ID ArraySize
+    (56) AccessArray -> . ID ArraySize
 
     ID              shift and go to state 53
     (               shift and go to state 12
@@ -700,10 +700,10 @@ state 19
 
 state 20
 
-    (64) Atrib -> AtribOp . RARROW ID
-    (59) DeclAtrib -> AtribOp . RARROW ID ID
+    (65) Atrib -> AtribOp . RARROW ID
+    (60) DeclAtrib -> AtribOp . RARROW ID ID
     (55) AtribArray -> AtribOp . RARROW ID ArraySize
-    (61) AtribNum -> AtribOp . RARROW ID
+    (62) AtribNum -> AtribOp . RARROW ID
 
     RARROW          shift and go to state 58
 
@@ -731,16 +731,16 @@ state 22
 
 state 23
 
-    (66) Atrib -> AtribArray .
-    (62) AtribNum -> AtribArray .
+    (67) Atrib -> AtribArray .
+    (63) AtribNum -> AtribArray .
 
-    ;               reduce using rule 66 (Atrib -> AtribArray .)
-    RARROW          reduce using rule 62 (AtribNum -> AtribArray .)
+    ;               reduce using rule 67 (Atrib -> AtribArray .)
+    RARROW          reduce using rule 63 (AtribNum -> AtribArray .)
 
 
 state 24
 
-    (67) Op -> OpBin .
+    (68) Op -> OpBin .
     (73) OpBin -> OpBin . OpLogico TermMod
     (94) OpLogico -> . DIFF
     (95) OpLogico -> . AND
@@ -751,23 +751,23 @@ state 24
     (100) OpLogico -> . GEQ
     (101) OpLogico -> . EQUAL
 
-    ;               reduce using rule 67 (Op -> OpBin .)
-    RARROW          reduce using rule 67 (Op -> OpBin .)
-    )               reduce using rule 67 (Op -> OpBin .)
-    {               reduce using rule 67 (Op -> OpBin .)
-    ID              reduce using rule 67 (Op -> OpBin .)
-    STRING          reduce using rule 67 (Op -> OpBin .)
-    IF              reduce using rule 67 (Op -> OpBin .)
-    WHILE           reduce using rule 67 (Op -> OpBin .)
-    SWITCHCOND      reduce using rule 67 (Op -> OpBin .)
-    SWITCHCASE      reduce using rule 67 (Op -> OpBin .)
-    (               reduce using rule 67 (Op -> OpBin .)
-    NUM             reduce using rule 67 (Op -> OpBin .)
-    READ            reduce using rule 67 (Op -> OpBin .)
-    NEG             reduce using rule 67 (Op -> OpBin .)
-    SUB             reduce using rule 67 (Op -> OpBin .)
-    ,               reduce using rule 67 (Op -> OpBin .)
-    ]               reduce using rule 67 (Op -> OpBin .)
+    ;               reduce using rule 68 (Op -> OpBin .)
+    RARROW          reduce using rule 68 (Op -> OpBin .)
+    )               reduce using rule 68 (Op -> OpBin .)
+    {               reduce using rule 68 (Op -> OpBin .)
+    ID              reduce using rule 68 (Op -> OpBin .)
+    STRING          reduce using rule 68 (Op -> OpBin .)
+    IF              reduce using rule 68 (Op -> OpBin .)
+    WHILE           reduce using rule 68 (Op -> OpBin .)
+    SWITCHCOND      reduce using rule 68 (Op -> OpBin .)
+    SWITCHCASE      reduce using rule 68 (Op -> OpBin .)
+    (               reduce using rule 68 (Op -> OpBin .)
+    NUM             reduce using rule 68 (Op -> OpBin .)
+    READ            reduce using rule 68 (Op -> OpBin .)
+    NEG             reduce using rule 68 (Op -> OpBin .)
+    SUB             reduce using rule 68 (Op -> OpBin .)
+    ,               reduce using rule 68 (Op -> OpBin .)
+    ]               reduce using rule 68 (Op -> OpBin .)
     DIFF            shift and go to state 65
     AND             shift and go to state 66
     OR              shift and go to state 67
@@ -993,7 +993,7 @@ state 33
 state 34
 
     (82) TermPow -> Base .
-    (71) OpUno -> Base . PRINT
+    (72) OpUno -> Base . PRINT
 
     POW             reduce using rule 82 (TermPow -> Base .)
     MUL             reduce using rule 82 (TermPow -> Base .)
@@ -1141,19 +1141,19 @@ state 37
 
 state 38
 
-    (68) OpUno -> NEG . Base
+    (69) OpUno -> NEG . Base
     (83) Base -> . OpUno
     (84) Base -> . ( AtribOp )
     (85) Base -> . ID
     (86) Base -> . NUM
     (87) Base -> . FunCall
     (88) Base -> . READ
-    (68) OpUno -> . NEG Base
-    (69) OpUno -> . AccessArray
-    (70) OpUno -> . SUB Base
-    (71) OpUno -> . Base PRINT
+    (69) OpUno -> . NEG Base
+    (70) OpUno -> . AccessArray
+    (71) OpUno -> . SUB Base
+    (72) OpUno -> . Base PRINT
     (89) FunCall -> . ID ( FunArg )
-    (72) AccessArray -> . ID ArraySize
+    (56) AccessArray -> . ID ArraySize
 
     (               shift and go to state 12
     ID              shift and go to state 85
@@ -1169,56 +1169,56 @@ state 38
 
 state 39
 
-    (69) OpUno -> AccessArray .
+    (70) OpUno -> AccessArray .
 
-    PRINT           reduce using rule 69 (OpUno -> AccessArray .)
-    POW             reduce using rule 69 (OpUno -> AccessArray .)
-    MUL             reduce using rule 69 (OpUno -> AccessArray .)
-    DIV             reduce using rule 69 (OpUno -> AccessArray .)
-    ADD             reduce using rule 69 (OpUno -> AccessArray .)
-    SUB             reduce using rule 69 (OpUno -> AccessArray .)
-    MOD             reduce using rule 69 (OpUno -> AccessArray .)
-    DIFF            reduce using rule 69 (OpUno -> AccessArray .)
-    AND             reduce using rule 69 (OpUno -> AccessArray .)
-    OR              reduce using rule 69 (OpUno -> AccessArray .)
-    LESSER          reduce using rule 69 (OpUno -> AccessArray .)
-    GREATER         reduce using rule 69 (OpUno -> AccessArray .)
-    LEQ             reduce using rule 69 (OpUno -> AccessArray .)
-    GEQ             reduce using rule 69 (OpUno -> AccessArray .)
-    EQUAL           reduce using rule 69 (OpUno -> AccessArray .)
-    ;               reduce using rule 69 (OpUno -> AccessArray .)
-    RARROW          reduce using rule 69 (OpUno -> AccessArray .)
-    )               reduce using rule 69 (OpUno -> AccessArray .)
-    {               reduce using rule 69 (OpUno -> AccessArray .)
-    ID              reduce using rule 69 (OpUno -> AccessArray .)
-    STRING          reduce using rule 69 (OpUno -> AccessArray .)
-    IF              reduce using rule 69 (OpUno -> AccessArray .)
-    WHILE           reduce using rule 69 (OpUno -> AccessArray .)
-    SWITCHCOND      reduce using rule 69 (OpUno -> AccessArray .)
-    SWITCHCASE      reduce using rule 69 (OpUno -> AccessArray .)
-    (               reduce using rule 69 (OpUno -> AccessArray .)
-    NUM             reduce using rule 69 (OpUno -> AccessArray .)
-    READ            reduce using rule 69 (OpUno -> AccessArray .)
-    NEG             reduce using rule 69 (OpUno -> AccessArray .)
-    ,               reduce using rule 69 (OpUno -> AccessArray .)
-    ]               reduce using rule 69 (OpUno -> AccessArray .)
+    PRINT           reduce using rule 70 (OpUno -> AccessArray .)
+    POW             reduce using rule 70 (OpUno -> AccessArray .)
+    MUL             reduce using rule 70 (OpUno -> AccessArray .)
+    DIV             reduce using rule 70 (OpUno -> AccessArray .)
+    ADD             reduce using rule 70 (OpUno -> AccessArray .)
+    SUB             reduce using rule 70 (OpUno -> AccessArray .)
+    MOD             reduce using rule 70 (OpUno -> AccessArray .)
+    DIFF            reduce using rule 70 (OpUno -> AccessArray .)
+    AND             reduce using rule 70 (OpUno -> AccessArray .)
+    OR              reduce using rule 70 (OpUno -> AccessArray .)
+    LESSER          reduce using rule 70 (OpUno -> AccessArray .)
+    GREATER         reduce using rule 70 (OpUno -> AccessArray .)
+    LEQ             reduce using rule 70 (OpUno -> AccessArray .)
+    GEQ             reduce using rule 70 (OpUno -> AccessArray .)
+    EQUAL           reduce using rule 70 (OpUno -> AccessArray .)
+    ;               reduce using rule 70 (OpUno -> AccessArray .)
+    RARROW          reduce using rule 70 (OpUno -> AccessArray .)
+    )               reduce using rule 70 (OpUno -> AccessArray .)
+    {               reduce using rule 70 (OpUno -> AccessArray .)
+    ID              reduce using rule 70 (OpUno -> AccessArray .)
+    STRING          reduce using rule 70 (OpUno -> AccessArray .)
+    IF              reduce using rule 70 (OpUno -> AccessArray .)
+    WHILE           reduce using rule 70 (OpUno -> AccessArray .)
+    SWITCHCOND      reduce using rule 70 (OpUno -> AccessArray .)
+    SWITCHCASE      reduce using rule 70 (OpUno -> AccessArray .)
+    (               reduce using rule 70 (OpUno -> AccessArray .)
+    NUM             reduce using rule 70 (OpUno -> AccessArray .)
+    READ            reduce using rule 70 (OpUno -> AccessArray .)
+    NEG             reduce using rule 70 (OpUno -> AccessArray .)
+    ,               reduce using rule 70 (OpUno -> AccessArray .)
+    ]               reduce using rule 70 (OpUno -> AccessArray .)
 
 
 state 40
 
-    (70) OpUno -> SUB . Base
+    (71) OpUno -> SUB . Base
     (83) Base -> . OpUno
     (84) Base -> . ( AtribOp )
     (85) Base -> . ID
     (86) Base -> . NUM
     (87) Base -> . FunCall
     (88) Base -> . READ
-    (68) OpUno -> . NEG Base
-    (69) OpUno -> . AccessArray
-    (70) OpUno -> . SUB Base
-    (71) OpUno -> . Base PRINT
+    (69) OpUno -> . NEG Base
+    (70) OpUno -> . AccessArray
+    (71) OpUno -> . SUB Base
+    (72) OpUno -> . Base PRINT
     (89) FunCall -> . ID ( FunArg )
-    (72) AccessArray -> . ID ArraySize
+    (56) AccessArray -> . ID ArraySize
 
     (               shift and go to state 12
     ID              shift and go to state 85
@@ -1278,7 +1278,7 @@ state 43
 
     (50) Decl -> ID ID .
     (51) DeclArray -> ID ID . DeclArraySize
-    (58) DeclAtrib -> ID ID . LARROW AtribOp
+    (59) DeclAtrib -> ID ID . LARROW AtribOp
     (52) DeclArraySize -> . DeclArraySize [ NUM ]
     (53) DeclArraySize -> . [ NUM ]
 
@@ -1327,10 +1327,10 @@ state 45
     (93) FunRec -> . AtribOp
     (48) AtribOp -> . AtribNum
     (49) AtribOp -> . Op
-    (60) AtribNum -> . ID LARROW AtribOp
-    (61) AtribNum -> . AtribOp RARROW ID
-    (62) AtribNum -> . AtribArray
-    (67) Op -> . OpBin
+    (61) AtribNum -> . ID LARROW AtribOp
+    (62) AtribNum -> . AtribOp RARROW ID
+    (63) AtribNum -> . AtribArray
+    (68) Op -> . OpBin
     (54) AtribArray -> . ID ArraySize LARROW AtribOp
     (55) AtribArray -> . AtribOp RARROW ID ArraySize
     (73) OpBin -> . OpBin OpLogico TermMod
@@ -1349,12 +1349,12 @@ state 45
     (86) Base -> . NUM
     (87) Base -> . FunCall
     (88) Base -> . READ
-    (68) OpUno -> . NEG Base
-    (69) OpUno -> . AccessArray
-    (70) OpUno -> . SUB Base
-    (71) OpUno -> . Base PRINT
+    (69) OpUno -> . NEG Base
+    (70) OpUno -> . AccessArray
+    (71) OpUno -> . SUB Base
+    (72) OpUno -> . Base PRINT
     (89) FunCall -> . ID ( FunArg )
-    (72) AccessArray -> . ID ArraySize
+    (56) AccessArray -> . ID ArraySize
 
     )               reduce using rule 91 (FunArg -> .)
     ID              shift and go to state 53
@@ -1382,14 +1382,14 @@ state 45
 
 state 46
 
-    (63) Atrib -> ID LARROW . AtribOp
-    (60) AtribNum -> ID LARROW . AtribOp
+    (64) Atrib -> ID LARROW . AtribOp
+    (61) AtribNum -> ID LARROW . AtribOp
     (48) AtribOp -> . AtribNum
     (49) AtribOp -> . Op
-    (60) AtribNum -> . ID LARROW AtribOp
-    (61) AtribNum -> . AtribOp RARROW ID
-    (62) AtribNum -> . AtribArray
-    (67) Op -> . OpBin
+    (61) AtribNum -> . ID LARROW AtribOp
+    (62) AtribNum -> . AtribOp RARROW ID
+    (63) AtribNum -> . AtribArray
+    (68) Op -> . OpBin
     (54) AtribArray -> . ID ArraySize LARROW AtribOp
     (55) AtribArray -> . AtribOp RARROW ID ArraySize
     (73) OpBin -> . OpBin OpLogico TermMod
@@ -1408,12 +1408,12 @@ state 46
     (86) Base -> . NUM
     (87) Base -> . FunCall
     (88) Base -> . READ
-    (68) OpUno -> . NEG Base
-    (69) OpUno -> . AccessArray
-    (70) OpUno -> . SUB Base
-    (71) OpUno -> . Base PRINT
+    (69) OpUno -> . NEG Base
+    (70) OpUno -> . AccessArray
+    (71) OpUno -> . SUB Base
+    (72) OpUno -> . Base PRINT
     (89) FunCall -> . ID ( FunArg )
-    (72) AccessArray -> . ID ArraySize
+    (56) AccessArray -> . ID ArraySize
 
     ID              shift and go to state 53
     (               shift and go to state 12
@@ -1438,7 +1438,7 @@ state 46
 
 state 47
 
-    (65) Atrib -> ID SWAP . ID
+    (66) Atrib -> ID SWAP . ID
 
     ID              shift and go to state 98
 
@@ -1446,41 +1446,41 @@ state 47
 state 48
 
     (54) AtribArray -> ID ArraySize . LARROW AtribOp
-    (72) AccessArray -> ID ArraySize .
-    (56) ArraySize -> ArraySize . [ AtribOp ]
+    (56) AccessArray -> ID ArraySize .
+    (57) ArraySize -> ArraySize . [ AtribOp ]
 
     LARROW          shift and go to state 99
-    PRINT           reduce using rule 72 (AccessArray -> ID ArraySize .)
-    POW             reduce using rule 72 (AccessArray -> ID ArraySize .)
-    MUL             reduce using rule 72 (AccessArray -> ID ArraySize .)
-    DIV             reduce using rule 72 (AccessArray -> ID ArraySize .)
-    ADD             reduce using rule 72 (AccessArray -> ID ArraySize .)
-    SUB             reduce using rule 72 (AccessArray -> ID ArraySize .)
-    MOD             reduce using rule 72 (AccessArray -> ID ArraySize .)
-    DIFF            reduce using rule 72 (AccessArray -> ID ArraySize .)
-    AND             reduce using rule 72 (AccessArray -> ID ArraySize .)
-    OR              reduce using rule 72 (AccessArray -> ID ArraySize .)
-    LESSER          reduce using rule 72 (AccessArray -> ID ArraySize .)
-    GREATER         reduce using rule 72 (AccessArray -> ID ArraySize .)
-    LEQ             reduce using rule 72 (AccessArray -> ID ArraySize .)
-    GEQ             reduce using rule 72 (AccessArray -> ID ArraySize .)
-    EQUAL           reduce using rule 72 (AccessArray -> ID ArraySize .)
-    ;               reduce using rule 72 (AccessArray -> ID ArraySize .)
-    RARROW          reduce using rule 72 (AccessArray -> ID ArraySize .)
-    )               reduce using rule 72 (AccessArray -> ID ArraySize .)
-    {               reduce using rule 72 (AccessArray -> ID ArraySize .)
-    ID              reduce using rule 72 (AccessArray -> ID ArraySize .)
-    STRING          reduce using rule 72 (AccessArray -> ID ArraySize .)
-    IF              reduce using rule 72 (AccessArray -> ID ArraySize .)
-    WHILE           reduce using rule 72 (AccessArray -> ID ArraySize .)
-    SWITCHCOND      reduce using rule 72 (AccessArray -> ID ArraySize .)
-    SWITCHCASE      reduce using rule 72 (AccessArray -> ID ArraySize .)
-    (               reduce using rule 72 (AccessArray -> ID ArraySize .)
-    NUM             reduce using rule 72 (AccessArray -> ID ArraySize .)
-    READ            reduce using rule 72 (AccessArray -> ID ArraySize .)
-    NEG             reduce using rule 72 (AccessArray -> ID ArraySize .)
-    ,               reduce using rule 72 (AccessArray -> ID ArraySize .)
-    ]               reduce using rule 72 (AccessArray -> ID ArraySize .)
+    PRINT           reduce using rule 56 (AccessArray -> ID ArraySize .)
+    POW             reduce using rule 56 (AccessArray -> ID ArraySize .)
+    MUL             reduce using rule 56 (AccessArray -> ID ArraySize .)
+    DIV             reduce using rule 56 (AccessArray -> ID ArraySize .)
+    ADD             reduce using rule 56 (AccessArray -> ID ArraySize .)
+    SUB             reduce using rule 56 (AccessArray -> ID ArraySize .)
+    MOD             reduce using rule 56 (AccessArray -> ID ArraySize .)
+    DIFF            reduce using rule 56 (AccessArray -> ID ArraySize .)
+    AND             reduce using rule 56 (AccessArray -> ID ArraySize .)
+    OR              reduce using rule 56 (AccessArray -> ID ArraySize .)
+    LESSER          reduce using rule 56 (AccessArray -> ID ArraySize .)
+    GREATER         reduce using rule 56 (AccessArray -> ID ArraySize .)
+    LEQ             reduce using rule 56 (AccessArray -> ID ArraySize .)
+    GEQ             reduce using rule 56 (AccessArray -> ID ArraySize .)
+    EQUAL           reduce using rule 56 (AccessArray -> ID ArraySize .)
+    ;               reduce using rule 56 (AccessArray -> ID ArraySize .)
+    RARROW          reduce using rule 56 (AccessArray -> ID ArraySize .)
+    )               reduce using rule 56 (AccessArray -> ID ArraySize .)
+    {               reduce using rule 56 (AccessArray -> ID ArraySize .)
+    ID              reduce using rule 56 (AccessArray -> ID ArraySize .)
+    STRING          reduce using rule 56 (AccessArray -> ID ArraySize .)
+    IF              reduce using rule 56 (AccessArray -> ID ArraySize .)
+    WHILE           reduce using rule 56 (AccessArray -> ID ArraySize .)
+    SWITCHCOND      reduce using rule 56 (AccessArray -> ID ArraySize .)
+    SWITCHCASE      reduce using rule 56 (AccessArray -> ID ArraySize .)
+    (               reduce using rule 56 (AccessArray -> ID ArraySize .)
+    NUM             reduce using rule 56 (AccessArray -> ID ArraySize .)
+    READ            reduce using rule 56 (AccessArray -> ID ArraySize .)
+    NEG             reduce using rule 56 (AccessArray -> ID ArraySize .)
+    ,               reduce using rule 56 (AccessArray -> ID ArraySize .)
+    ]               reduce using rule 56 (AccessArray -> ID ArraySize .)
     [               shift and go to state 100
 
 
@@ -1505,13 +1505,13 @@ state 49
 
 state 50
 
-    (57) ArraySize -> [ . AtribOp ]
+    (58) ArraySize -> [ . AtribOp ]
     (48) AtribOp -> . AtribNum
     (49) AtribOp -> . Op
-    (60) AtribNum -> . ID LARROW AtribOp
-    (61) AtribNum -> . AtribOp RARROW ID
-    (62) AtribNum -> . AtribArray
-    (67) Op -> . OpBin
+    (61) AtribNum -> . ID LARROW AtribOp
+    (62) AtribNum -> . AtribOp RARROW ID
+    (63) AtribNum -> . AtribArray
+    (68) Op -> . OpBin
     (54) AtribArray -> . ID ArraySize LARROW AtribOp
     (55) AtribArray -> . AtribOp RARROW ID ArraySize
     (73) OpBin -> . OpBin OpLogico TermMod
@@ -1530,12 +1530,12 @@ state 50
     (86) Base -> . NUM
     (87) Base -> . FunCall
     (88) Base -> . READ
-    (68) OpUno -> . NEG Base
-    (69) OpUno -> . AccessArray
-    (70) OpUno -> . SUB Base
-    (71) OpUno -> . Base PRINT
+    (69) OpUno -> . NEG Base
+    (70) OpUno -> . AccessArray
+    (71) OpUno -> . SUB Base
+    (72) OpUno -> . Base PRINT
     (89) FunCall -> . ID ( FunArg )
-    (72) AccessArray -> . ID ArraySize
+    (56) AccessArray -> . ID ArraySize
 
     ID              shift and go to state 53
     (               shift and go to state 12
@@ -1561,7 +1561,7 @@ state 50
 state 51
 
     (84) Base -> ( AtribOp . )
-    (61) AtribNum -> AtribOp . RARROW ID
+    (62) AtribNum -> AtribOp . RARROW ID
     (55) AtribArray -> AtribOp . RARROW ID ArraySize
 
     )               shift and go to state 102
@@ -1593,13 +1593,13 @@ state 52
 
 state 53
 
-    (60) AtribNum -> ID . LARROW AtribOp
+    (61) AtribNum -> ID . LARROW AtribOp
     (54) AtribArray -> ID . ArraySize LARROW AtribOp
     (85) Base -> ID .
     (89) FunCall -> ID . ( FunArg )
-    (72) AccessArray -> ID . ArraySize
-    (56) ArraySize -> . ArraySize [ AtribOp ]
-    (57) ArraySize -> . [ AtribOp ]
+    (56) AccessArray -> ID . ArraySize
+    (57) ArraySize -> . ArraySize [ AtribOp ]
+    (58) ArraySize -> . [ AtribOp ]
 
   ! shift/reduce conflict for ( resolved as shift
     LARROW          shift and go to state 104
@@ -1642,25 +1642,25 @@ state 53
 
 state 54
 
-    (62) AtribNum -> AtribArray .
+    (63) AtribNum -> AtribArray .
 
-    )               reduce using rule 62 (AtribNum -> AtribArray .)
-    RARROW          reduce using rule 62 (AtribNum -> AtribArray .)
-    {               reduce using rule 62 (AtribNum -> AtribArray .)
-    ID              reduce using rule 62 (AtribNum -> AtribArray .)
-    STRING          reduce using rule 62 (AtribNum -> AtribArray .)
-    IF              reduce using rule 62 (AtribNum -> AtribArray .)
-    WHILE           reduce using rule 62 (AtribNum -> AtribArray .)
-    SWITCHCOND      reduce using rule 62 (AtribNum -> AtribArray .)
-    SWITCHCASE      reduce using rule 62 (AtribNum -> AtribArray .)
-    (               reduce using rule 62 (AtribNum -> AtribArray .)
-    NUM             reduce using rule 62 (AtribNum -> AtribArray .)
-    READ            reduce using rule 62 (AtribNum -> AtribArray .)
-    NEG             reduce using rule 62 (AtribNum -> AtribArray .)
-    SUB             reduce using rule 62 (AtribNum -> AtribArray .)
-    ,               reduce using rule 62 (AtribNum -> AtribArray .)
-    ;               reduce using rule 62 (AtribNum -> AtribArray .)
-    ]               reduce using rule 62 (AtribNum -> AtribArray .)
+    )               reduce using rule 63 (AtribNum -> AtribArray .)
+    RARROW          reduce using rule 63 (AtribNum -> AtribArray .)
+    {               reduce using rule 63 (AtribNum -> AtribArray .)
+    ID              reduce using rule 63 (AtribNum -> AtribArray .)
+    STRING          reduce using rule 63 (AtribNum -> AtribArray .)
+    IF              reduce using rule 63 (AtribNum -> AtribArray .)
+    WHILE           reduce using rule 63 (AtribNum -> AtribArray .)
+    SWITCHCOND      reduce using rule 63 (AtribNum -> AtribArray .)
+    SWITCHCASE      reduce using rule 63 (AtribNum -> AtribArray .)
+    (               reduce using rule 63 (AtribNum -> AtribArray .)
+    NUM             reduce using rule 63 (AtribNum -> AtribArray .)
+    READ            reduce using rule 63 (AtribNum -> AtribArray .)
+    NEG             reduce using rule 63 (AtribNum -> AtribArray .)
+    SUB             reduce using rule 63 (AtribNum -> AtribArray .)
+    ,               reduce using rule 63 (AtribNum -> AtribArray .)
+    ;               reduce using rule 63 (AtribNum -> AtribArray .)
+    ]               reduce using rule 63 (AtribNum -> AtribArray .)
 
 
 state 55
@@ -1711,7 +1711,7 @@ state 57
 
     (26) If -> IfScope AtribOp . Body
     (28) IfElse -> IfScope AtribOp . Body ElseScope Body
-    (61) AtribNum -> AtribOp . RARROW ID
+    (62) AtribNum -> AtribOp . RARROW ID
     (55) AtribArray -> AtribOp . RARROW ID ArraySize
     (14) Body -> . { }
     (15) Body -> . Block
@@ -1733,15 +1733,15 @@ state 57
     (28) IfElse -> . IfScope AtribOp Body ElseScope Body
     (30) While -> . WhileScope ( AtribOp ) Body
     (33) Switch -> . SwitchScope Conds { Cases }
-    (63) Atrib -> . ID LARROW AtribOp
-    (64) Atrib -> . AtribOp RARROW ID
-    (65) Atrib -> . ID SWAP ID
-    (66) Atrib -> . AtribArray
-    (67) Op -> . OpBin
+    (64) Atrib -> . ID LARROW AtribOp
+    (65) Atrib -> . AtribOp RARROW ID
+    (66) Atrib -> . ID SWAP ID
+    (67) Atrib -> . AtribArray
+    (68) Op -> . OpBin
     (50) Decl -> . ID ID
     (51) DeclArray -> . ID ID DeclArraySize
-    (58) DeclAtrib -> . ID ID LARROW AtribOp
-    (59) DeclAtrib -> . AtribOp RARROW ID ID
+    (59) DeclAtrib -> . ID ID LARROW AtribOp
+    (60) DeclAtrib -> . AtribOp RARROW ID ID
     (25) IfScope -> . IF
     (29) WhileScope -> . WHILE
     (31) SwitchScope -> . SWITCHCOND
@@ -1752,9 +1752,9 @@ state 57
     (55) AtribArray -> . AtribOp RARROW ID ArraySize
     (73) OpBin -> . OpBin OpLogico TermMod
     (74) OpBin -> . TermMod
-    (60) AtribNum -> . ID LARROW AtribOp
-    (61) AtribNum -> . AtribOp RARROW ID
-    (62) AtribNum -> . AtribArray
+    (61) AtribNum -> . ID LARROW AtribOp
+    (62) AtribNum -> . AtribOp RARROW ID
+    (63) AtribNum -> . AtribArray
     (75) TermMod -> . TermMod OpMod TermPlus
     (76) TermMod -> . TermPlus
     (77) TermPlus -> . TermPlus OpPlus TermMult
@@ -1769,11 +1769,11 @@ state 57
     (86) Base -> . NUM
     (87) Base -> . FunCall
     (88) Base -> . READ
-    (68) OpUno -> . NEG Base
-    (69) OpUno -> . AccessArray
-    (70) OpUno -> . SUB Base
-    (71) OpUno -> . Base PRINT
-    (72) AccessArray -> . ID ArraySize
+    (69) OpUno -> . NEG Base
+    (70) OpUno -> . AccessArray
+    (71) OpUno -> . SUB Base
+    (72) OpUno -> . Base PRINT
+    (56) AccessArray -> . ID ArraySize
 
     RARROW          shift and go to state 103
     {               shift and go to state 107
@@ -1819,10 +1819,10 @@ state 57
 
 state 58
 
-    (64) Atrib -> AtribOp RARROW . ID
-    (59) DeclAtrib -> AtribOp RARROW . ID ID
+    (65) Atrib -> AtribOp RARROW . ID
+    (60) DeclAtrib -> AtribOp RARROW . ID ID
     (55) AtribArray -> AtribOp RARROW . ID ArraySize
-    (61) AtribNum -> AtribOp RARROW . ID
+    (62) AtribNum -> AtribOp RARROW . ID
 
     ID              shift and go to state 109
 
@@ -1832,10 +1832,10 @@ state 59
     (30) While -> WhileScope ( . AtribOp ) Body
     (48) AtribOp -> . AtribNum
     (49) AtribOp -> . Op
-    (60) AtribNum -> . ID LARROW AtribOp
-    (61) AtribNum -> . AtribOp RARROW ID
-    (62) AtribNum -> . AtribArray
-    (67) Op -> . OpBin
+    (61) AtribNum -> . ID LARROW AtribOp
+    (62) AtribNum -> . AtribOp RARROW ID
+    (63) AtribNum -> . AtribArray
+    (68) Op -> . OpBin
     (54) AtribArray -> . ID ArraySize LARROW AtribOp
     (55) AtribArray -> . AtribOp RARROW ID ArraySize
     (73) OpBin -> . OpBin OpLogico TermMod
@@ -1854,12 +1854,12 @@ state 59
     (86) Base -> . NUM
     (87) Base -> . FunCall
     (88) Base -> . READ
-    (68) OpUno -> . NEG Base
-    (69) OpUno -> . AccessArray
-    (70) OpUno -> . SUB Base
-    (71) OpUno -> . Base PRINT
+    (69) OpUno -> . NEG Base
+    (70) OpUno -> . AccessArray
+    (71) OpUno -> . SUB Base
+    (72) OpUno -> . Base PRINT
     (89) FunCall -> . ID ( FunArg )
-    (72) AccessArray -> . ID ArraySize
+    (56) AccessArray -> . ID ArraySize
 
     ID              shift and go to state 53
     (               shift and go to state 12
@@ -1911,10 +1911,10 @@ state 63
     (37) Cond -> ( . AtribOp )
     (48) AtribOp -> . AtribNum
     (49) AtribOp -> . Op
-    (60) AtribNum -> . ID LARROW AtribOp
-    (61) AtribNum -> . AtribOp RARROW ID
-    (62) AtribNum -> . AtribArray
-    (67) Op -> . OpBin
+    (61) AtribNum -> . ID LARROW AtribOp
+    (62) AtribNum -> . AtribOp RARROW ID
+    (63) AtribNum -> . AtribArray
+    (68) Op -> . OpBin
     (54) AtribArray -> . ID ArraySize LARROW AtribOp
     (55) AtribArray -> . AtribOp RARROW ID ArraySize
     (73) OpBin -> . OpBin OpLogico TermMod
@@ -1933,12 +1933,12 @@ state 63
     (86) Base -> . NUM
     (87) Base -> . FunCall
     (88) Base -> . READ
-    (68) OpUno -> . NEG Base
-    (69) OpUno -> . AccessArray
-    (70) OpUno -> . SUB Base
-    (71) OpUno -> . Base PRINT
+    (69) OpUno -> . NEG Base
+    (70) OpUno -> . AccessArray
+    (71) OpUno -> . SUB Base
+    (72) OpUno -> . Base PRINT
     (89) FunCall -> . ID ( FunArg )
-    (72) AccessArray -> . ID ArraySize
+    (56) AccessArray -> . ID ArraySize
 
     ID              shift and go to state 53
     (               shift and go to state 12
@@ -1978,12 +1978,12 @@ state 64
     (86) Base -> . NUM
     (87) Base -> . FunCall
     (88) Base -> . READ
-    (68) OpUno -> . NEG Base
-    (69) OpUno -> . AccessArray
-    (70) OpUno -> . SUB Base
-    (71) OpUno -> . Base PRINT
+    (69) OpUno -> . NEG Base
+    (70) OpUno -> . AccessArray
+    (71) OpUno -> . SUB Base
+    (72) OpUno -> . Base PRINT
     (89) FunCall -> . ID ( FunArg )
-    (72) AccessArray -> . ID ArraySize
+    (56) AccessArray -> . ID ArraySize
 
     (               shift and go to state 12
     ID              shift and go to state 85
@@ -2112,12 +2112,12 @@ state 73
     (86) Base -> . NUM
     (87) Base -> . FunCall
     (88) Base -> . READ
-    (68) OpUno -> . NEG Base
-    (69) OpUno -> . AccessArray
-    (70) OpUno -> . SUB Base
-    (71) OpUno -> . Base PRINT
+    (69) OpUno -> . NEG Base
+    (70) OpUno -> . AccessArray
+    (71) OpUno -> . SUB Base
+    (72) OpUno -> . Base PRINT
     (89) FunCall -> . ID ( FunArg )
-    (72) AccessArray -> . ID ArraySize
+    (56) AccessArray -> . ID ArraySize
 
     (               shift and go to state 12
     ID              shift and go to state 85
@@ -2159,12 +2159,12 @@ state 75
     (86) Base -> . NUM
     (87) Base -> . FunCall
     (88) Base -> . READ
-    (68) OpUno -> . NEG Base
-    (69) OpUno -> . AccessArray
-    (70) OpUno -> . SUB Base
-    (71) OpUno -> . Base PRINT
+    (69) OpUno -> . NEG Base
+    (70) OpUno -> . AccessArray
+    (71) OpUno -> . SUB Base
+    (72) OpUno -> . Base PRINT
     (89) FunCall -> . ID ( FunArg )
-    (72) AccessArray -> . ID ArraySize
+    (56) AccessArray -> . ID ArraySize
 
     (               shift and go to state 12
     ID              shift and go to state 85
@@ -2215,12 +2215,12 @@ state 78
     (86) Base -> . NUM
     (87) Base -> . FunCall
     (88) Base -> . READ
-    (68) OpUno -> . NEG Base
-    (69) OpUno -> . AccessArray
-    (70) OpUno -> . SUB Base
-    (71) OpUno -> . Base PRINT
+    (69) OpUno -> . NEG Base
+    (70) OpUno -> . AccessArray
+    (71) OpUno -> . SUB Base
+    (72) OpUno -> . Base PRINT
     (89) FunCall -> . ID ( FunArg )
-    (72) AccessArray -> . ID ArraySize
+    (56) AccessArray -> . ID ArraySize
 
     (               shift and go to state 12
     ID              shift and go to state 85
@@ -2268,12 +2268,12 @@ state 81
     (86) Base -> . NUM
     (87) Base -> . FunCall
     (88) Base -> . READ
-    (68) OpUno -> . NEG Base
-    (69) OpUno -> . AccessArray
-    (70) OpUno -> . SUB Base
-    (71) OpUno -> . Base PRINT
+    (69) OpUno -> . NEG Base
+    (70) OpUno -> . AccessArray
+    (71) OpUno -> . SUB Base
+    (72) OpUno -> . Base PRINT
     (89) FunCall -> . ID ( FunArg )
-    (72) AccessArray -> . ID ArraySize
+    (56) AccessArray -> . ID ArraySize
 
     (               shift and go to state 12
     ID              shift and go to state 85
@@ -2301,89 +2301,89 @@ state 82
 
 state 83
 
-    (71) OpUno -> Base PRINT .
+    (72) OpUno -> Base PRINT .
 
-    PRINT           reduce using rule 71 (OpUno -> Base PRINT .)
-    POW             reduce using rule 71 (OpUno -> Base PRINT .)
-    MUL             reduce using rule 71 (OpUno -> Base PRINT .)
-    DIV             reduce using rule 71 (OpUno -> Base PRINT .)
-    ADD             reduce using rule 71 (OpUno -> Base PRINT .)
-    SUB             reduce using rule 71 (OpUno -> Base PRINT .)
-    MOD             reduce using rule 71 (OpUno -> Base PRINT .)
-    DIFF            reduce using rule 71 (OpUno -> Base PRINT .)
-    AND             reduce using rule 71 (OpUno -> Base PRINT .)
-    OR              reduce using rule 71 (OpUno -> Base PRINT .)
-    LESSER          reduce using rule 71 (OpUno -> Base PRINT .)
-    GREATER         reduce using rule 71 (OpUno -> Base PRINT .)
-    LEQ             reduce using rule 71 (OpUno -> Base PRINT .)
-    GEQ             reduce using rule 71 (OpUno -> Base PRINT .)
-    EQUAL           reduce using rule 71 (OpUno -> Base PRINT .)
-    ;               reduce using rule 71 (OpUno -> Base PRINT .)
-    RARROW          reduce using rule 71 (OpUno -> Base PRINT .)
-    )               reduce using rule 71 (OpUno -> Base PRINT .)
-    {               reduce using rule 71 (OpUno -> Base PRINT .)
-    ID              reduce using rule 71 (OpUno -> Base PRINT .)
-    STRING          reduce using rule 71 (OpUno -> Base PRINT .)
-    IF              reduce using rule 71 (OpUno -> Base PRINT .)
-    WHILE           reduce using rule 71 (OpUno -> Base PRINT .)
-    SWITCHCOND      reduce using rule 71 (OpUno -> Base PRINT .)
-    SWITCHCASE      reduce using rule 71 (OpUno -> Base PRINT .)
-    (               reduce using rule 71 (OpUno -> Base PRINT .)
-    NUM             reduce using rule 71 (OpUno -> Base PRINT .)
-    READ            reduce using rule 71 (OpUno -> Base PRINT .)
-    NEG             reduce using rule 71 (OpUno -> Base PRINT .)
-    ,               reduce using rule 71 (OpUno -> Base PRINT .)
-    ]               reduce using rule 71 (OpUno -> Base PRINT .)
+    PRINT           reduce using rule 72 (OpUno -> Base PRINT .)
+    POW             reduce using rule 72 (OpUno -> Base PRINT .)
+    MUL             reduce using rule 72 (OpUno -> Base PRINT .)
+    DIV             reduce using rule 72 (OpUno -> Base PRINT .)
+    ADD             reduce using rule 72 (OpUno -> Base PRINT .)
+    SUB             reduce using rule 72 (OpUno -> Base PRINT .)
+    MOD             reduce using rule 72 (OpUno -> Base PRINT .)
+    DIFF            reduce using rule 72 (OpUno -> Base PRINT .)
+    AND             reduce using rule 72 (OpUno -> Base PRINT .)
+    OR              reduce using rule 72 (OpUno -> Base PRINT .)
+    LESSER          reduce using rule 72 (OpUno -> Base PRINT .)
+    GREATER         reduce using rule 72 (OpUno -> Base PRINT .)
+    LEQ             reduce using rule 72 (OpUno -> Base PRINT .)
+    GEQ             reduce using rule 72 (OpUno -> Base PRINT .)
+    EQUAL           reduce using rule 72 (OpUno -> Base PRINT .)
+    ;               reduce using rule 72 (OpUno -> Base PRINT .)
+    RARROW          reduce using rule 72 (OpUno -> Base PRINT .)
+    )               reduce using rule 72 (OpUno -> Base PRINT .)
+    {               reduce using rule 72 (OpUno -> Base PRINT .)
+    ID              reduce using rule 72 (OpUno -> Base PRINT .)
+    STRING          reduce using rule 72 (OpUno -> Base PRINT .)
+    IF              reduce using rule 72 (OpUno -> Base PRINT .)
+    WHILE           reduce using rule 72 (OpUno -> Base PRINT .)
+    SWITCHCOND      reduce using rule 72 (OpUno -> Base PRINT .)
+    SWITCHCASE      reduce using rule 72 (OpUno -> Base PRINT .)
+    (               reduce using rule 72 (OpUno -> Base PRINT .)
+    NUM             reduce using rule 72 (OpUno -> Base PRINT .)
+    READ            reduce using rule 72 (OpUno -> Base PRINT .)
+    NEG             reduce using rule 72 (OpUno -> Base PRINT .)
+    ,               reduce using rule 72 (OpUno -> Base PRINT .)
+    ]               reduce using rule 72 (OpUno -> Base PRINT .)
 
 
 state 84
 
-    (68) OpUno -> NEG Base .
-    (71) OpUno -> Base . PRINT
+    (69) OpUno -> NEG Base .
+    (72) OpUno -> Base . PRINT
 
   ! shift/reduce conflict for PRINT resolved as shift
-    POW             reduce using rule 68 (OpUno -> NEG Base .)
-    MUL             reduce using rule 68 (OpUno -> NEG Base .)
-    DIV             reduce using rule 68 (OpUno -> NEG Base .)
-    ADD             reduce using rule 68 (OpUno -> NEG Base .)
-    SUB             reduce using rule 68 (OpUno -> NEG Base .)
-    MOD             reduce using rule 68 (OpUno -> NEG Base .)
-    DIFF            reduce using rule 68 (OpUno -> NEG Base .)
-    AND             reduce using rule 68 (OpUno -> NEG Base .)
-    OR              reduce using rule 68 (OpUno -> NEG Base .)
-    LESSER          reduce using rule 68 (OpUno -> NEG Base .)
-    GREATER         reduce using rule 68 (OpUno -> NEG Base .)
-    LEQ             reduce using rule 68 (OpUno -> NEG Base .)
-    GEQ             reduce using rule 68 (OpUno -> NEG Base .)
-    EQUAL           reduce using rule 68 (OpUno -> NEG Base .)
-    ;               reduce using rule 68 (OpUno -> NEG Base .)
-    RARROW          reduce using rule 68 (OpUno -> NEG Base .)
-    )               reduce using rule 68 (OpUno -> NEG Base .)
-    {               reduce using rule 68 (OpUno -> NEG Base .)
-    ID              reduce using rule 68 (OpUno -> NEG Base .)
-    STRING          reduce using rule 68 (OpUno -> NEG Base .)
-    IF              reduce using rule 68 (OpUno -> NEG Base .)
-    WHILE           reduce using rule 68 (OpUno -> NEG Base .)
-    SWITCHCOND      reduce using rule 68 (OpUno -> NEG Base .)
-    SWITCHCASE      reduce using rule 68 (OpUno -> NEG Base .)
-    (               reduce using rule 68 (OpUno -> NEG Base .)
-    NUM             reduce using rule 68 (OpUno -> NEG Base .)
-    READ            reduce using rule 68 (OpUno -> NEG Base .)
-    NEG             reduce using rule 68 (OpUno -> NEG Base .)
-    ,               reduce using rule 68 (OpUno -> NEG Base .)
-    ]               reduce using rule 68 (OpUno -> NEG Base .)
+    POW             reduce using rule 69 (OpUno -> NEG Base .)
+    MUL             reduce using rule 69 (OpUno -> NEG Base .)
+    DIV             reduce using rule 69 (OpUno -> NEG Base .)
+    ADD             reduce using rule 69 (OpUno -> NEG Base .)
+    SUB             reduce using rule 69 (OpUno -> NEG Base .)
+    MOD             reduce using rule 69 (OpUno -> NEG Base .)
+    DIFF            reduce using rule 69 (OpUno -> NEG Base .)
+    AND             reduce using rule 69 (OpUno -> NEG Base .)
+    OR              reduce using rule 69 (OpUno -> NEG Base .)
+    LESSER          reduce using rule 69 (OpUno -> NEG Base .)
+    GREATER         reduce using rule 69 (OpUno -> NEG Base .)
+    LEQ             reduce using rule 69 (OpUno -> NEG Base .)
+    GEQ             reduce using rule 69 (OpUno -> NEG Base .)
+    EQUAL           reduce using rule 69 (OpUno -> NEG Base .)
+    ;               reduce using rule 69 (OpUno -> NEG Base .)
+    RARROW          reduce using rule 69 (OpUno -> NEG Base .)
+    )               reduce using rule 69 (OpUno -> NEG Base .)
+    {               reduce using rule 69 (OpUno -> NEG Base .)
+    ID              reduce using rule 69 (OpUno -> NEG Base .)
+    STRING          reduce using rule 69 (OpUno -> NEG Base .)
+    IF              reduce using rule 69 (OpUno -> NEG Base .)
+    WHILE           reduce using rule 69 (OpUno -> NEG Base .)
+    SWITCHCOND      reduce using rule 69 (OpUno -> NEG Base .)
+    SWITCHCASE      reduce using rule 69 (OpUno -> NEG Base .)
+    (               reduce using rule 69 (OpUno -> NEG Base .)
+    NUM             reduce using rule 69 (OpUno -> NEG Base .)
+    READ            reduce using rule 69 (OpUno -> NEG Base .)
+    NEG             reduce using rule 69 (OpUno -> NEG Base .)
+    ,               reduce using rule 69 (OpUno -> NEG Base .)
+    ]               reduce using rule 69 (OpUno -> NEG Base .)
     PRINT           shift and go to state 83
 
-  ! PRINT           [ reduce using rule 68 (OpUno -> NEG Base .) ]
+  ! PRINT           [ reduce using rule 69 (OpUno -> NEG Base .) ]
 
 
 state 85
 
     (85) Base -> ID .
     (89) FunCall -> ID . ( FunArg )
-    (72) AccessArray -> ID . ArraySize
-    (56) ArraySize -> . ArraySize [ AtribOp ]
-    (57) ArraySize -> . [ AtribOp ]
+    (56) AccessArray -> ID . ArraySize
+    (57) ArraySize -> . ArraySize [ AtribOp ]
+    (58) ArraySize -> . [ AtribOp ]
 
   ! shift/reduce conflict for ( resolved as shift
     PRINT           reduce using rule 85 (Base -> ID .)
@@ -2425,43 +2425,43 @@ state 85
 
 state 86
 
-    (70) OpUno -> SUB Base .
-    (71) OpUno -> Base . PRINT
+    (71) OpUno -> SUB Base .
+    (72) OpUno -> Base . PRINT
 
   ! shift/reduce conflict for PRINT resolved as shift
-    POW             reduce using rule 70 (OpUno -> SUB Base .)
-    MUL             reduce using rule 70 (OpUno -> SUB Base .)
-    DIV             reduce using rule 70 (OpUno -> SUB Base .)
-    ADD             reduce using rule 70 (OpUno -> SUB Base .)
-    SUB             reduce using rule 70 (OpUno -> SUB Base .)
-    MOD             reduce using rule 70 (OpUno -> SUB Base .)
-    DIFF            reduce using rule 70 (OpUno -> SUB Base .)
-    AND             reduce using rule 70 (OpUno -> SUB Base .)
-    OR              reduce using rule 70 (OpUno -> SUB Base .)
-    LESSER          reduce using rule 70 (OpUno -> SUB Base .)
-    GREATER         reduce using rule 70 (OpUno -> SUB Base .)
-    LEQ             reduce using rule 70 (OpUno -> SUB Base .)
-    GEQ             reduce using rule 70 (OpUno -> SUB Base .)
-    EQUAL           reduce using rule 70 (OpUno -> SUB Base .)
-    ;               reduce using rule 70 (OpUno -> SUB Base .)
-    RARROW          reduce using rule 70 (OpUno -> SUB Base .)
-    )               reduce using rule 70 (OpUno -> SUB Base .)
-    {               reduce using rule 70 (OpUno -> SUB Base .)
-    ID              reduce using rule 70 (OpUno -> SUB Base .)
-    STRING          reduce using rule 70 (OpUno -> SUB Base .)
-    IF              reduce using rule 70 (OpUno -> SUB Base .)
-    WHILE           reduce using rule 70 (OpUno -> SUB Base .)
-    SWITCHCOND      reduce using rule 70 (OpUno -> SUB Base .)
-    SWITCHCASE      reduce using rule 70 (OpUno -> SUB Base .)
-    (               reduce using rule 70 (OpUno -> SUB Base .)
-    NUM             reduce using rule 70 (OpUno -> SUB Base .)
-    READ            reduce using rule 70 (OpUno -> SUB Base .)
-    NEG             reduce using rule 70 (OpUno -> SUB Base .)
-    ,               reduce using rule 70 (OpUno -> SUB Base .)
-    ]               reduce using rule 70 (OpUno -> SUB Base .)
+    POW             reduce using rule 71 (OpUno -> SUB Base .)
+    MUL             reduce using rule 71 (OpUno -> SUB Base .)
+    DIV             reduce using rule 71 (OpUno -> SUB Base .)
+    ADD             reduce using rule 71 (OpUno -> SUB Base .)
+    SUB             reduce using rule 71 (OpUno -> SUB Base .)
+    MOD             reduce using rule 71 (OpUno -> SUB Base .)
+    DIFF            reduce using rule 71 (OpUno -> SUB Base .)
+    AND             reduce using rule 71 (OpUno -> SUB Base .)
+    OR              reduce using rule 71 (OpUno -> SUB Base .)
+    LESSER          reduce using rule 71 (OpUno -> SUB Base .)
+    GREATER         reduce using rule 71 (OpUno -> SUB Base .)
+    LEQ             reduce using rule 71 (OpUno -> SUB Base .)
+    GEQ             reduce using rule 71 (OpUno -> SUB Base .)
+    EQUAL           reduce using rule 71 (OpUno -> SUB Base .)
+    ;               reduce using rule 71 (OpUno -> SUB Base .)
+    RARROW          reduce using rule 71 (OpUno -> SUB Base .)
+    )               reduce using rule 71 (OpUno -> SUB Base .)
+    {               reduce using rule 71 (OpUno -> SUB Base .)
+    ID              reduce using rule 71 (OpUno -> SUB Base .)
+    STRING          reduce using rule 71 (OpUno -> SUB Base .)
+    IF              reduce using rule 71 (OpUno -> SUB Base .)
+    WHILE           reduce using rule 71 (OpUno -> SUB Base .)
+    SWITCHCOND      reduce using rule 71 (OpUno -> SUB Base .)
+    SWITCHCASE      reduce using rule 71 (OpUno -> SUB Base .)
+    (               reduce using rule 71 (OpUno -> SUB Base .)
+    NUM             reduce using rule 71 (OpUno -> SUB Base .)
+    READ            reduce using rule 71 (OpUno -> SUB Base .)
+    NEG             reduce using rule 71 (OpUno -> SUB Base .)
+    ,               reduce using rule 71 (OpUno -> SUB Base .)
+    ]               reduce using rule 71 (OpUno -> SUB Base .)
     PRINT           shift and go to state 83
 
-  ! PRINT           [ reduce using rule 70 (OpUno -> SUB Base .) ]
+  ! PRINT           [ reduce using rule 71 (OpUno -> SUB Base .) ]
 
 
 state 87
@@ -2475,13 +2475,13 @@ state 87
 
 state 88
 
-    (58) DeclAtrib -> ID ID LARROW . AtribOp
+    (59) DeclAtrib -> ID ID LARROW . AtribOp
     (48) AtribOp -> . AtribNum
     (49) AtribOp -> . Op
-    (60) AtribNum -> . ID LARROW AtribOp
-    (61) AtribNum -> . AtribOp RARROW ID
-    (62) AtribNum -> . AtribArray
-    (67) Op -> . OpBin
+    (61) AtribNum -> . ID LARROW AtribOp
+    (62) AtribNum -> . AtribOp RARROW ID
+    (63) AtribNum -> . AtribArray
+    (68) Op -> . OpBin
     (54) AtribArray -> . ID ArraySize LARROW AtribOp
     (55) AtribArray -> . AtribOp RARROW ID ArraySize
     (73) OpBin -> . OpBin OpLogico TermMod
@@ -2500,12 +2500,12 @@ state 88
     (86) Base -> . NUM
     (87) Base -> . FunCall
     (88) Base -> . READ
-    (68) OpUno -> . NEG Base
-    (69) OpUno -> . AccessArray
-    (70) OpUno -> . SUB Base
-    (71) OpUno -> . Base PRINT
+    (69) OpUno -> . NEG Base
+    (70) OpUno -> . AccessArray
+    (71) OpUno -> . SUB Base
+    (72) OpUno -> . Base PRINT
     (89) FunCall -> . ID ( FunArg )
-    (72) AccessArray -> . ID ArraySize
+    (56) AccessArray -> . ID ArraySize
 
     ID              shift and go to state 53
     (               shift and go to state 12
@@ -2578,15 +2578,15 @@ state 91
     (28) IfElse -> . IfScope AtribOp Body ElseScope Body
     (30) While -> . WhileScope ( AtribOp ) Body
     (33) Switch -> . SwitchScope Conds { Cases }
-    (63) Atrib -> . ID LARROW AtribOp
-    (64) Atrib -> . AtribOp RARROW ID
-    (65) Atrib -> . ID SWAP ID
-    (66) Atrib -> . AtribArray
-    (67) Op -> . OpBin
+    (64) Atrib -> . ID LARROW AtribOp
+    (65) Atrib -> . AtribOp RARROW ID
+    (66) Atrib -> . ID SWAP ID
+    (67) Atrib -> . AtribArray
+    (68) Op -> . OpBin
     (50) Decl -> . ID ID
     (51) DeclArray -> . ID ID DeclArraySize
-    (58) DeclAtrib -> . ID ID LARROW AtribOp
-    (59) DeclAtrib -> . AtribOp RARROW ID ID
+    (59) DeclAtrib -> . ID ID LARROW AtribOp
+    (60) DeclAtrib -> . AtribOp RARROW ID ID
     (25) IfScope -> . IF
     (29) WhileScope -> . WHILE
     (31) SwitchScope -> . SWITCHCOND
@@ -2597,9 +2597,9 @@ state 91
     (55) AtribArray -> . AtribOp RARROW ID ArraySize
     (73) OpBin -> . OpBin OpLogico TermMod
     (74) OpBin -> . TermMod
-    (60) AtribNum -> . ID LARROW AtribOp
-    (61) AtribNum -> . AtribOp RARROW ID
-    (62) AtribNum -> . AtribArray
+    (61) AtribNum -> . ID LARROW AtribOp
+    (62) AtribNum -> . AtribOp RARROW ID
+    (63) AtribNum -> . AtribArray
     (75) TermMod -> . TermMod OpMod TermPlus
     (76) TermMod -> . TermPlus
     (77) TermPlus -> . TermPlus OpPlus TermMult
@@ -2614,11 +2614,11 @@ state 91
     (86) Base -> . NUM
     (87) Base -> . FunCall
     (88) Base -> . READ
-    (68) OpUno -> . NEG Base
-    (69) OpUno -> . AccessArray
-    (70) OpUno -> . SUB Base
-    (71) OpUno -> . Base PRINT
-    (72) AccessArray -> . ID ArraySize
+    (69) OpUno -> . NEG Base
+    (70) OpUno -> . AccessArray
+    (71) OpUno -> . SUB Base
+    (72) OpUno -> . Base PRINT
+    (56) AccessArray -> . ID ArraySize
 
     {               shift and go to state 107
     ID              shift and go to state 106
@@ -2709,7 +2709,7 @@ state 95
 state 96
 
     (93) FunRec -> AtribOp .
-    (61) AtribNum -> AtribOp . RARROW ID
+    (62) AtribNum -> AtribOp . RARROW ID
     (55) AtribArray -> AtribOp . RARROW ID ArraySize
 
     ,               reduce using rule 93 (FunRec -> AtribOp .)
@@ -2719,23 +2719,23 @@ state 96
 
 state 97
 
-    (63) Atrib -> ID LARROW AtribOp .
-    (60) AtribNum -> ID LARROW AtribOp .
-    (61) AtribNum -> AtribOp . RARROW ID
+    (64) Atrib -> ID LARROW AtribOp .
+    (61) AtribNum -> ID LARROW AtribOp .
+    (62) AtribNum -> AtribOp . RARROW ID
     (55) AtribArray -> AtribOp . RARROW ID ArraySize
 
   ! shift/reduce conflict for RARROW resolved as shift
-    ;               reduce using rule 63 (Atrib -> ID LARROW AtribOp .)
+    ;               reduce using rule 64 (Atrib -> ID LARROW AtribOp .)
     RARROW          shift and go to state 103
 
-  ! RARROW          [ reduce using rule 60 (AtribNum -> ID LARROW AtribOp .) ]
+  ! RARROW          [ reduce using rule 61 (AtribNum -> ID LARROW AtribOp .) ]
 
 
 state 98
 
-    (65) Atrib -> ID SWAP ID .
+    (66) Atrib -> ID SWAP ID .
 
-    ;               reduce using rule 65 (Atrib -> ID SWAP ID .)
+    ;               reduce using rule 66 (Atrib -> ID SWAP ID .)
 
 
 state 99
@@ -2743,10 +2743,10 @@ state 99
     (54) AtribArray -> ID ArraySize LARROW . AtribOp
     (48) AtribOp -> . AtribNum
     (49) AtribOp -> . Op
-    (60) AtribNum -> . ID LARROW AtribOp
-    (61) AtribNum -> . AtribOp RARROW ID
-    (62) AtribNum -> . AtribArray
-    (67) Op -> . OpBin
+    (61) AtribNum -> . ID LARROW AtribOp
+    (62) AtribNum -> . AtribOp RARROW ID
+    (63) AtribNum -> . AtribArray
+    (68) Op -> . OpBin
     (54) AtribArray -> . ID ArraySize LARROW AtribOp
     (55) AtribArray -> . AtribOp RARROW ID ArraySize
     (73) OpBin -> . OpBin OpLogico TermMod
@@ -2765,12 +2765,12 @@ state 99
     (86) Base -> . NUM
     (87) Base -> . FunCall
     (88) Base -> . READ
-    (68) OpUno -> . NEG Base
-    (69) OpUno -> . AccessArray
-    (70) OpUno -> . SUB Base
-    (71) OpUno -> . Base PRINT
+    (69) OpUno -> . NEG Base
+    (70) OpUno -> . AccessArray
+    (71) OpUno -> . SUB Base
+    (72) OpUno -> . Base PRINT
     (89) FunCall -> . ID ( FunArg )
-    (72) AccessArray -> . ID ArraySize
+    (56) AccessArray -> . ID ArraySize
 
     ID              shift and go to state 53
     (               shift and go to state 12
@@ -2795,13 +2795,13 @@ state 99
 
 state 100
 
-    (56) ArraySize -> ArraySize [ . AtribOp ]
+    (57) ArraySize -> ArraySize [ . AtribOp ]
     (48) AtribOp -> . AtribNum
     (49) AtribOp -> . Op
-    (60) AtribNum -> . ID LARROW AtribOp
-    (61) AtribNum -> . AtribOp RARROW ID
-    (62) AtribNum -> . AtribArray
-    (67) Op -> . OpBin
+    (61) AtribNum -> . ID LARROW AtribOp
+    (62) AtribNum -> . AtribOp RARROW ID
+    (63) AtribNum -> . AtribArray
+    (68) Op -> . OpBin
     (54) AtribArray -> . ID ArraySize LARROW AtribOp
     (55) AtribArray -> . AtribOp RARROW ID ArraySize
     (73) OpBin -> . OpBin OpLogico TermMod
@@ -2820,12 +2820,12 @@ state 100
     (86) Base -> . NUM
     (87) Base -> . FunCall
     (88) Base -> . READ
-    (68) OpUno -> . NEG Base
-    (69) OpUno -> . AccessArray
-    (70) OpUno -> . SUB Base
-    (71) OpUno -> . Base PRINT
+    (69) OpUno -> . NEG Base
+    (70) OpUno -> . AccessArray
+    (71) OpUno -> . SUB Base
+    (72) OpUno -> . Base PRINT
     (89) FunCall -> . ID ( FunArg )
-    (72) AccessArray -> . ID ArraySize
+    (56) AccessArray -> . ID ArraySize
 
     ID              shift and go to state 53
     (               shift and go to state 12
@@ -2850,8 +2850,8 @@ state 100
 
 state 101
 
-    (57) ArraySize -> [ AtribOp . ]
-    (61) AtribNum -> AtribOp . RARROW ID
+    (58) ArraySize -> [ AtribOp . ]
+    (62) AtribNum -> AtribOp . RARROW ID
     (55) AtribArray -> AtribOp . RARROW ID ArraySize
 
     ]               shift and go to state 132
@@ -2897,7 +2897,7 @@ state 102
 
 state 103
 
-    (61) AtribNum -> AtribOp RARROW . ID
+    (62) AtribNum -> AtribOp RARROW . ID
     (55) AtribArray -> AtribOp RARROW . ID ArraySize
 
     ID              shift and go to state 133
@@ -2905,13 +2905,13 @@ state 103
 
 state 104
 
-    (60) AtribNum -> ID LARROW . AtribOp
+    (61) AtribNum -> ID LARROW . AtribOp
     (48) AtribOp -> . AtribNum
     (49) AtribOp -> . Op
-    (60) AtribNum -> . ID LARROW AtribOp
-    (61) AtribNum -> . AtribOp RARROW ID
-    (62) AtribNum -> . AtribArray
-    (67) Op -> . OpBin
+    (61) AtribNum -> . ID LARROW AtribOp
+    (62) AtribNum -> . AtribOp RARROW ID
+    (63) AtribNum -> . AtribArray
+    (68) Op -> . OpBin
     (54) AtribArray -> . ID ArraySize LARROW AtribOp
     (55) AtribArray -> . AtribOp RARROW ID ArraySize
     (73) OpBin -> . OpBin OpLogico TermMod
@@ -2930,12 +2930,12 @@ state 104
     (86) Base -> . NUM
     (87) Base -> . FunCall
     (88) Base -> . READ
-    (68) OpUno -> . NEG Base
-    (69) OpUno -> . AccessArray
-    (70) OpUno -> . SUB Base
-    (71) OpUno -> . Base PRINT
+    (69) OpUno -> . NEG Base
+    (70) OpUno -> . AccessArray
+    (71) OpUno -> . SUB Base
+    (72) OpUno -> . Base PRINT
     (89) FunCall -> . ID ( FunArg )
-    (72) AccessArray -> . ID ArraySize
+    (56) AccessArray -> . ID ArraySize
 
     ID              shift and go to state 53
     (               shift and go to state 12
@@ -2988,17 +2988,17 @@ state 105
 state 106
 
     (89) FunCall -> ID . ( FunArg )
-    (63) Atrib -> ID . LARROW AtribOp
-    (65) Atrib -> ID . SWAP ID
+    (64) Atrib -> ID . LARROW AtribOp
+    (66) Atrib -> ID . SWAP ID
     (50) Decl -> ID . ID
     (51) DeclArray -> ID . ID DeclArraySize
-    (58) DeclAtrib -> ID . ID LARROW AtribOp
+    (59) DeclAtrib -> ID . ID LARROW AtribOp
     (54) AtribArray -> ID . ArraySize LARROW AtribOp
-    (60) AtribNum -> ID . LARROW AtribOp
+    (61) AtribNum -> ID . LARROW AtribOp
     (85) Base -> ID .
-    (72) AccessArray -> ID . ArraySize
-    (56) ArraySize -> . ArraySize [ AtribOp ]
-    (57) ArraySize -> . [ AtribOp ]
+    (56) AccessArray -> ID . ArraySize
+    (57) ArraySize -> . ArraySize [ AtribOp ]
+    (58) ArraySize -> . [ AtribOp ]
 
     (               shift and go to state 45
     LARROW          shift and go to state 46
@@ -3048,15 +3048,15 @@ state 107
     (28) IfElse -> . IfScope AtribOp Body ElseScope Body
     (30) While -> . WhileScope ( AtribOp ) Body
     (33) Switch -> . SwitchScope Conds { Cases }
-    (63) Atrib -> . ID LARROW AtribOp
-    (64) Atrib -> . AtribOp RARROW ID
-    (65) Atrib -> . ID SWAP ID
-    (66) Atrib -> . AtribArray
-    (67) Op -> . OpBin
+    (64) Atrib -> . ID LARROW AtribOp
+    (65) Atrib -> . AtribOp RARROW ID
+    (66) Atrib -> . ID SWAP ID
+    (67) Atrib -> . AtribArray
+    (68) Op -> . OpBin
     (50) Decl -> . ID ID
     (51) DeclArray -> . ID ID DeclArraySize
-    (58) DeclAtrib -> . ID ID LARROW AtribOp
-    (59) DeclAtrib -> . AtribOp RARROW ID ID
+    (59) DeclAtrib -> . ID ID LARROW AtribOp
+    (60) DeclAtrib -> . AtribOp RARROW ID ID
     (25) IfScope -> . IF
     (29) WhileScope -> . WHILE
     (31) SwitchScope -> . SWITCHCOND
@@ -3067,9 +3067,9 @@ state 107
     (55) AtribArray -> . AtribOp RARROW ID ArraySize
     (73) OpBin -> . OpBin OpLogico TermMod
     (74) OpBin -> . TermMod
-    (60) AtribNum -> . ID LARROW AtribOp
-    (61) AtribNum -> . AtribOp RARROW ID
-    (62) AtribNum -> . AtribArray
+    (61) AtribNum -> . ID LARROW AtribOp
+    (62) AtribNum -> . AtribOp RARROW ID
+    (63) AtribNum -> . AtribArray
     (75) TermMod -> . TermMod OpMod TermPlus
     (76) TermMod -> . TermPlus
     (77) TermPlus -> . TermPlus OpPlus TermMult
@@ -3084,11 +3084,11 @@ state 107
     (86) Base -> . NUM
     (87) Base -> . FunCall
     (88) Base -> . READ
-    (68) OpUno -> . NEG Base
-    (69) OpUno -> . AccessArray
-    (70) OpUno -> . SUB Base
-    (71) OpUno -> . Base PRINT
-    (72) AccessArray -> . ID ArraySize
+    (69) OpUno -> . NEG Base
+    (70) OpUno -> . AccessArray
+    (71) OpUno -> . SUB Base
+    (72) OpUno -> . Base PRINT
+    (56) AccessArray -> . ID ArraySize
 
     }               shift and go to state 137
     ID              shift and go to state 106
@@ -3154,16 +3154,16 @@ state 108
 
 state 109
 
-    (64) Atrib -> AtribOp RARROW ID .
-    (59) DeclAtrib -> AtribOp RARROW ID . ID
+    (65) Atrib -> AtribOp RARROW ID .
+    (60) DeclAtrib -> AtribOp RARROW ID . ID
     (55) AtribArray -> AtribOp RARROW ID . ArraySize
-    (61) AtribNum -> AtribOp RARROW ID .
-    (56) ArraySize -> . ArraySize [ AtribOp ]
-    (57) ArraySize -> . [ AtribOp ]
+    (62) AtribNum -> AtribOp RARROW ID .
+    (57) ArraySize -> . ArraySize [ AtribOp ]
+    (58) ArraySize -> . [ AtribOp ]
 
-    ;               reduce using rule 64 (Atrib -> AtribOp RARROW ID .)
+    ;               reduce using rule 65 (Atrib -> AtribOp RARROW ID .)
     ID              shift and go to state 140
-    RARROW          reduce using rule 61 (AtribNum -> AtribOp RARROW ID .)
+    RARROW          reduce using rule 62 (AtribNum -> AtribOp RARROW ID .)
     [               shift and go to state 50
 
     ArraySize                      shift and go to state 141
@@ -3171,7 +3171,7 @@ state 109
 state 110
 
     (30) While -> WhileScope ( AtribOp . ) Body
-    (61) AtribNum -> AtribOp . RARROW ID
+    (62) AtribNum -> AtribOp . RARROW ID
     (55) AtribArray -> AtribOp . RARROW ID ArraySize
 
     )               shift and go to state 142
@@ -3208,10 +3208,10 @@ state 113
     (36) Cond -> ID ( . AtribOp )
     (48) AtribOp -> . AtribNum
     (49) AtribOp -> . Op
-    (60) AtribNum -> . ID LARROW AtribOp
-    (61) AtribNum -> . AtribOp RARROW ID
-    (62) AtribNum -> . AtribArray
-    (67) Op -> . OpBin
+    (61) AtribNum -> . ID LARROW AtribOp
+    (62) AtribNum -> . AtribOp RARROW ID
+    (63) AtribNum -> . AtribArray
+    (68) Op -> . OpBin
     (54) AtribArray -> . ID ArraySize LARROW AtribOp
     (55) AtribArray -> . AtribOp RARROW ID ArraySize
     (73) OpBin -> . OpBin OpLogico TermMod
@@ -3230,12 +3230,12 @@ state 113
     (86) Base -> . NUM
     (87) Base -> . FunCall
     (88) Base -> . READ
-    (68) OpUno -> . NEG Base
-    (69) OpUno -> . AccessArray
-    (70) OpUno -> . SUB Base
-    (71) OpUno -> . Base PRINT
+    (69) OpUno -> . NEG Base
+    (70) OpUno -> . AccessArray
+    (71) OpUno -> . SUB Base
+    (72) OpUno -> . Base PRINT
     (89) FunCall -> . ID ( FunArg )
-    (72) AccessArray -> . ID ArraySize
+    (56) AccessArray -> . ID ArraySize
 
     ID              shift and go to state 53
     (               shift and go to state 12
@@ -3261,7 +3261,7 @@ state 113
 state 114
 
     (37) Cond -> ( AtribOp . )
-    (61) AtribNum -> AtribOp . RARROW ID
+    (62) AtribNum -> AtribOp . RARROW ID
     (55) AtribArray -> AtribOp . RARROW ID ArraySize
 
     )               shift and go to state 149
@@ -3424,7 +3424,7 @@ state 118
 state 119
 
     (81) TermPow -> TermPow OpPow Base .
-    (71) OpUno -> Base . PRINT
+    (72) OpUno -> Base . PRINT
 
     POW             reduce using rule 81 (TermPow -> TermPow OpPow Base .)
     MUL             reduce using rule 81 (TermPow -> TermPow OpPow Base .)
@@ -3461,40 +3461,40 @@ state 119
 
 state 120
 
-    (72) AccessArray -> ID ArraySize .
-    (56) ArraySize -> ArraySize . [ AtribOp ]
+    (56) AccessArray -> ID ArraySize .
+    (57) ArraySize -> ArraySize . [ AtribOp ]
 
-    PRINT           reduce using rule 72 (AccessArray -> ID ArraySize .)
-    POW             reduce using rule 72 (AccessArray -> ID ArraySize .)
-    MUL             reduce using rule 72 (AccessArray -> ID ArraySize .)
-    DIV             reduce using rule 72 (AccessArray -> ID ArraySize .)
-    ADD             reduce using rule 72 (AccessArray -> ID ArraySize .)
-    SUB             reduce using rule 72 (AccessArray -> ID ArraySize .)
-    MOD             reduce using rule 72 (AccessArray -> ID ArraySize .)
-    DIFF            reduce using rule 72 (AccessArray -> ID ArraySize .)
-    AND             reduce using rule 72 (AccessArray -> ID ArraySize .)
-    OR              reduce using rule 72 (AccessArray -> ID ArraySize .)
-    LESSER          reduce using rule 72 (AccessArray -> ID ArraySize .)
-    GREATER         reduce using rule 72 (AccessArray -> ID ArraySize .)
-    LEQ             reduce using rule 72 (AccessArray -> ID ArraySize .)
-    GEQ             reduce using rule 72 (AccessArray -> ID ArraySize .)
-    EQUAL           reduce using rule 72 (AccessArray -> ID ArraySize .)
-    ;               reduce using rule 72 (AccessArray -> ID ArraySize .)
-    RARROW          reduce using rule 72 (AccessArray -> ID ArraySize .)
-    )               reduce using rule 72 (AccessArray -> ID ArraySize .)
-    {               reduce using rule 72 (AccessArray -> ID ArraySize .)
-    ID              reduce using rule 72 (AccessArray -> ID ArraySize .)
-    STRING          reduce using rule 72 (AccessArray -> ID ArraySize .)
-    IF              reduce using rule 72 (AccessArray -> ID ArraySize .)
-    WHILE           reduce using rule 72 (AccessArray -> ID ArraySize .)
-    SWITCHCOND      reduce using rule 72 (AccessArray -> ID ArraySize .)
-    SWITCHCASE      reduce using rule 72 (AccessArray -> ID ArraySize .)
-    (               reduce using rule 72 (AccessArray -> ID ArraySize .)
-    NUM             reduce using rule 72 (AccessArray -> ID ArraySize .)
-    READ            reduce using rule 72 (AccessArray -> ID ArraySize .)
-    NEG             reduce using rule 72 (AccessArray -> ID ArraySize .)
-    ,               reduce using rule 72 (AccessArray -> ID ArraySize .)
-    ]               reduce using rule 72 (AccessArray -> ID ArraySize .)
+    PRINT           reduce using rule 56 (AccessArray -> ID ArraySize .)
+    POW             reduce using rule 56 (AccessArray -> ID ArraySize .)
+    MUL             reduce using rule 56 (AccessArray -> ID ArraySize .)
+    DIV             reduce using rule 56 (AccessArray -> ID ArraySize .)
+    ADD             reduce using rule 56 (AccessArray -> ID ArraySize .)
+    SUB             reduce using rule 56 (AccessArray -> ID ArraySize .)
+    MOD             reduce using rule 56 (AccessArray -> ID ArraySize .)
+    DIFF            reduce using rule 56 (AccessArray -> ID ArraySize .)
+    AND             reduce using rule 56 (AccessArray -> ID ArraySize .)
+    OR              reduce using rule 56 (AccessArray -> ID ArraySize .)
+    LESSER          reduce using rule 56 (AccessArray -> ID ArraySize .)
+    GREATER         reduce using rule 56 (AccessArray -> ID ArraySize .)
+    LEQ             reduce using rule 56 (AccessArray -> ID ArraySize .)
+    GEQ             reduce using rule 56 (AccessArray -> ID ArraySize .)
+    EQUAL           reduce using rule 56 (AccessArray -> ID ArraySize .)
+    ;               reduce using rule 56 (AccessArray -> ID ArraySize .)
+    RARROW          reduce using rule 56 (AccessArray -> ID ArraySize .)
+    )               reduce using rule 56 (AccessArray -> ID ArraySize .)
+    {               reduce using rule 56 (AccessArray -> ID ArraySize .)
+    ID              reduce using rule 56 (AccessArray -> ID ArraySize .)
+    STRING          reduce using rule 56 (AccessArray -> ID ArraySize .)
+    IF              reduce using rule 56 (AccessArray -> ID ArraySize .)
+    WHILE           reduce using rule 56 (AccessArray -> ID ArraySize .)
+    SWITCHCOND      reduce using rule 56 (AccessArray -> ID ArraySize .)
+    SWITCHCASE      reduce using rule 56 (AccessArray -> ID ArraySize .)
+    (               reduce using rule 56 (AccessArray -> ID ArraySize .)
+    NUM             reduce using rule 56 (AccessArray -> ID ArraySize .)
+    READ            reduce using rule 56 (AccessArray -> ID ArraySize .)
+    NEG             reduce using rule 56 (AccessArray -> ID ArraySize .)
+    ,               reduce using rule 56 (AccessArray -> ID ArraySize .)
+    ]               reduce using rule 56 (AccessArray -> ID ArraySize .)
     [               shift and go to state 100
 
 
@@ -3507,11 +3507,11 @@ state 121
 
 state 122
 
-    (58) DeclAtrib -> ID ID LARROW AtribOp .
-    (61) AtribNum -> AtribOp . RARROW ID
+    (59) DeclAtrib -> ID ID LARROW AtribOp .
+    (62) AtribNum -> AtribOp . RARROW ID
     (55) AtribArray -> AtribOp . RARROW ID ArraySize
 
-    ;               reduce using rule 58 (DeclAtrib -> ID ID LARROW AtribOp .)
+    ;               reduce using rule 59 (DeclAtrib -> ID ID LARROW AtribOp .)
     RARROW          shift and go to state 103
 
 
@@ -3614,10 +3614,10 @@ state 129
     (92) FunRec -> FunRec , . AtribOp
     (48) AtribOp -> . AtribNum
     (49) AtribOp -> . Op
-    (60) AtribNum -> . ID LARROW AtribOp
-    (61) AtribNum -> . AtribOp RARROW ID
-    (62) AtribNum -> . AtribArray
-    (67) Op -> . OpBin
+    (61) AtribNum -> . ID LARROW AtribOp
+    (62) AtribNum -> . AtribOp RARROW ID
+    (63) AtribNum -> . AtribArray
+    (68) Op -> . OpBin
     (54) AtribArray -> . ID ArraySize LARROW AtribOp
     (55) AtribArray -> . AtribOp RARROW ID ArraySize
     (73) OpBin -> . OpBin OpLogico TermMod
@@ -3636,12 +3636,12 @@ state 129
     (86) Base -> . NUM
     (87) Base -> . FunCall
     (88) Base -> . READ
-    (68) OpUno -> . NEG Base
-    (69) OpUno -> . AccessArray
-    (70) OpUno -> . SUB Base
-    (71) OpUno -> . Base PRINT
+    (69) OpUno -> . NEG Base
+    (70) OpUno -> . AccessArray
+    (71) OpUno -> . SUB Base
+    (72) OpUno -> . Base PRINT
     (89) FunCall -> . ID ( FunArg )
-    (72) AccessArray -> . ID ArraySize
+    (56) AccessArray -> . ID ArraySize
 
     ID              shift and go to state 53
     (               shift and go to state 12
@@ -3667,7 +3667,7 @@ state 129
 state 130
 
     (54) AtribArray -> ID ArraySize LARROW AtribOp .
-    (61) AtribNum -> AtribOp . RARROW ID
+    (62) AtribNum -> AtribOp . RARROW ID
     (55) AtribArray -> AtribOp . RARROW ID ArraySize
 
   ! shift/reduce conflict for RARROW resolved as shift
@@ -3694,8 +3694,8 @@ state 130
 
 state 131
 
-    (56) ArraySize -> ArraySize [ AtribOp . ]
-    (61) AtribNum -> AtribOp . RARROW ID
+    (57) ArraySize -> ArraySize [ AtribOp . ]
+    (62) AtribNum -> AtribOp . RARROW ID
     (55) AtribArray -> AtribOp . RARROW ID ArraySize
 
     ]               shift and go to state 155
@@ -3704,97 +3704,97 @@ state 131
 
 state 132
 
-    (57) ArraySize -> [ AtribOp ] .
+    (58) ArraySize -> [ AtribOp ] .
 
-    LARROW          reduce using rule 57 (ArraySize -> [ AtribOp ] .)
-    [               reduce using rule 57 (ArraySize -> [ AtribOp ] .)
-    PRINT           reduce using rule 57 (ArraySize -> [ AtribOp ] .)
-    POW             reduce using rule 57 (ArraySize -> [ AtribOp ] .)
-    MUL             reduce using rule 57 (ArraySize -> [ AtribOp ] .)
-    DIV             reduce using rule 57 (ArraySize -> [ AtribOp ] .)
-    ADD             reduce using rule 57 (ArraySize -> [ AtribOp ] .)
-    SUB             reduce using rule 57 (ArraySize -> [ AtribOp ] .)
-    MOD             reduce using rule 57 (ArraySize -> [ AtribOp ] .)
-    DIFF            reduce using rule 57 (ArraySize -> [ AtribOp ] .)
-    AND             reduce using rule 57 (ArraySize -> [ AtribOp ] .)
-    OR              reduce using rule 57 (ArraySize -> [ AtribOp ] .)
-    LESSER          reduce using rule 57 (ArraySize -> [ AtribOp ] .)
-    GREATER         reduce using rule 57 (ArraySize -> [ AtribOp ] .)
-    LEQ             reduce using rule 57 (ArraySize -> [ AtribOp ] .)
-    GEQ             reduce using rule 57 (ArraySize -> [ AtribOp ] .)
-    EQUAL           reduce using rule 57 (ArraySize -> [ AtribOp ] .)
-    ;               reduce using rule 57 (ArraySize -> [ AtribOp ] .)
-    RARROW          reduce using rule 57 (ArraySize -> [ AtribOp ] .)
-    )               reduce using rule 57 (ArraySize -> [ AtribOp ] .)
-    {               reduce using rule 57 (ArraySize -> [ AtribOp ] .)
-    ID              reduce using rule 57 (ArraySize -> [ AtribOp ] .)
-    STRING          reduce using rule 57 (ArraySize -> [ AtribOp ] .)
-    IF              reduce using rule 57 (ArraySize -> [ AtribOp ] .)
-    WHILE           reduce using rule 57 (ArraySize -> [ AtribOp ] .)
-    SWITCHCOND      reduce using rule 57 (ArraySize -> [ AtribOp ] .)
-    SWITCHCASE      reduce using rule 57 (ArraySize -> [ AtribOp ] .)
-    (               reduce using rule 57 (ArraySize -> [ AtribOp ] .)
-    NUM             reduce using rule 57 (ArraySize -> [ AtribOp ] .)
-    READ            reduce using rule 57 (ArraySize -> [ AtribOp ] .)
-    NEG             reduce using rule 57 (ArraySize -> [ AtribOp ] .)
-    ,               reduce using rule 57 (ArraySize -> [ AtribOp ] .)
-    ]               reduce using rule 57 (ArraySize -> [ AtribOp ] .)
+    LARROW          reduce using rule 58 (ArraySize -> [ AtribOp ] .)
+    [               reduce using rule 58 (ArraySize -> [ AtribOp ] .)
+    PRINT           reduce using rule 58 (ArraySize -> [ AtribOp ] .)
+    POW             reduce using rule 58 (ArraySize -> [ AtribOp ] .)
+    MUL             reduce using rule 58 (ArraySize -> [ AtribOp ] .)
+    DIV             reduce using rule 58 (ArraySize -> [ AtribOp ] .)
+    ADD             reduce using rule 58 (ArraySize -> [ AtribOp ] .)
+    SUB             reduce using rule 58 (ArraySize -> [ AtribOp ] .)
+    MOD             reduce using rule 58 (ArraySize -> [ AtribOp ] .)
+    DIFF            reduce using rule 58 (ArraySize -> [ AtribOp ] .)
+    AND             reduce using rule 58 (ArraySize -> [ AtribOp ] .)
+    OR              reduce using rule 58 (ArraySize -> [ AtribOp ] .)
+    LESSER          reduce using rule 58 (ArraySize -> [ AtribOp ] .)
+    GREATER         reduce using rule 58 (ArraySize -> [ AtribOp ] .)
+    LEQ             reduce using rule 58 (ArraySize -> [ AtribOp ] .)
+    GEQ             reduce using rule 58 (ArraySize -> [ AtribOp ] .)
+    EQUAL           reduce using rule 58 (ArraySize -> [ AtribOp ] .)
+    ;               reduce using rule 58 (ArraySize -> [ AtribOp ] .)
+    RARROW          reduce using rule 58 (ArraySize -> [ AtribOp ] .)
+    )               reduce using rule 58 (ArraySize -> [ AtribOp ] .)
+    {               reduce using rule 58 (ArraySize -> [ AtribOp ] .)
+    ID              reduce using rule 58 (ArraySize -> [ AtribOp ] .)
+    STRING          reduce using rule 58 (ArraySize -> [ AtribOp ] .)
+    IF              reduce using rule 58 (ArraySize -> [ AtribOp ] .)
+    WHILE           reduce using rule 58 (ArraySize -> [ AtribOp ] .)
+    SWITCHCOND      reduce using rule 58 (ArraySize -> [ AtribOp ] .)
+    SWITCHCASE      reduce using rule 58 (ArraySize -> [ AtribOp ] .)
+    (               reduce using rule 58 (ArraySize -> [ AtribOp ] .)
+    NUM             reduce using rule 58 (ArraySize -> [ AtribOp ] .)
+    READ            reduce using rule 58 (ArraySize -> [ AtribOp ] .)
+    NEG             reduce using rule 58 (ArraySize -> [ AtribOp ] .)
+    ,               reduce using rule 58 (ArraySize -> [ AtribOp ] .)
+    ]               reduce using rule 58 (ArraySize -> [ AtribOp ] .)
 
 
 state 133
 
-    (61) AtribNum -> AtribOp RARROW ID .
+    (62) AtribNum -> AtribOp RARROW ID .
     (55) AtribArray -> AtribOp RARROW ID . ArraySize
-    (56) ArraySize -> . ArraySize [ AtribOp ]
-    (57) ArraySize -> . [ AtribOp ]
+    (57) ArraySize -> . ArraySize [ AtribOp ]
+    (58) ArraySize -> . [ AtribOp ]
 
-    )               reduce using rule 61 (AtribNum -> AtribOp RARROW ID .)
-    RARROW          reduce using rule 61 (AtribNum -> AtribOp RARROW ID .)
-    {               reduce using rule 61 (AtribNum -> AtribOp RARROW ID .)
-    ID              reduce using rule 61 (AtribNum -> AtribOp RARROW ID .)
-    STRING          reduce using rule 61 (AtribNum -> AtribOp RARROW ID .)
-    IF              reduce using rule 61 (AtribNum -> AtribOp RARROW ID .)
-    WHILE           reduce using rule 61 (AtribNum -> AtribOp RARROW ID .)
-    SWITCHCOND      reduce using rule 61 (AtribNum -> AtribOp RARROW ID .)
-    SWITCHCASE      reduce using rule 61 (AtribNum -> AtribOp RARROW ID .)
-    (               reduce using rule 61 (AtribNum -> AtribOp RARROW ID .)
-    NUM             reduce using rule 61 (AtribNum -> AtribOp RARROW ID .)
-    READ            reduce using rule 61 (AtribNum -> AtribOp RARROW ID .)
-    NEG             reduce using rule 61 (AtribNum -> AtribOp RARROW ID .)
-    SUB             reduce using rule 61 (AtribNum -> AtribOp RARROW ID .)
-    ,               reduce using rule 61 (AtribNum -> AtribOp RARROW ID .)
-    ;               reduce using rule 61 (AtribNum -> AtribOp RARROW ID .)
-    ]               reduce using rule 61 (AtribNum -> AtribOp RARROW ID .)
+    )               reduce using rule 62 (AtribNum -> AtribOp RARROW ID .)
+    RARROW          reduce using rule 62 (AtribNum -> AtribOp RARROW ID .)
+    {               reduce using rule 62 (AtribNum -> AtribOp RARROW ID .)
+    ID              reduce using rule 62 (AtribNum -> AtribOp RARROW ID .)
+    STRING          reduce using rule 62 (AtribNum -> AtribOp RARROW ID .)
+    IF              reduce using rule 62 (AtribNum -> AtribOp RARROW ID .)
+    WHILE           reduce using rule 62 (AtribNum -> AtribOp RARROW ID .)
+    SWITCHCOND      reduce using rule 62 (AtribNum -> AtribOp RARROW ID .)
+    SWITCHCASE      reduce using rule 62 (AtribNum -> AtribOp RARROW ID .)
+    (               reduce using rule 62 (AtribNum -> AtribOp RARROW ID .)
+    NUM             reduce using rule 62 (AtribNum -> AtribOp RARROW ID .)
+    READ            reduce using rule 62 (AtribNum -> AtribOp RARROW ID .)
+    NEG             reduce using rule 62 (AtribNum -> AtribOp RARROW ID .)
+    SUB             reduce using rule 62 (AtribNum -> AtribOp RARROW ID .)
+    ,               reduce using rule 62 (AtribNum -> AtribOp RARROW ID .)
+    ;               reduce using rule 62 (AtribNum -> AtribOp RARROW ID .)
+    ]               reduce using rule 62 (AtribNum -> AtribOp RARROW ID .)
     [               shift and go to state 50
 
     ArraySize                      shift and go to state 141
 
 state 134
 
-    (60) AtribNum -> ID LARROW AtribOp .
-    (61) AtribNum -> AtribOp . RARROW ID
+    (61) AtribNum -> ID LARROW AtribOp .
+    (62) AtribNum -> AtribOp . RARROW ID
     (55) AtribArray -> AtribOp . RARROW ID ArraySize
 
   ! shift/reduce conflict for RARROW resolved as shift
-    )               reduce using rule 60 (AtribNum -> ID LARROW AtribOp .)
-    {               reduce using rule 60 (AtribNum -> ID LARROW AtribOp .)
-    ID              reduce using rule 60 (AtribNum -> ID LARROW AtribOp .)
-    STRING          reduce using rule 60 (AtribNum -> ID LARROW AtribOp .)
-    IF              reduce using rule 60 (AtribNum -> ID LARROW AtribOp .)
-    WHILE           reduce using rule 60 (AtribNum -> ID LARROW AtribOp .)
-    SWITCHCOND      reduce using rule 60 (AtribNum -> ID LARROW AtribOp .)
-    SWITCHCASE      reduce using rule 60 (AtribNum -> ID LARROW AtribOp .)
-    (               reduce using rule 60 (AtribNum -> ID LARROW AtribOp .)
-    NUM             reduce using rule 60 (AtribNum -> ID LARROW AtribOp .)
-    READ            reduce using rule 60 (AtribNum -> ID LARROW AtribOp .)
-    NEG             reduce using rule 60 (AtribNum -> ID LARROW AtribOp .)
-    SUB             reduce using rule 60 (AtribNum -> ID LARROW AtribOp .)
-    ,               reduce using rule 60 (AtribNum -> ID LARROW AtribOp .)
-    ;               reduce using rule 60 (AtribNum -> ID LARROW AtribOp .)
-    ]               reduce using rule 60 (AtribNum -> ID LARROW AtribOp .)
+    )               reduce using rule 61 (AtribNum -> ID LARROW AtribOp .)
+    {               reduce using rule 61 (AtribNum -> ID LARROW AtribOp .)
+    ID              reduce using rule 61 (AtribNum -> ID LARROW AtribOp .)
+    STRING          reduce using rule 61 (AtribNum -> ID LARROW AtribOp .)
+    IF              reduce using rule 61 (AtribNum -> ID LARROW AtribOp .)
+    WHILE           reduce using rule 61 (AtribNum -> ID LARROW AtribOp .)
+    SWITCHCOND      reduce using rule 61 (AtribNum -> ID LARROW AtribOp .)
+    SWITCHCASE      reduce using rule 61 (AtribNum -> ID LARROW AtribOp .)
+    (               reduce using rule 61 (AtribNum -> ID LARROW AtribOp .)
+    NUM             reduce using rule 61 (AtribNum -> ID LARROW AtribOp .)
+    READ            reduce using rule 61 (AtribNum -> ID LARROW AtribOp .)
+    NEG             reduce using rule 61 (AtribNum -> ID LARROW AtribOp .)
+    SUB             reduce using rule 61 (AtribNum -> ID LARROW AtribOp .)
+    ,               reduce using rule 61 (AtribNum -> ID LARROW AtribOp .)
+    ;               reduce using rule 61 (AtribNum -> ID LARROW AtribOp .)
+    ]               reduce using rule 61 (AtribNum -> ID LARROW AtribOp .)
     RARROW          shift and go to state 103
 
-  ! RARROW          [ reduce using rule 60 (AtribNum -> ID LARROW AtribOp .) ]
+  ! RARROW          [ reduce using rule 61 (AtribNum -> ID LARROW AtribOp .) ]
 
 
 state 135
@@ -3820,15 +3820,15 @@ state 135
     (28) IfElse -> . IfScope AtribOp Body ElseScope Body
     (30) While -> . WhileScope ( AtribOp ) Body
     (33) Switch -> . SwitchScope Conds { Cases }
-    (63) Atrib -> . ID LARROW AtribOp
-    (64) Atrib -> . AtribOp RARROW ID
-    (65) Atrib -> . ID SWAP ID
-    (66) Atrib -> . AtribArray
-    (67) Op -> . OpBin
+    (64) Atrib -> . ID LARROW AtribOp
+    (65) Atrib -> . AtribOp RARROW ID
+    (66) Atrib -> . ID SWAP ID
+    (67) Atrib -> . AtribArray
+    (68) Op -> . OpBin
     (50) Decl -> . ID ID
     (51) DeclArray -> . ID ID DeclArraySize
-    (58) DeclAtrib -> . ID ID LARROW AtribOp
-    (59) DeclAtrib -> . AtribOp RARROW ID ID
+    (59) DeclAtrib -> . ID ID LARROW AtribOp
+    (60) DeclAtrib -> . AtribOp RARROW ID ID
     (25) IfScope -> . IF
     (29) WhileScope -> . WHILE
     (31) SwitchScope -> . SWITCHCOND
@@ -3839,9 +3839,9 @@ state 135
     (55) AtribArray -> . AtribOp RARROW ID ArraySize
     (73) OpBin -> . OpBin OpLogico TermMod
     (74) OpBin -> . TermMod
-    (60) AtribNum -> . ID LARROW AtribOp
-    (61) AtribNum -> . AtribOp RARROW ID
-    (62) AtribNum -> . AtribArray
+    (61) AtribNum -> . ID LARROW AtribOp
+    (62) AtribNum -> . AtribOp RARROW ID
+    (63) AtribNum -> . AtribArray
     (75) TermMod -> . TermMod OpMod TermPlus
     (76) TermMod -> . TermPlus
     (77) TermPlus -> . TermPlus OpPlus TermMult
@@ -3856,11 +3856,11 @@ state 135
     (86) Base -> . NUM
     (87) Base -> . FunCall
     (88) Base -> . READ
-    (68) OpUno -> . NEG Base
-    (69) OpUno -> . AccessArray
-    (70) OpUno -> . SUB Base
-    (71) OpUno -> . Base PRINT
-    (72) AccessArray -> . ID ArraySize
+    (69) OpUno -> . NEG Base
+    (70) OpUno -> . AccessArray
+    (71) OpUno -> . SUB Base
+    (72) OpUno -> . Base PRINT
+    (56) AccessArray -> . ID ArraySize
 
     {               shift and go to state 107
     ID              shift and go to state 106
@@ -3963,15 +3963,15 @@ state 138
     (28) IfElse -> . IfScope AtribOp Body ElseScope Body
     (30) While -> . WhileScope ( AtribOp ) Body
     (33) Switch -> . SwitchScope Conds { Cases }
-    (63) Atrib -> . ID LARROW AtribOp
-    (64) Atrib -> . AtribOp RARROW ID
-    (65) Atrib -> . ID SWAP ID
-    (66) Atrib -> . AtribArray
-    (67) Op -> . OpBin
+    (64) Atrib -> . ID LARROW AtribOp
+    (65) Atrib -> . AtribOp RARROW ID
+    (66) Atrib -> . ID SWAP ID
+    (67) Atrib -> . AtribArray
+    (68) Op -> . OpBin
     (50) Decl -> . ID ID
     (51) DeclArray -> . ID ID DeclArraySize
-    (58) DeclAtrib -> . ID ID LARROW AtribOp
-    (59) DeclAtrib -> . AtribOp RARROW ID ID
+    (59) DeclAtrib -> . ID ID LARROW AtribOp
+    (60) DeclAtrib -> . AtribOp RARROW ID ID
     (25) IfScope -> . IF
     (29) WhileScope -> . WHILE
     (31) SwitchScope -> . SWITCHCOND
@@ -3982,9 +3982,9 @@ state 138
     (55) AtribArray -> . AtribOp RARROW ID ArraySize
     (73) OpBin -> . OpBin OpLogico TermMod
     (74) OpBin -> . TermMod
-    (60) AtribNum -> . ID LARROW AtribOp
-    (61) AtribNum -> . AtribOp RARROW ID
-    (62) AtribNum -> . AtribArray
+    (61) AtribNum -> . ID LARROW AtribOp
+    (62) AtribNum -> . AtribOp RARROW ID
+    (63) AtribNum -> . AtribArray
     (75) TermMod -> . TermMod OpMod TermPlus
     (76) TermMod -> . TermPlus
     (77) TermPlus -> . TermPlus OpPlus TermMult
@@ -3999,11 +3999,11 @@ state 138
     (86) Base -> . NUM
     (87) Base -> . FunCall
     (88) Base -> . READ
-    (68) OpUno -> . NEG Base
-    (69) OpUno -> . AccessArray
-    (70) OpUno -> . SUB Base
-    (71) OpUno -> . Base PRINT
-    (72) AccessArray -> . ID ArraySize
+    (69) OpUno -> . NEG Base
+    (70) OpUno -> . AccessArray
+    (71) OpUno -> . SUB Base
+    (72) OpUno -> . Base PRINT
+    (56) AccessArray -> . ID ArraySize
 
     }               shift and go to state 157
     ID              shift and go to state 106
@@ -4065,15 +4065,15 @@ state 139
 
 state 140
 
-    (59) DeclAtrib -> AtribOp RARROW ID ID .
+    (60) DeclAtrib -> AtribOp RARROW ID ID .
 
-    ;               reduce using rule 59 (DeclAtrib -> AtribOp RARROW ID ID .)
+    ;               reduce using rule 60 (DeclAtrib -> AtribOp RARROW ID ID .)
 
 
 state 141
 
     (55) AtribArray -> AtribOp RARROW ID ArraySize .
-    (56) ArraySize -> ArraySize . [ AtribOp ]
+    (57) ArraySize -> ArraySize . [ AtribOp ]
 
     ;               reduce using rule 55 (AtribArray -> AtribOp RARROW ID ArraySize .)
     RARROW          reduce using rule 55 (AtribArray -> AtribOp RARROW ID ArraySize .)
@@ -4118,15 +4118,15 @@ state 142
     (28) IfElse -> . IfScope AtribOp Body ElseScope Body
     (30) While -> . WhileScope ( AtribOp ) Body
     (33) Switch -> . SwitchScope Conds { Cases }
-    (63) Atrib -> . ID LARROW AtribOp
-    (64) Atrib -> . AtribOp RARROW ID
-    (65) Atrib -> . ID SWAP ID
-    (66) Atrib -> . AtribArray
-    (67) Op -> . OpBin
+    (64) Atrib -> . ID LARROW AtribOp
+    (65) Atrib -> . AtribOp RARROW ID
+    (66) Atrib -> . ID SWAP ID
+    (67) Atrib -> . AtribArray
+    (68) Op -> . OpBin
     (50) Decl -> . ID ID
     (51) DeclArray -> . ID ID DeclArraySize
-    (58) DeclAtrib -> . ID ID LARROW AtribOp
-    (59) DeclAtrib -> . AtribOp RARROW ID ID
+    (59) DeclAtrib -> . ID ID LARROW AtribOp
+    (60) DeclAtrib -> . AtribOp RARROW ID ID
     (25) IfScope -> . IF
     (29) WhileScope -> . WHILE
     (31) SwitchScope -> . SWITCHCOND
@@ -4137,9 +4137,9 @@ state 142
     (55) AtribArray -> . AtribOp RARROW ID ArraySize
     (73) OpBin -> . OpBin OpLogico TermMod
     (74) OpBin -> . TermMod
-    (60) AtribNum -> . ID LARROW AtribOp
-    (61) AtribNum -> . AtribOp RARROW ID
-    (62) AtribNum -> . AtribArray
+    (61) AtribNum -> . ID LARROW AtribOp
+    (62) AtribNum -> . AtribOp RARROW ID
+    (63) AtribNum -> . AtribArray
     (75) TermMod -> . TermMod OpMod TermPlus
     (76) TermMod -> . TermPlus
     (77) TermPlus -> . TermPlus OpPlus TermMult
@@ -4154,11 +4154,11 @@ state 142
     (86) Base -> . NUM
     (87) Base -> . FunCall
     (88) Base -> . READ
-    (68) OpUno -> . NEG Base
-    (69) OpUno -> . AccessArray
-    (70) OpUno -> . SUB Base
-    (71) OpUno -> . Base PRINT
-    (72) AccessArray -> . ID ArraySize
+    (69) OpUno -> . NEG Base
+    (70) OpUno -> . AccessArray
+    (71) OpUno -> . SUB Base
+    (72) OpUno -> . Base PRINT
+    (56) AccessArray -> . ID ArraySize
 
     {               shift and go to state 107
     ID              shift and go to state 106
@@ -4253,15 +4253,15 @@ state 146
     (28) IfElse -> . IfScope AtribOp Body ElseScope Body
     (30) While -> . WhileScope ( AtribOp ) Body
     (33) Switch -> . SwitchScope Conds { Cases }
-    (63) Atrib -> . ID LARROW AtribOp
-    (64) Atrib -> . AtribOp RARROW ID
-    (65) Atrib -> . ID SWAP ID
-    (66) Atrib -> . AtribArray
-    (67) Op -> . OpBin
+    (64) Atrib -> . ID LARROW AtribOp
+    (65) Atrib -> . AtribOp RARROW ID
+    (66) Atrib -> . ID SWAP ID
+    (67) Atrib -> . AtribArray
+    (68) Op -> . OpBin
     (50) Decl -> . ID ID
     (51) DeclArray -> . ID ID DeclArraySize
-    (58) DeclAtrib -> . ID ID LARROW AtribOp
-    (59) DeclAtrib -> . AtribOp RARROW ID ID
+    (59) DeclAtrib -> . ID ID LARROW AtribOp
+    (60) DeclAtrib -> . AtribOp RARROW ID ID
     (25) IfScope -> . IF
     (29) WhileScope -> . WHILE
     (31) SwitchScope -> . SWITCHCOND
@@ -4272,9 +4272,9 @@ state 146
     (55) AtribArray -> . AtribOp RARROW ID ArraySize
     (73) OpBin -> . OpBin OpLogico TermMod
     (74) OpBin -> . TermMod
-    (60) AtribNum -> . ID LARROW AtribOp
-    (61) AtribNum -> . AtribOp RARROW ID
-    (62) AtribNum -> . AtribArray
+    (61) AtribNum -> . ID LARROW AtribOp
+    (62) AtribNum -> . AtribOp RARROW ID
+    (63) AtribNum -> . AtribArray
     (75) TermMod -> . TermMod OpMod TermPlus
     (76) TermMod -> . TermPlus
     (77) TermPlus -> . TermPlus OpPlus TermMult
@@ -4289,11 +4289,11 @@ state 146
     (86) Base -> . NUM
     (87) Base -> . FunCall
     (88) Base -> . READ
-    (68) OpUno -> . NEG Base
-    (69) OpUno -> . AccessArray
-    (70) OpUno -> . SUB Base
-    (71) OpUno -> . Base PRINT
-    (72) AccessArray -> . ID ArraySize
+    (69) OpUno -> . NEG Base
+    (70) OpUno -> . AccessArray
+    (71) OpUno -> . SUB Base
+    (72) OpUno -> . Base PRINT
+    (56) AccessArray -> . ID ArraySize
 
     {               shift and go to state 107
     ID              shift and go to state 106
@@ -4347,7 +4347,7 @@ state 147
 state 148
 
     (36) Cond -> ID ( AtribOp . )
-    (61) AtribNum -> AtribOp . RARROW ID
+    (62) AtribNum -> AtribOp . RARROW ID
     (55) AtribArray -> AtribOp . RARROW ID ArraySize
 
     )               shift and go to state 164
@@ -4418,7 +4418,7 @@ state 153
 state 154
 
     (92) FunRec -> FunRec , AtribOp .
-    (61) AtribNum -> AtribOp . RARROW ID
+    (62) AtribNum -> AtribOp . RARROW ID
     (55) AtribArray -> AtribOp . RARROW ID ArraySize
 
     ,               reduce using rule 92 (FunRec -> FunRec , AtribOp .)
@@ -4428,41 +4428,41 @@ state 154
 
 state 155
 
-    (56) ArraySize -> ArraySize [ AtribOp ] .
+    (57) ArraySize -> ArraySize [ AtribOp ] .
 
-    LARROW          reduce using rule 56 (ArraySize -> ArraySize [ AtribOp ] .)
-    [               reduce using rule 56 (ArraySize -> ArraySize [ AtribOp ] .)
-    PRINT           reduce using rule 56 (ArraySize -> ArraySize [ AtribOp ] .)
-    POW             reduce using rule 56 (ArraySize -> ArraySize [ AtribOp ] .)
-    MUL             reduce using rule 56 (ArraySize -> ArraySize [ AtribOp ] .)
-    DIV             reduce using rule 56 (ArraySize -> ArraySize [ AtribOp ] .)
-    ADD             reduce using rule 56 (ArraySize -> ArraySize [ AtribOp ] .)
-    SUB             reduce using rule 56 (ArraySize -> ArraySize [ AtribOp ] .)
-    MOD             reduce using rule 56 (ArraySize -> ArraySize [ AtribOp ] .)
-    DIFF            reduce using rule 56 (ArraySize -> ArraySize [ AtribOp ] .)
-    AND             reduce using rule 56 (ArraySize -> ArraySize [ AtribOp ] .)
-    OR              reduce using rule 56 (ArraySize -> ArraySize [ AtribOp ] .)
-    LESSER          reduce using rule 56 (ArraySize -> ArraySize [ AtribOp ] .)
-    GREATER         reduce using rule 56 (ArraySize -> ArraySize [ AtribOp ] .)
-    LEQ             reduce using rule 56 (ArraySize -> ArraySize [ AtribOp ] .)
-    GEQ             reduce using rule 56 (ArraySize -> ArraySize [ AtribOp ] .)
-    EQUAL           reduce using rule 56 (ArraySize -> ArraySize [ AtribOp ] .)
-    ;               reduce using rule 56 (ArraySize -> ArraySize [ AtribOp ] .)
-    RARROW          reduce using rule 56 (ArraySize -> ArraySize [ AtribOp ] .)
-    )               reduce using rule 56 (ArraySize -> ArraySize [ AtribOp ] .)
-    {               reduce using rule 56 (ArraySize -> ArraySize [ AtribOp ] .)
-    ID              reduce using rule 56 (ArraySize -> ArraySize [ AtribOp ] .)
-    STRING          reduce using rule 56 (ArraySize -> ArraySize [ AtribOp ] .)
-    IF              reduce using rule 56 (ArraySize -> ArraySize [ AtribOp ] .)
-    WHILE           reduce using rule 56 (ArraySize -> ArraySize [ AtribOp ] .)
-    SWITCHCOND      reduce using rule 56 (ArraySize -> ArraySize [ AtribOp ] .)
-    SWITCHCASE      reduce using rule 56 (ArraySize -> ArraySize [ AtribOp ] .)
-    (               reduce using rule 56 (ArraySize -> ArraySize [ AtribOp ] .)
-    NUM             reduce using rule 56 (ArraySize -> ArraySize [ AtribOp ] .)
-    READ            reduce using rule 56 (ArraySize -> ArraySize [ AtribOp ] .)
-    NEG             reduce using rule 56 (ArraySize -> ArraySize [ AtribOp ] .)
-    ,               reduce using rule 56 (ArraySize -> ArraySize [ AtribOp ] .)
-    ]               reduce using rule 56 (ArraySize -> ArraySize [ AtribOp ] .)
+    LARROW          reduce using rule 57 (ArraySize -> ArraySize [ AtribOp ] .)
+    [               reduce using rule 57 (ArraySize -> ArraySize [ AtribOp ] .)
+    PRINT           reduce using rule 57 (ArraySize -> ArraySize [ AtribOp ] .)
+    POW             reduce using rule 57 (ArraySize -> ArraySize [ AtribOp ] .)
+    MUL             reduce using rule 57 (ArraySize -> ArraySize [ AtribOp ] .)
+    DIV             reduce using rule 57 (ArraySize -> ArraySize [ AtribOp ] .)
+    ADD             reduce using rule 57 (ArraySize -> ArraySize [ AtribOp ] .)
+    SUB             reduce using rule 57 (ArraySize -> ArraySize [ AtribOp ] .)
+    MOD             reduce using rule 57 (ArraySize -> ArraySize [ AtribOp ] .)
+    DIFF            reduce using rule 57 (ArraySize -> ArraySize [ AtribOp ] .)
+    AND             reduce using rule 57 (ArraySize -> ArraySize [ AtribOp ] .)
+    OR              reduce using rule 57 (ArraySize -> ArraySize [ AtribOp ] .)
+    LESSER          reduce using rule 57 (ArraySize -> ArraySize [ AtribOp ] .)
+    GREATER         reduce using rule 57 (ArraySize -> ArraySize [ AtribOp ] .)
+    LEQ             reduce using rule 57 (ArraySize -> ArraySize [ AtribOp ] .)
+    GEQ             reduce using rule 57 (ArraySize -> ArraySize [ AtribOp ] .)
+    EQUAL           reduce using rule 57 (ArraySize -> ArraySize [ AtribOp ] .)
+    ;               reduce using rule 57 (ArraySize -> ArraySize [ AtribOp ] .)
+    RARROW          reduce using rule 57 (ArraySize -> ArraySize [ AtribOp ] .)
+    )               reduce using rule 57 (ArraySize -> ArraySize [ AtribOp ] .)
+    {               reduce using rule 57 (ArraySize -> ArraySize [ AtribOp ] .)
+    ID              reduce using rule 57 (ArraySize -> ArraySize [ AtribOp ] .)
+    STRING          reduce using rule 57 (ArraySize -> ArraySize [ AtribOp ] .)
+    IF              reduce using rule 57 (ArraySize -> ArraySize [ AtribOp ] .)
+    WHILE           reduce using rule 57 (ArraySize -> ArraySize [ AtribOp ] .)
+    SWITCHCOND      reduce using rule 57 (ArraySize -> ArraySize [ AtribOp ] .)
+    SWITCHCASE      reduce using rule 57 (ArraySize -> ArraySize [ AtribOp ] .)
+    (               reduce using rule 57 (ArraySize -> ArraySize [ AtribOp ] .)
+    NUM             reduce using rule 57 (ArraySize -> ArraySize [ AtribOp ] .)
+    READ            reduce using rule 57 (ArraySize -> ArraySize [ AtribOp ] .)
+    NEG             reduce using rule 57 (ArraySize -> ArraySize [ AtribOp ] .)
+    ,               reduce using rule 57 (ArraySize -> ArraySize [ AtribOp ] .)
+    ]               reduce using rule 57 (ArraySize -> ArraySize [ AtribOp ] .)
 
 
 state 156
@@ -4599,15 +4599,15 @@ state 162
     (28) IfElse -> . IfScope AtribOp Body ElseScope Body
     (30) While -> . WhileScope ( AtribOp ) Body
     (33) Switch -> . SwitchScope Conds { Cases }
-    (63) Atrib -> . ID LARROW AtribOp
-    (64) Atrib -> . AtribOp RARROW ID
-    (65) Atrib -> . ID SWAP ID
-    (66) Atrib -> . AtribArray
-    (67) Op -> . OpBin
+    (64) Atrib -> . ID LARROW AtribOp
+    (65) Atrib -> . AtribOp RARROW ID
+    (66) Atrib -> . ID SWAP ID
+    (67) Atrib -> . AtribArray
+    (68) Op -> . OpBin
     (50) Decl -> . ID ID
     (51) DeclArray -> . ID ID DeclArraySize
-    (58) DeclAtrib -> . ID ID LARROW AtribOp
-    (59) DeclAtrib -> . AtribOp RARROW ID ID
+    (59) DeclAtrib -> . ID ID LARROW AtribOp
+    (60) DeclAtrib -> . AtribOp RARROW ID ID
     (25) IfScope -> . IF
     (29) WhileScope -> . WHILE
     (31) SwitchScope -> . SWITCHCOND
@@ -4618,9 +4618,9 @@ state 162
     (55) AtribArray -> . AtribOp RARROW ID ArraySize
     (73) OpBin -> . OpBin OpLogico TermMod
     (74) OpBin -> . TermMod
-    (60) AtribNum -> . ID LARROW AtribOp
-    (61) AtribNum -> . AtribOp RARROW ID
-    (62) AtribNum -> . AtribArray
+    (61) AtribNum -> . ID LARROW AtribOp
+    (62) AtribNum -> . AtribOp RARROW ID
+    (63) AtribNum -> . AtribArray
     (75) TermMod -> . TermMod OpMod TermPlus
     (76) TermMod -> . TermPlus
     (77) TermPlus -> . TermPlus OpPlus TermMult
@@ -4635,11 +4635,11 @@ state 162
     (86) Base -> . NUM
     (87) Base -> . FunCall
     (88) Base -> . READ
-    (68) OpUno -> . NEG Base
-    (69) OpUno -> . AccessArray
-    (70) OpUno -> . SUB Base
-    (71) OpUno -> . Base PRINT
-    (72) AccessArray -> . ID ArraySize
+    (69) OpUno -> . NEG Base
+    (70) OpUno -> . AccessArray
+    (71) OpUno -> . SUB Base
+    (72) OpUno -> . Base PRINT
+    (56) AccessArray -> . ID ArraySize
 
     {               shift and go to state 107
     ID              shift and go to state 106

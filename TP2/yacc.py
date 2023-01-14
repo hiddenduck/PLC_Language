@@ -549,6 +549,30 @@ def p_atribarray_Rightatribop(p):
     p[0] = s + p[1] + "storen\n"
 
 
+def p_accessarray(p):
+    "AccessArray : ID ArraySize"
+    s = ""
+    for i in range(len(p.parser.id_table_stack)-1, 0, -1):
+        if p[1] in p.parser.id_table_stack[i]:
+            end = p.parser.id_table_stack[i][p[1]]['endereco']
+            sizes = p.parser.id_table_stack[i][p[1]]['tamanho']
+            s += p[2]
+            for size in sizes:
+                s += f"pushi {size}\nmul\nadd\n"
+            p[0] = f"pushfp\npushi {end}\npadd\n" + s + "loadn\n"
+            return
+    if p[1] not in p.parser.id_table_stack[0]:
+        print("ERROR: Variable %s not in scope" % p[1])
+    else:
+        end = p.parser.id_table_stack[0][p[1]]['endereco']
+        sizes = p.parser.id_table_stack[0][p[1]]['tamanho']
+        s += p[2]
+        for size in sizes:
+            s += f"pushi {size}\nmul\nadd\n"
+        p[0] = f"pushgp\npushi {end}\npadd\n" + s + "loadn\n"
+    return
+
+
 def p_arraysize_rec(p):
     "ArraySize : ArraySize '[' AtribOp ']'"
     p[0] = p[3] + p[1]  # array nao ´e uma lista
@@ -706,20 +730,6 @@ def p_opuno_print(p):
     # funciona para tudo que não seja array
     p[0] = p[1] + "dup 1\n" + "writei\n" + r'pushs "\n"' + "\nwrites\n"
 
-
-def p_accessarray(p):
-    "AccessArray : ID ArraySize"
-    for i in range(len(p.parser.id_table_stack)-1, 0, -1):
-        if p[1] in p.parser.id_table_stack[i]:
-            end = p.parser.id_table_stack[i][p[1]]['endereco']
-            p[0] = f"pushfp\npushi {end}\npadd\n" + p[2] + "loadn\n"
-            return
-    if p[1] not in p.parser.id_table_stack[0]:
-        print("ERROR: Variable %s not in scope" % p[1])
-    else:
-        end = p.parser.id_table_stack[0][p[1]]['endereco']
-        p[0] = f"pushgp\npushi {end}\npadd\n" + p[2] + "loadn\n"
-    return
 
 
 def p_opbin_rec(p):
