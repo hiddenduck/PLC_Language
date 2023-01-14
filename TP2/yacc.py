@@ -716,7 +716,7 @@ def p_opmod_rec(p):
     p[0] = p[1] + p[3] + p[2]
 
 
-def p_opbin_base(p):
+def p_opmod_base(p):
     "TermMod : TermPlus"
     p[0] = p[1]
 

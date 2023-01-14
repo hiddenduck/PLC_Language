@@ -22,6 +22,7 @@ tokens = (
 'LEQ',
 'GEQ',
 'EQUAL',
+'MOD',
 'ADD',
 'SUB',
 'MUL',
@@ -68,6 +69,8 @@ t_GEQ = r'>='
 t_EQUAL = r'=+'
 
 t_ADD = r'\+'
+
+t_MOD = r'\%'
 
 #O lex não consegue apanhar o a -1 porque acha que (-1) é um número oops
 t_SUB = r'-'
