@@ -28,8 +28,7 @@ tokens = (
 'DIV',
 'POW',
 'READ',
-'PRINT',
-'COMMENT'
+'PRINT'
 )
 
 t_ANY_ignore = ' \n\t'
@@ -43,8 +42,6 @@ reserved = {
     'switchcond' : 'SWITCHCOND',
     'switchcase' : 'SWITCHCASE'
 }
-
-t_COMMENT = r'\#[^\#]*\#'
 
 t_STRING = r'"[^"\n]'
 
@@ -97,6 +94,10 @@ def t_NUM(t):
     r'[0-9]+'
     t.value = int(t.value)
     return t
+
+def t_ANY_COMMENT(t):
+    r'\#[^\#]*\#'
+    pass
 
 lexer = lex.lex()
 
