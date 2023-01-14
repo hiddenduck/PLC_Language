@@ -53,7 +53,7 @@ t_LARROW = r'<-+'
 
 t_SWAP = r'<-+>'
 
-t_NEG = r'~ | !'
+t_NEG = r'~|!'
 
 t_AND = r'&'
 
@@ -69,7 +69,7 @@ t_GEQ = r'>='
 
 t_EQUAL = r'=+'
 
-t_DIFF = r'!=+ | ~=+'
+t_DIFF = r'!=+|~=+'
 
 t_ADD = r'\+'
 
