@@ -837,6 +837,10 @@ def p_funrec_base(p):
     p[0] = [p[1]]
 
 
+def p_oplogico_diff(p):
+    "OpLogico : DIFF"
+    p[0] = "equal\nnot\n"
+
 def p_oplogico_and(p):
     "OpLogico : AND"
     p[0] = "and\n"

@@ -22,6 +22,7 @@ tokens = (
 'LEQ',
 'GEQ',
 'EQUAL',
+'DIFF',
 'MOD',
 'ADD',
 'SUB',
@@ -67,6 +68,8 @@ t_LEQ = r'<='
 t_GEQ = r'>='
 
 t_EQUAL = r'=+'
+
+t_DIFF = r'!=+ | ~=+'
 
 t_ADD = r'\+'
 

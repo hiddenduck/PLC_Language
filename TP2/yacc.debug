@@ -96,19 +96,20 @@ Rule 90    FunArg -> FunRec
 Rule 91    FunArg -> <empty>
 Rule 92    FunRec -> FunRec , AtribOp
 Rule 93    FunRec -> AtribOp
-Rule 94    OpLogico -> AND
-Rule 95    OpLogico -> OR
-Rule 96    OpLogico -> LESSER
-Rule 97    OpLogico -> GREATER
-Rule 98    OpLogico -> LEQ
-Rule 99    OpLogico -> GEQ
-Rule 100   OpLogico -> EQUAL
-Rule 101   OpMod -> MOD
-Rule 102   OpPlus -> ADD
-Rule 103   OpPlus -> SUB
-Rule 104   OpMult -> MUL
-Rule 105   OpMult -> DIV
-Rule 106   OpPow -> POW
+Rule 94    OpLogico -> DIFF
+Rule 95    OpLogico -> AND
+Rule 96    OpLogico -> OR
+Rule 97    OpLogico -> LESSER
+Rule 98    OpLogico -> GREATER
+Rule 99    OpLogico -> LEQ
+Rule 100   OpLogico -> GEQ
+Rule 101   OpLogico -> EQUAL
+Rule 102   OpMod -> MOD
+Rule 103   OpPlus -> ADD
+Rule 104   OpPlus -> SUB
+Rule 105   OpMult -> MUL
+Rule 106   OpMult -> DIV
+Rule 107   OpPow -> POW
 
 Terminals, with rules where they appear
 
@@ -117,29 +118,30 @@ Terminals, with rules where they appear
 ,                    : 23 34 92
 :                    : 18 40 41
 ;                    : 8 9
-ADD                  : 102
-AND                  : 94
-DIV                  : 105
+ADD                  : 103
+AND                  : 95
+DIFF                 : 94
+DIV                  : 106
 ELSE                 : 27
-EQUAL                : 100
-GEQ                  : 99
-GREATER              : 97
+EQUAL                : 101
+GEQ                  : 100
+GREATER              : 98
 ID                   : 17 19 20 23 24 36 40 50 50 51 51 54 55 58 58 59 59 60 61 63 64 65 65 72 85 89
 IF                   : 25
 LARROW               : 54 58 60 63
-LEQ                  : 98
-LESSER               : 96
-MOD                  : 101
-MUL                  : 104
+LEQ                  : 99
+LESSER               : 97
+MOD                  : 102
+MUL                  : 105
 NEG                  : 68
 NUM                  : 52 53 86
-OR                   : 95
-POW                  : 106
+OR                   : 96
+POW                  : 107
 PRINT                : 42 71
 RARROW               : 19 20 55 59 61 64
 READ                 : 88
 STRING               : 42
-SUB                  : 70 103
+SUB                  : 70 104
 SWAP                 : 65
 SWITCHCASE           : 32
 SWITCHCOND           : 31
@@ -393,6 +395,7 @@ state 5
     ADD             reduce using rule 87 (Base -> FunCall .)
     SUB             reduce using rule 87 (Base -> FunCall .)
     MOD             reduce using rule 87 (Base -> FunCall .)
+    DIFF            reduce using rule 87 (Base -> FunCall .)
     AND             reduce using rule 87 (Base -> FunCall .)
     OR              reduce using rule 87 (Base -> FunCall .)
     LESSER          reduce using rule 87 (Base -> FunCall .)
@@ -524,6 +527,7 @@ state 11
     ADD             reduce using rule 85 (Base -> ID .)
     SUB             reduce using rule 85 (Base -> ID .)
     MOD             reduce using rule 85 (Base -> ID .)
+    DIFF            reduce using rule 85 (Base -> ID .)
     AND             reduce using rule 85 (Base -> ID .)
     OR              reduce using rule 85 (Base -> ID .)
     LESSER          reduce using rule 85 (Base -> ID .)
@@ -738,13 +742,14 @@ state 24
 
     (67) Op -> OpBin .
     (73) OpBin -> OpBin . OpLogico TermMod
-    (94) OpLogico -> . AND
-    (95) OpLogico -> . OR
-    (96) OpLogico -> . LESSER
-    (97) OpLogico -> . GREATER
-    (98) OpLogico -> . LEQ
-    (99) OpLogico -> . GEQ
-    (100) OpLogico -> . EQUAL
+    (94) OpLogico -> . DIFF
+    (95) OpLogico -> . AND
+    (96) OpLogico -> . OR
+    (97) OpLogico -> . LESSER
+    (98) OpLogico -> . GREATER
+    (99) OpLogico -> . LEQ
+    (100) OpLogico -> . GEQ
+    (101) OpLogico -> . EQUAL
 
     ;               reduce using rule 67 (Op -> OpBin .)
     RARROW          reduce using rule 67 (Op -> OpBin .)
@@ -763,13 +768,14 @@ state 24
     SUB             reduce using rule 67 (Op -> OpBin .)
     ,               reduce using rule 67 (Op -> OpBin .)
     ]               reduce using rule 67 (Op -> OpBin .)
-    AND             shift and go to state 65
-    OR              shift and go to state 66
-    LESSER          shift and go to state 67
-    GREATER         shift and go to state 68
-    LEQ             shift and go to state 69
-    GEQ             shift and go to state 70
-    EQUAL           shift and go to state 71
+    DIFF            shift and go to state 65
+    AND             shift and go to state 66
+    OR              shift and go to state 67
+    LESSER          shift and go to state 68
+    GREATER         shift and go to state 69
+    LEQ             shift and go to state 70
+    GEQ             shift and go to state 71
+    EQUAL           shift and go to state 72
 
     OpLogico                       shift and go to state 64
 
@@ -835,8 +841,9 @@ state 30
 
     (74) OpBin -> TermMod .
     (75) TermMod -> TermMod . OpMod TermPlus
-    (101) OpMod -> . MOD
+    (102) OpMod -> . MOD
 
+    DIFF            reduce using rule 74 (OpBin -> TermMod .)
     AND             reduce using rule 74 (OpBin -> TermMod .)
     OR              reduce using rule 74 (OpBin -> TermMod .)
     LESSER          reduce using rule 74 (OpBin -> TermMod .)
@@ -861,19 +868,20 @@ state 30
     SUB             reduce using rule 74 (OpBin -> TermMod .)
     ,               reduce using rule 74 (OpBin -> TermMod .)
     ]               reduce using rule 74 (OpBin -> TermMod .)
-    MOD             shift and go to state 73
+    MOD             shift and go to state 74
 
-    OpMod                          shift and go to state 72
+    OpMod                          shift and go to state 73
 
 state 31
 
     (76) TermMod -> TermPlus .
     (77) TermPlus -> TermPlus . OpPlus TermMult
-    (102) OpPlus -> . ADD
-    (103) OpPlus -> . SUB
+    (103) OpPlus -> . ADD
+    (104) OpPlus -> . SUB
 
   ! shift/reduce conflict for SUB resolved as shift
     MOD             reduce using rule 76 (TermMod -> TermPlus .)
+    DIFF            reduce using rule 76 (TermMod -> TermPlus .)
     AND             reduce using rule 76 (TermMod -> TermPlus .)
     OR              reduce using rule 76 (TermMod -> TermPlus .)
     LESSER          reduce using rule 76 (TermMod -> TermPlus .)
@@ -897,23 +905,24 @@ state 31
     NEG             reduce using rule 76 (TermMod -> TermPlus .)
     ,               reduce using rule 76 (TermMod -> TermPlus .)
     ]               reduce using rule 76 (TermMod -> TermPlus .)
-    ADD             shift and go to state 75
-    SUB             shift and go to state 76
+    ADD             shift and go to state 76
+    SUB             shift and go to state 77
 
   ! SUB             [ reduce using rule 76 (TermMod -> TermPlus .) ]
 
-    OpPlus                         shift and go to state 74
+    OpPlus                         shift and go to state 75
 
 state 32
 
     (78) TermPlus -> TermMult .
     (79) TermMult -> TermMult . OpMult TermPow
-    (104) OpMult -> . MUL
-    (105) OpMult -> . DIV
+    (105) OpMult -> . MUL
+    (106) OpMult -> . DIV
 
     ADD             reduce using rule 78 (TermPlus -> TermMult .)
     SUB             reduce using rule 78 (TermPlus -> TermMult .)
     MOD             reduce using rule 78 (TermPlus -> TermMult .)
+    DIFF            reduce using rule 78 (TermPlus -> TermMult .)
     AND             reduce using rule 78 (TermPlus -> TermMult .)
     OR              reduce using rule 78 (TermPlus -> TermMult .)
     LESSER          reduce using rule 78 (TermPlus -> TermMult .)
@@ -937,22 +946,23 @@ state 32
     NEG             reduce using rule 78 (TermPlus -> TermMult .)
     ,               reduce using rule 78 (TermPlus -> TermMult .)
     ]               reduce using rule 78 (TermPlus -> TermMult .)
-    MUL             shift and go to state 78
-    DIV             shift and go to state 79
+    MUL             shift and go to state 79
+    DIV             shift and go to state 80
 
-    OpMult                         shift and go to state 77
+    OpMult                         shift and go to state 78
 
 state 33
 
     (80) TermMult -> TermPow .
     (81) TermPow -> TermPow . OpPow Base
-    (106) OpPow -> . POW
+    (107) OpPow -> . POW
 
     MUL             reduce using rule 80 (TermMult -> TermPow .)
     DIV             reduce using rule 80 (TermMult -> TermPow .)
     ADD             reduce using rule 80 (TermMult -> TermPow .)
     SUB             reduce using rule 80 (TermMult -> TermPow .)
     MOD             reduce using rule 80 (TermMult -> TermPow .)
+    DIFF            reduce using rule 80 (TermMult -> TermPow .)
     AND             reduce using rule 80 (TermMult -> TermPow .)
     OR              reduce using rule 80 (TermMult -> TermPow .)
     LESSER          reduce using rule 80 (TermMult -> TermPow .)
@@ -976,9 +986,9 @@ state 33
     NEG             reduce using rule 80 (TermMult -> TermPow .)
     ,               reduce using rule 80 (TermMult -> TermPow .)
     ]               reduce using rule 80 (TermMult -> TermPow .)
-    POW             shift and go to state 81
+    POW             shift and go to state 82
 
-    OpPow                          shift and go to state 80
+    OpPow                          shift and go to state 81
 
 state 34
 
@@ -991,6 +1001,7 @@ state 34
     ADD             reduce using rule 82 (TermPow -> Base .)
     SUB             reduce using rule 82 (TermPow -> Base .)
     MOD             reduce using rule 82 (TermPow -> Base .)
+    DIFF            reduce using rule 82 (TermPow -> Base .)
     AND             reduce using rule 82 (TermPow -> Base .)
     OR              reduce using rule 82 (TermPow -> Base .)
     LESSER          reduce using rule 82 (TermPow -> Base .)
@@ -1014,7 +1025,7 @@ state 34
     NEG             reduce using rule 82 (TermPow -> Base .)
     ,               reduce using rule 82 (TermPow -> Base .)
     ]               reduce using rule 82 (TermPow -> Base .)
-    PRINT           shift and go to state 82
+    PRINT           shift and go to state 83
 
 
 state 35
@@ -1028,6 +1039,7 @@ state 35
     ADD             reduce using rule 83 (Base -> OpUno .)
     SUB             reduce using rule 83 (Base -> OpUno .)
     MOD             reduce using rule 83 (Base -> OpUno .)
+    DIFF            reduce using rule 83 (Base -> OpUno .)
     AND             reduce using rule 83 (Base -> OpUno .)
     OR              reduce using rule 83 (Base -> OpUno .)
     LESSER          reduce using rule 83 (Base -> OpUno .)
@@ -1064,6 +1076,7 @@ state 36
     ADD             reduce using rule 86 (Base -> NUM .)
     SUB             reduce using rule 86 (Base -> NUM .)
     MOD             reduce using rule 86 (Base -> NUM .)
+    DIFF            reduce using rule 86 (Base -> NUM .)
     AND             reduce using rule 86 (Base -> NUM .)
     OR              reduce using rule 86 (Base -> NUM .)
     LESSER          reduce using rule 86 (Base -> NUM .)
@@ -1100,6 +1113,7 @@ state 37
     ADD             reduce using rule 88 (Base -> READ .)
     SUB             reduce using rule 88 (Base -> READ .)
     MOD             reduce using rule 88 (Base -> READ .)
+    DIFF            reduce using rule 88 (Base -> READ .)
     AND             reduce using rule 88 (Base -> READ .)
     OR              reduce using rule 88 (Base -> READ .)
     LESSER          reduce using rule 88 (Base -> READ .)
@@ -1142,13 +1156,13 @@ state 38
     (72) AccessArray -> . ID ArraySize
 
     (               shift and go to state 12
-    ID              shift and go to state 84
+    ID              shift and go to state 85
     NUM             shift and go to state 36
     READ            shift and go to state 37
     NEG             shift and go to state 38
     SUB             shift and go to state 40
 
-    Base                           shift and go to state 83
+    Base                           shift and go to state 84
     OpUno                          shift and go to state 35
     FunCall                        shift and go to state 55
     AccessArray                    shift and go to state 39
@@ -1164,6 +1178,7 @@ state 39
     ADD             reduce using rule 69 (OpUno -> AccessArray .)
     SUB             reduce using rule 69 (OpUno -> AccessArray .)
     MOD             reduce using rule 69 (OpUno -> AccessArray .)
+    DIFF            reduce using rule 69 (OpUno -> AccessArray .)
     AND             reduce using rule 69 (OpUno -> AccessArray .)
     OR              reduce using rule 69 (OpUno -> AccessArray .)
     LESSER          reduce using rule 69 (OpUno -> AccessArray .)
@@ -1206,13 +1221,13 @@ state 40
     (72) AccessArray -> . ID ArraySize
 
     (               shift and go to state 12
-    ID              shift and go to state 84
+    ID              shift and go to state 85
     NUM             shift and go to state 36
     READ            shift and go to state 37
     NEG             shift and go to state 38
     SUB             shift and go to state 40
 
-    Base                           shift and go to state 85
+    Base                           shift and go to state 86
     OpUno                          shift and go to state 35
     FunCall                        shift and go to state 55
     AccessArray                    shift and go to state 39
@@ -1268,10 +1283,10 @@ state 43
     (53) DeclArraySize -> . [ NUM ]
 
     ;               reduce using rule 50 (Decl -> ID ID .)
-    LARROW          shift and go to state 87
-    [               shift and go to state 88
+    LARROW          shift and go to state 88
+    [               shift and go to state 89
 
-    DeclArraySize                  shift and go to state 86
+    DeclArraySize                  shift and go to state 87
 
 state 44
 
@@ -1284,7 +1299,7 @@ state 44
     (24) FunExtra -> . ID
 
   ! shift/reduce conflict for ID resolved as shift
-    RARROW          shift and go to state 92
+    RARROW          shift and go to state 93
     {               reduce using rule 22 (FunCases -> .)
     STRING          reduce using rule 22 (FunCases -> .)
     IF              reduce using rule 22 (FunCases -> .)
@@ -1296,12 +1311,12 @@ state 44
     READ            reduce using rule 22 (FunCases -> .)
     NEG             reduce using rule 22 (FunCases -> .)
     SUB             reduce using rule 22 (FunCases -> .)
-    ID              shift and go to state 89
+    ID              shift and go to state 90
 
   ! ID              [ reduce using rule 22 (FunCases -> .) ]
 
-    FunCases                       shift and go to state 90
-    FunExtra                       shift and go to state 91
+    FunCases                       shift and go to state 91
+    FunExtra                       shift and go to state 92
 
 state 45
 
@@ -1349,9 +1364,9 @@ state 45
     NEG             shift and go to state 38
     SUB             shift and go to state 40
 
-    FunArg                         shift and go to state 93
-    FunRec                         shift and go to state 94
-    AtribOp                        shift and go to state 95
+    FunArg                         shift and go to state 94
+    FunRec                         shift and go to state 95
+    AtribOp                        shift and go to state 96
     AtribNum                       shift and go to state 29
     Op                             shift and go to state 52
     AtribArray                     shift and go to state 54
@@ -1407,7 +1422,7 @@ state 46
     NEG             shift and go to state 38
     SUB             shift and go to state 40
 
-    AtribOp                        shift and go to state 96
+    AtribOp                        shift and go to state 97
     AtribNum                       shift and go to state 29
     Op                             shift and go to state 52
     AtribArray                     shift and go to state 54
@@ -1425,7 +1440,7 @@ state 47
 
     (65) Atrib -> ID SWAP . ID
 
-    ID              shift and go to state 97
+    ID              shift and go to state 98
 
 
 state 48
@@ -1434,7 +1449,7 @@ state 48
     (72) AccessArray -> ID ArraySize .
     (56) ArraySize -> ArraySize . [ AtribOp ]
 
-    LARROW          shift and go to state 98
+    LARROW          shift and go to state 99
     PRINT           reduce using rule 72 (AccessArray -> ID ArraySize .)
     POW             reduce using rule 72 (AccessArray -> ID ArraySize .)
     MUL             reduce using rule 72 (AccessArray -> ID ArraySize .)
@@ -1442,6 +1457,7 @@ state 48
     ADD             reduce using rule 72 (AccessArray -> ID ArraySize .)
     SUB             reduce using rule 72 (AccessArray -> ID ArraySize .)
     MOD             reduce using rule 72 (AccessArray -> ID ArraySize .)
+    DIFF            reduce using rule 72 (AccessArray -> ID ArraySize .)
     AND             reduce using rule 72 (AccessArray -> ID ArraySize .)
     OR              reduce using rule 72 (AccessArray -> ID ArraySize .)
     LESSER          reduce using rule 72 (AccessArray -> ID ArraySize .)
@@ -1465,7 +1481,7 @@ state 48
     NEG             reduce using rule 72 (AccessArray -> ID ArraySize .)
     ,               reduce using rule 72 (AccessArray -> ID ArraySize .)
     ]               reduce using rule 72 (AccessArray -> ID ArraySize .)
-    [               shift and go to state 99
+    [               shift and go to state 100
 
 
 state 49
@@ -1528,7 +1544,7 @@ state 50
     NEG             shift and go to state 38
     SUB             shift and go to state 40
 
-    AtribOp                        shift and go to state 100
+    AtribOp                        shift and go to state 101
     AtribNum                       shift and go to state 29
     Op                             shift and go to state 52
     AtribArray                     shift and go to state 54
@@ -1548,8 +1564,8 @@ state 51
     (61) AtribNum -> AtribOp . RARROW ID
     (55) AtribArray -> AtribOp . RARROW ID ArraySize
 
-    )               shift and go to state 101
-    RARROW          shift and go to state 102
+    )               shift and go to state 102
+    RARROW          shift and go to state 103
 
 
 state 52
@@ -1586,7 +1602,7 @@ state 53
     (57) ArraySize -> . [ AtribOp ]
 
   ! shift/reduce conflict for ( resolved as shift
-    LARROW          shift and go to state 103
+    LARROW          shift and go to state 104
     PRINT           reduce using rule 85 (Base -> ID .)
     POW             reduce using rule 85 (Base -> ID .)
     MUL             reduce using rule 85 (Base -> ID .)
@@ -1594,6 +1610,7 @@ state 53
     ADD             reduce using rule 85 (Base -> ID .)
     SUB             reduce using rule 85 (Base -> ID .)
     MOD             reduce using rule 85 (Base -> ID .)
+    DIFF            reduce using rule 85 (Base -> ID .)
     AND             reduce using rule 85 (Base -> ID .)
     OR              reduce using rule 85 (Base -> ID .)
     LESSER          reduce using rule 85 (Base -> ID .)
@@ -1657,6 +1674,7 @@ state 55
     ADD             reduce using rule 87 (Base -> FunCall .)
     SUB             reduce using rule 87 (Base -> FunCall .)
     MOD             reduce using rule 87 (Base -> FunCall .)
+    DIFF            reduce using rule 87 (Base -> FunCall .)
     AND             reduce using rule 87 (Base -> FunCall .)
     OR              reduce using rule 87 (Base -> FunCall .)
     LESSER          reduce using rule 87 (Base -> FunCall .)
@@ -1757,9 +1775,9 @@ state 57
     (71) OpUno -> . Base PRINT
     (72) AccessArray -> . ID ArraySize
 
-    RARROW          shift and go to state 102
-    {               shift and go to state 106
-    ID              shift and go to state 105
+    RARROW          shift and go to state 103
+    {               shift and go to state 107
+    ID              shift and go to state 106
     STRING          shift and go to state 13
     IF              shift and go to state 25
     WHILE           shift and go to state 26
@@ -1773,8 +1791,8 @@ state 57
 
     IfScope                        shift and go to state 19
     AtribOp                        shift and go to state 20
-    Body                           shift and go to state 104
-    Block                          shift and go to state 107
+    Body                           shift and go to state 105
+    Block                          shift and go to state 108
     FunCall                        shift and go to state 5
     Exp                            shift and go to state 6
     If                             shift and go to state 7
@@ -1806,7 +1824,7 @@ state 58
     (55) AtribArray -> AtribOp RARROW . ID ArraySize
     (61) AtribNum -> AtribOp RARROW . ID
 
-    ID              shift and go to state 108
+    ID              shift and go to state 109
 
 
 state 59
@@ -1850,7 +1868,7 @@ state 59
     NEG             shift and go to state 38
     SUB             shift and go to state 40
 
-    AtribOp                        shift and go to state 109
+    AtribOp                        shift and go to state 110
     AtribNum                       shift and go to state 29
     Op                             shift and go to state 52
     AtribArray                     shift and go to state 54
@@ -1869,8 +1887,8 @@ state 60
     (33) Switch -> SwitchScope Conds . { Cases }
     (34) Conds -> Conds . , Cond
 
-    {               shift and go to state 110
-    ,               shift and go to state 111
+    {               shift and go to state 111
+    ,               shift and go to state 112
 
 
 state 61
@@ -1885,7 +1903,7 @@ state 62
 
     (36) Cond -> ID . ( AtribOp )
 
-    (               shift and go to state 112
+    (               shift and go to state 113
 
 
 state 63
@@ -1929,7 +1947,7 @@ state 63
     NEG             shift and go to state 38
     SUB             shift and go to state 40
 
-    AtribOp                        shift and go to state 113
+    AtribOp                        shift and go to state 114
     AtribNum                       shift and go to state 29
     Op                             shift and go to state 52
     AtribArray                     shift and go to state 54
@@ -1968,13 +1986,13 @@ state 64
     (72) AccessArray -> . ID ArraySize
 
     (               shift and go to state 12
-    ID              shift and go to state 84
+    ID              shift and go to state 85
     NUM             shift and go to state 36
     READ            shift and go to state 37
     NEG             shift and go to state 38
     SUB             shift and go to state 40
 
-    TermMod                        shift and go to state 114
+    TermMod                        shift and go to state 115
     TermPlus                       shift and go to state 31
     TermMult                       shift and go to state 32
     TermPow                        shift and go to state 33
@@ -1985,89 +2003,101 @@ state 64
 
 state 65
 
-    (94) OpLogico -> AND .
+    (94) OpLogico -> DIFF .
 
-    (               reduce using rule 94 (OpLogico -> AND .)
-    ID              reduce using rule 94 (OpLogico -> AND .)
-    NUM             reduce using rule 94 (OpLogico -> AND .)
-    READ            reduce using rule 94 (OpLogico -> AND .)
-    NEG             reduce using rule 94 (OpLogico -> AND .)
-    SUB             reduce using rule 94 (OpLogico -> AND .)
+    (               reduce using rule 94 (OpLogico -> DIFF .)
+    ID              reduce using rule 94 (OpLogico -> DIFF .)
+    NUM             reduce using rule 94 (OpLogico -> DIFF .)
+    READ            reduce using rule 94 (OpLogico -> DIFF .)
+    NEG             reduce using rule 94 (OpLogico -> DIFF .)
+    SUB             reduce using rule 94 (OpLogico -> DIFF .)
 
 
 state 66
 
-    (95) OpLogico -> OR .
+    (95) OpLogico -> AND .
 
-    (               reduce using rule 95 (OpLogico -> OR .)
-    ID              reduce using rule 95 (OpLogico -> OR .)
-    NUM             reduce using rule 95 (OpLogico -> OR .)
-    READ            reduce using rule 95 (OpLogico -> OR .)
-    NEG             reduce using rule 95 (OpLogico -> OR .)
-    SUB             reduce using rule 95 (OpLogico -> OR .)
+    (               reduce using rule 95 (OpLogico -> AND .)
+    ID              reduce using rule 95 (OpLogico -> AND .)
+    NUM             reduce using rule 95 (OpLogico -> AND .)
+    READ            reduce using rule 95 (OpLogico -> AND .)
+    NEG             reduce using rule 95 (OpLogico -> AND .)
+    SUB             reduce using rule 95 (OpLogico -> AND .)
 
 
 state 67
 
-    (96) OpLogico -> LESSER .
+    (96) OpLogico -> OR .
 
-    (               reduce using rule 96 (OpLogico -> LESSER .)
-    ID              reduce using rule 96 (OpLogico -> LESSER .)
-    NUM             reduce using rule 96 (OpLogico -> LESSER .)
-    READ            reduce using rule 96 (OpLogico -> LESSER .)
-    NEG             reduce using rule 96 (OpLogico -> LESSER .)
-    SUB             reduce using rule 96 (OpLogico -> LESSER .)
+    (               reduce using rule 96 (OpLogico -> OR .)
+    ID              reduce using rule 96 (OpLogico -> OR .)
+    NUM             reduce using rule 96 (OpLogico -> OR .)
+    READ            reduce using rule 96 (OpLogico -> OR .)
+    NEG             reduce using rule 96 (OpLogico -> OR .)
+    SUB             reduce using rule 96 (OpLogico -> OR .)
 
 
 state 68
 
-    (97) OpLogico -> GREATER .
+    (97) OpLogico -> LESSER .
 
-    (               reduce using rule 97 (OpLogico -> GREATER .)
-    ID              reduce using rule 97 (OpLogico -> GREATER .)
-    NUM             reduce using rule 97 (OpLogico -> GREATER .)
-    READ            reduce using rule 97 (OpLogico -> GREATER .)
-    NEG             reduce using rule 97 (OpLogico -> GREATER .)
-    SUB             reduce using rule 97 (OpLogico -> GREATER .)
+    (               reduce using rule 97 (OpLogico -> LESSER .)
+    ID              reduce using rule 97 (OpLogico -> LESSER .)
+    NUM             reduce using rule 97 (OpLogico -> LESSER .)
+    READ            reduce using rule 97 (OpLogico -> LESSER .)
+    NEG             reduce using rule 97 (OpLogico -> LESSER .)
+    SUB             reduce using rule 97 (OpLogico -> LESSER .)
 
 
 state 69
 
-    (98) OpLogico -> LEQ .
+    (98) OpLogico -> GREATER .
 
-    (               reduce using rule 98 (OpLogico -> LEQ .)
-    ID              reduce using rule 98 (OpLogico -> LEQ .)
-    NUM             reduce using rule 98 (OpLogico -> LEQ .)
-    READ            reduce using rule 98 (OpLogico -> LEQ .)
-    NEG             reduce using rule 98 (OpLogico -> LEQ .)
-    SUB             reduce using rule 98 (OpLogico -> LEQ .)
+    (               reduce using rule 98 (OpLogico -> GREATER .)
+    ID              reduce using rule 98 (OpLogico -> GREATER .)
+    NUM             reduce using rule 98 (OpLogico -> GREATER .)
+    READ            reduce using rule 98 (OpLogico -> GREATER .)
+    NEG             reduce using rule 98 (OpLogico -> GREATER .)
+    SUB             reduce using rule 98 (OpLogico -> GREATER .)
 
 
 state 70
 
-    (99) OpLogico -> GEQ .
+    (99) OpLogico -> LEQ .
 
-    (               reduce using rule 99 (OpLogico -> GEQ .)
-    ID              reduce using rule 99 (OpLogico -> GEQ .)
-    NUM             reduce using rule 99 (OpLogico -> GEQ .)
-    READ            reduce using rule 99 (OpLogico -> GEQ .)
-    NEG             reduce using rule 99 (OpLogico -> GEQ .)
-    SUB             reduce using rule 99 (OpLogico -> GEQ .)
+    (               reduce using rule 99 (OpLogico -> LEQ .)
+    ID              reduce using rule 99 (OpLogico -> LEQ .)
+    NUM             reduce using rule 99 (OpLogico -> LEQ .)
+    READ            reduce using rule 99 (OpLogico -> LEQ .)
+    NEG             reduce using rule 99 (OpLogico -> LEQ .)
+    SUB             reduce using rule 99 (OpLogico -> LEQ .)
 
 
 state 71
 
-    (100) OpLogico -> EQUAL .
+    (100) OpLogico -> GEQ .
 
-    (               reduce using rule 100 (OpLogico -> EQUAL .)
-    ID              reduce using rule 100 (OpLogico -> EQUAL .)
-    NUM             reduce using rule 100 (OpLogico -> EQUAL .)
-    READ            reduce using rule 100 (OpLogico -> EQUAL .)
-    NEG             reduce using rule 100 (OpLogico -> EQUAL .)
-    SUB             reduce using rule 100 (OpLogico -> EQUAL .)
+    (               reduce using rule 100 (OpLogico -> GEQ .)
+    ID              reduce using rule 100 (OpLogico -> GEQ .)
+    NUM             reduce using rule 100 (OpLogico -> GEQ .)
+    READ            reduce using rule 100 (OpLogico -> GEQ .)
+    NEG             reduce using rule 100 (OpLogico -> GEQ .)
+    SUB             reduce using rule 100 (OpLogico -> GEQ .)
 
 
 state 72
+
+    (101) OpLogico -> EQUAL .
+
+    (               reduce using rule 101 (OpLogico -> EQUAL .)
+    ID              reduce using rule 101 (OpLogico -> EQUAL .)
+    NUM             reduce using rule 101 (OpLogico -> EQUAL .)
+    READ            reduce using rule 101 (OpLogico -> EQUAL .)
+    NEG             reduce using rule 101 (OpLogico -> EQUAL .)
+    SUB             reduce using rule 101 (OpLogico -> EQUAL .)
+
+
+state 73
 
     (75) TermMod -> TermMod OpMod . TermPlus
     (77) TermPlus -> . TermPlus OpPlus TermMult
@@ -2090,13 +2120,13 @@ state 72
     (72) AccessArray -> . ID ArraySize
 
     (               shift and go to state 12
-    ID              shift and go to state 84
+    ID              shift and go to state 85
     NUM             shift and go to state 36
     READ            shift and go to state 37
     NEG             shift and go to state 38
     SUB             shift and go to state 40
 
-    TermPlus                       shift and go to state 115
+    TermPlus                       shift and go to state 116
     TermMult                       shift and go to state 32
     TermPow                        shift and go to state 33
     Base                           shift and go to state 34
@@ -2104,19 +2134,19 @@ state 72
     FunCall                        shift and go to state 55
     AccessArray                    shift and go to state 39
 
-state 73
-
-    (101) OpMod -> MOD .
-
-    (               reduce using rule 101 (OpMod -> MOD .)
-    ID              reduce using rule 101 (OpMod -> MOD .)
-    NUM             reduce using rule 101 (OpMod -> MOD .)
-    READ            reduce using rule 101 (OpMod -> MOD .)
-    NEG             reduce using rule 101 (OpMod -> MOD .)
-    SUB             reduce using rule 101 (OpMod -> MOD .)
-
-
 state 74
+
+    (102) OpMod -> MOD .
+
+    (               reduce using rule 102 (OpMod -> MOD .)
+    ID              reduce using rule 102 (OpMod -> MOD .)
+    NUM             reduce using rule 102 (OpMod -> MOD .)
+    READ            reduce using rule 102 (OpMod -> MOD .)
+    NEG             reduce using rule 102 (OpMod -> MOD .)
+    SUB             reduce using rule 102 (OpMod -> MOD .)
+
+
+state 75
 
     (77) TermPlus -> TermPlus OpPlus . TermMult
     (79) TermMult -> . TermMult OpMult TermPow
@@ -2137,44 +2167,44 @@ state 74
     (72) AccessArray -> . ID ArraySize
 
     (               shift and go to state 12
-    ID              shift and go to state 84
+    ID              shift and go to state 85
     NUM             shift and go to state 36
     READ            shift and go to state 37
     NEG             shift and go to state 38
     SUB             shift and go to state 40
 
-    TermMult                       shift and go to state 116
+    TermMult                       shift and go to state 117
     TermPow                        shift and go to state 33
     Base                           shift and go to state 34
     OpUno                          shift and go to state 35
     FunCall                        shift and go to state 55
     AccessArray                    shift and go to state 39
 
-state 75
-
-    (102) OpPlus -> ADD .
-
-    (               reduce using rule 102 (OpPlus -> ADD .)
-    ID              reduce using rule 102 (OpPlus -> ADD .)
-    NUM             reduce using rule 102 (OpPlus -> ADD .)
-    READ            reduce using rule 102 (OpPlus -> ADD .)
-    NEG             reduce using rule 102 (OpPlus -> ADD .)
-    SUB             reduce using rule 102 (OpPlus -> ADD .)
-
-
 state 76
 
-    (103) OpPlus -> SUB .
+    (103) OpPlus -> ADD .
 
-    (               reduce using rule 103 (OpPlus -> SUB .)
-    ID              reduce using rule 103 (OpPlus -> SUB .)
-    NUM             reduce using rule 103 (OpPlus -> SUB .)
-    READ            reduce using rule 103 (OpPlus -> SUB .)
-    NEG             reduce using rule 103 (OpPlus -> SUB .)
-    SUB             reduce using rule 103 (OpPlus -> SUB .)
+    (               reduce using rule 103 (OpPlus -> ADD .)
+    ID              reduce using rule 103 (OpPlus -> ADD .)
+    NUM             reduce using rule 103 (OpPlus -> ADD .)
+    READ            reduce using rule 103 (OpPlus -> ADD .)
+    NEG             reduce using rule 103 (OpPlus -> ADD .)
+    SUB             reduce using rule 103 (OpPlus -> ADD .)
 
 
 state 77
+
+    (104) OpPlus -> SUB .
+
+    (               reduce using rule 104 (OpPlus -> SUB .)
+    ID              reduce using rule 104 (OpPlus -> SUB .)
+    NUM             reduce using rule 104 (OpPlus -> SUB .)
+    READ            reduce using rule 104 (OpPlus -> SUB .)
+    NEG             reduce using rule 104 (OpPlus -> SUB .)
+    SUB             reduce using rule 104 (OpPlus -> SUB .)
+
+
+state 78
 
     (79) TermMult -> TermMult OpMult . TermPow
     (81) TermPow -> . TermPow OpPow Base
@@ -2193,43 +2223,43 @@ state 77
     (72) AccessArray -> . ID ArraySize
 
     (               shift and go to state 12
-    ID              shift and go to state 84
+    ID              shift and go to state 85
     NUM             shift and go to state 36
     READ            shift and go to state 37
     NEG             shift and go to state 38
     SUB             shift and go to state 40
 
-    TermPow                        shift and go to state 117
+    TermPow                        shift and go to state 118
     Base                           shift and go to state 34
     OpUno                          shift and go to state 35
     FunCall                        shift and go to state 55
     AccessArray                    shift and go to state 39
 
-state 78
-
-    (104) OpMult -> MUL .
-
-    (               reduce using rule 104 (OpMult -> MUL .)
-    ID              reduce using rule 104 (OpMult -> MUL .)
-    NUM             reduce using rule 104 (OpMult -> MUL .)
-    READ            reduce using rule 104 (OpMult -> MUL .)
-    NEG             reduce using rule 104 (OpMult -> MUL .)
-    SUB             reduce using rule 104 (OpMult -> MUL .)
-
-
 state 79
 
-    (105) OpMult -> DIV .
+    (105) OpMult -> MUL .
 
-    (               reduce using rule 105 (OpMult -> DIV .)
-    ID              reduce using rule 105 (OpMult -> DIV .)
-    NUM             reduce using rule 105 (OpMult -> DIV .)
-    READ            reduce using rule 105 (OpMult -> DIV .)
-    NEG             reduce using rule 105 (OpMult -> DIV .)
-    SUB             reduce using rule 105 (OpMult -> DIV .)
+    (               reduce using rule 105 (OpMult -> MUL .)
+    ID              reduce using rule 105 (OpMult -> MUL .)
+    NUM             reduce using rule 105 (OpMult -> MUL .)
+    READ            reduce using rule 105 (OpMult -> MUL .)
+    NEG             reduce using rule 105 (OpMult -> MUL .)
+    SUB             reduce using rule 105 (OpMult -> MUL .)
 
 
 state 80
+
+    (106) OpMult -> DIV .
+
+    (               reduce using rule 106 (OpMult -> DIV .)
+    ID              reduce using rule 106 (OpMult -> DIV .)
+    NUM             reduce using rule 106 (OpMult -> DIV .)
+    READ            reduce using rule 106 (OpMult -> DIV .)
+    NEG             reduce using rule 106 (OpMult -> DIV .)
+    SUB             reduce using rule 106 (OpMult -> DIV .)
+
+
+state 81
 
     (81) TermPow -> TermPow OpPow . Base
     (83) Base -> . OpUno
@@ -2246,30 +2276,30 @@ state 80
     (72) AccessArray -> . ID ArraySize
 
     (               shift and go to state 12
-    ID              shift and go to state 84
+    ID              shift and go to state 85
     NUM             shift and go to state 36
     READ            shift and go to state 37
     NEG             shift and go to state 38
     SUB             shift and go to state 40
 
-    Base                           shift and go to state 118
+    Base                           shift and go to state 119
     OpUno                          shift and go to state 35
     FunCall                        shift and go to state 55
     AccessArray                    shift and go to state 39
 
-state 81
-
-    (106) OpPow -> POW .
-
-    (               reduce using rule 106 (OpPow -> POW .)
-    ID              reduce using rule 106 (OpPow -> POW .)
-    NUM             reduce using rule 106 (OpPow -> POW .)
-    READ            reduce using rule 106 (OpPow -> POW .)
-    NEG             reduce using rule 106 (OpPow -> POW .)
-    SUB             reduce using rule 106 (OpPow -> POW .)
-
-
 state 82
+
+    (107) OpPow -> POW .
+
+    (               reduce using rule 107 (OpPow -> POW .)
+    ID              reduce using rule 107 (OpPow -> POW .)
+    NUM             reduce using rule 107 (OpPow -> POW .)
+    READ            reduce using rule 107 (OpPow -> POW .)
+    NEG             reduce using rule 107 (OpPow -> POW .)
+    SUB             reduce using rule 107 (OpPow -> POW .)
+
+
+state 83
 
     (71) OpUno -> Base PRINT .
 
@@ -2280,6 +2310,7 @@ state 82
     ADD             reduce using rule 71 (OpUno -> Base PRINT .)
     SUB             reduce using rule 71 (OpUno -> Base PRINT .)
     MOD             reduce using rule 71 (OpUno -> Base PRINT .)
+    DIFF            reduce using rule 71 (OpUno -> Base PRINT .)
     AND             reduce using rule 71 (OpUno -> Base PRINT .)
     OR              reduce using rule 71 (OpUno -> Base PRINT .)
     LESSER          reduce using rule 71 (OpUno -> Base PRINT .)
@@ -2305,7 +2336,7 @@ state 82
     ]               reduce using rule 71 (OpUno -> Base PRINT .)
 
 
-state 83
+state 84
 
     (68) OpUno -> NEG Base .
     (71) OpUno -> Base . PRINT
@@ -2317,6 +2348,7 @@ state 83
     ADD             reduce using rule 68 (OpUno -> NEG Base .)
     SUB             reduce using rule 68 (OpUno -> NEG Base .)
     MOD             reduce using rule 68 (OpUno -> NEG Base .)
+    DIFF            reduce using rule 68 (OpUno -> NEG Base .)
     AND             reduce using rule 68 (OpUno -> NEG Base .)
     OR              reduce using rule 68 (OpUno -> NEG Base .)
     LESSER          reduce using rule 68 (OpUno -> NEG Base .)
@@ -2340,12 +2372,12 @@ state 83
     NEG             reduce using rule 68 (OpUno -> NEG Base .)
     ,               reduce using rule 68 (OpUno -> NEG Base .)
     ]               reduce using rule 68 (OpUno -> NEG Base .)
-    PRINT           shift and go to state 82
+    PRINT           shift and go to state 83
 
   ! PRINT           [ reduce using rule 68 (OpUno -> NEG Base .) ]
 
 
-state 84
+state 85
 
     (85) Base -> ID .
     (89) FunCall -> ID . ( FunArg )
@@ -2361,6 +2393,7 @@ state 84
     ADD             reduce using rule 85 (Base -> ID .)
     SUB             reduce using rule 85 (Base -> ID .)
     MOD             reduce using rule 85 (Base -> ID .)
+    DIFF            reduce using rule 85 (Base -> ID .)
     AND             reduce using rule 85 (Base -> ID .)
     OR              reduce using rule 85 (Base -> ID .)
     LESSER          reduce using rule 85 (Base -> ID .)
@@ -2388,9 +2421,9 @@ state 84
 
   ! (               [ reduce using rule 85 (Base -> ID .) ]
 
-    ArraySize                      shift and go to state 119
+    ArraySize                      shift and go to state 120
 
-state 85
+state 86
 
     (70) OpUno -> SUB Base .
     (71) OpUno -> Base . PRINT
@@ -2402,6 +2435,7 @@ state 85
     ADD             reduce using rule 70 (OpUno -> SUB Base .)
     SUB             reduce using rule 70 (OpUno -> SUB Base .)
     MOD             reduce using rule 70 (OpUno -> SUB Base .)
+    DIFF            reduce using rule 70 (OpUno -> SUB Base .)
     AND             reduce using rule 70 (OpUno -> SUB Base .)
     OR              reduce using rule 70 (OpUno -> SUB Base .)
     LESSER          reduce using rule 70 (OpUno -> SUB Base .)
@@ -2425,21 +2459,21 @@ state 85
     NEG             reduce using rule 70 (OpUno -> SUB Base .)
     ,               reduce using rule 70 (OpUno -> SUB Base .)
     ]               reduce using rule 70 (OpUno -> SUB Base .)
-    PRINT           shift and go to state 82
+    PRINT           shift and go to state 83
 
   ! PRINT           [ reduce using rule 70 (OpUno -> SUB Base .) ]
 
 
-state 86
+state 87
 
     (51) DeclArray -> ID ID DeclArraySize .
     (52) DeclArraySize -> DeclArraySize . [ NUM ]
 
     ;               reduce using rule 51 (DeclArray -> ID ID DeclArraySize .)
-    [               shift and go to state 120
+    [               shift and go to state 121
 
 
-state 87
+state 88
 
     (58) DeclAtrib -> ID ID LARROW . AtribOp
     (48) AtribOp -> . AtribNum
@@ -2480,7 +2514,7 @@ state 87
     NEG             shift and go to state 38
     SUB             shift and go to state 40
 
-    AtribOp                        shift and go to state 121
+    AtribOp                        shift and go to state 122
     AtribNum                       shift and go to state 29
     Op                             shift and go to state 52
     AtribArray                     shift and go to state 54
@@ -2494,14 +2528,14 @@ state 87
     FunCall                        shift and go to state 55
     AccessArray                    shift and go to state 39
 
-state 88
+state 89
 
     (53) DeclArraySize -> [ . NUM ]
 
-    NUM             shift and go to state 122
+    NUM             shift and go to state 123
 
 
-state 89
+state 90
 
     (24) FunExtra -> ID .
 
@@ -2521,7 +2555,7 @@ state 89
     SUB             reduce using rule 24 (FunExtra -> ID .)
 
 
-state 90
+state 91
 
     (17) Function -> ID FunScope FunCases . Body
     (14) Body -> . { }
@@ -2586,8 +2620,8 @@ state 90
     (71) OpUno -> . Base PRINT
     (72) AccessArray -> . ID ArraySize
 
-    {               shift and go to state 106
-    ID              shift and go to state 105
+    {               shift and go to state 107
+    ID              shift and go to state 106
     STRING          shift and go to state 13
     IF              shift and go to state 25
     WHILE           shift and go to state 26
@@ -2599,8 +2633,8 @@ state 90
     NEG             shift and go to state 38
     SUB             shift and go to state 40
 
-    Body                           shift and go to state 123
-    Block                          shift and go to state 107
+    Body                           shift and go to state 124
+    Block                          shift and go to state 108
     FunCall                        shift and go to state 5
     Exp                            shift and go to state 6
     If                             shift and go to state 7
@@ -2627,13 +2661,13 @@ state 90
     OpUno                          shift and go to state 35
     AccessArray                    shift and go to state 39
 
-state 91
+state 92
 
     (19) FunCases -> FunExtra . RARROW ID
     (21) FunCases -> FunExtra .
     (23) FunExtra -> FunExtra . , ID
 
-    RARROW          shift and go to state 124
+    RARROW          shift and go to state 125
     {               reduce using rule 21 (FunCases -> FunExtra .)
     ID              reduce using rule 21 (FunCases -> FunExtra .)
     STRING          reduce using rule 21 (FunCases -> FunExtra .)
@@ -2646,33 +2680,33 @@ state 91
     READ            reduce using rule 21 (FunCases -> FunExtra .)
     NEG             reduce using rule 21 (FunCases -> FunExtra .)
     SUB             reduce using rule 21 (FunCases -> FunExtra .)
-    ,               shift and go to state 125
-
-
-state 92
-
-    (20) FunCases -> RARROW . ID
-
-    ID              shift and go to state 126
+    ,               shift and go to state 126
 
 
 state 93
 
-    (89) FunCall -> ID ( FunArg . )
+    (20) FunCases -> RARROW . ID
 
-    )               shift and go to state 127
+    ID              shift and go to state 127
 
 
 state 94
+
+    (89) FunCall -> ID ( FunArg . )
+
+    )               shift and go to state 128
+
+
+state 95
 
     (90) FunArg -> FunRec .
     (92) FunRec -> FunRec . , AtribOp
 
     )               reduce using rule 90 (FunArg -> FunRec .)
-    ,               shift and go to state 128
+    ,               shift and go to state 129
 
 
-state 95
+state 96
 
     (93) FunRec -> AtribOp .
     (61) AtribNum -> AtribOp . RARROW ID
@@ -2680,10 +2714,10 @@ state 95
 
     ,               reduce using rule 93 (FunRec -> AtribOp .)
     )               reduce using rule 93 (FunRec -> AtribOp .)
-    RARROW          shift and go to state 102
+    RARROW          shift and go to state 103
 
 
-state 96
+state 97
 
     (63) Atrib -> ID LARROW AtribOp .
     (60) AtribNum -> ID LARROW AtribOp .
@@ -2692,76 +2726,21 @@ state 96
 
   ! shift/reduce conflict for RARROW resolved as shift
     ;               reduce using rule 63 (Atrib -> ID LARROW AtribOp .)
-    RARROW          shift and go to state 102
+    RARROW          shift and go to state 103
 
   ! RARROW          [ reduce using rule 60 (AtribNum -> ID LARROW AtribOp .) ]
 
 
-state 97
+state 98
 
     (65) Atrib -> ID SWAP ID .
 
     ;               reduce using rule 65 (Atrib -> ID SWAP ID .)
 
 
-state 98
-
-    (54) AtribArray -> ID ArraySize LARROW . AtribOp
-    (48) AtribOp -> . AtribNum
-    (49) AtribOp -> . Op
-    (60) AtribNum -> . ID LARROW AtribOp
-    (61) AtribNum -> . AtribOp RARROW ID
-    (62) AtribNum -> . AtribArray
-    (67) Op -> . OpBin
-    (54) AtribArray -> . ID ArraySize LARROW AtribOp
-    (55) AtribArray -> . AtribOp RARROW ID ArraySize
-    (73) OpBin -> . OpBin OpLogico TermMod
-    (74) OpBin -> . TermMod
-    (75) TermMod -> . TermMod OpMod TermPlus
-    (76) TermMod -> . TermPlus
-    (77) TermPlus -> . TermPlus OpPlus TermMult
-    (78) TermPlus -> . TermMult
-    (79) TermMult -> . TermMult OpMult TermPow
-    (80) TermMult -> . TermPow
-    (81) TermPow -> . TermPow OpPow Base
-    (82) TermPow -> . Base
-    (83) Base -> . OpUno
-    (84) Base -> . ( AtribOp )
-    (85) Base -> . ID
-    (86) Base -> . NUM
-    (87) Base -> . FunCall
-    (88) Base -> . READ
-    (68) OpUno -> . NEG Base
-    (69) OpUno -> . AccessArray
-    (70) OpUno -> . SUB Base
-    (71) OpUno -> . Base PRINT
-    (89) FunCall -> . ID ( FunArg )
-    (72) AccessArray -> . ID ArraySize
-
-    ID              shift and go to state 53
-    (               shift and go to state 12
-    NUM             shift and go to state 36
-    READ            shift and go to state 37
-    NEG             shift and go to state 38
-    SUB             shift and go to state 40
-
-    AtribOp                        shift and go to state 129
-    AtribNum                       shift and go to state 29
-    Op                             shift and go to state 52
-    AtribArray                     shift and go to state 54
-    OpBin                          shift and go to state 24
-    TermMod                        shift and go to state 30
-    TermPlus                       shift and go to state 31
-    TermMult                       shift and go to state 32
-    TermPow                        shift and go to state 33
-    Base                           shift and go to state 34
-    OpUno                          shift and go to state 35
-    FunCall                        shift and go to state 55
-    AccessArray                    shift and go to state 39
-
 state 99
 
-    (56) ArraySize -> ArraySize [ . AtribOp ]
+    (54) AtribArray -> ID ArraySize LARROW . AtribOp
     (48) AtribOp -> . AtribNum
     (49) AtribOp -> . Op
     (60) AtribNum -> . ID LARROW AtribOp
@@ -2816,15 +2795,70 @@ state 99
 
 state 100
 
+    (56) ArraySize -> ArraySize [ . AtribOp ]
+    (48) AtribOp -> . AtribNum
+    (49) AtribOp -> . Op
+    (60) AtribNum -> . ID LARROW AtribOp
+    (61) AtribNum -> . AtribOp RARROW ID
+    (62) AtribNum -> . AtribArray
+    (67) Op -> . OpBin
+    (54) AtribArray -> . ID ArraySize LARROW AtribOp
+    (55) AtribArray -> . AtribOp RARROW ID ArraySize
+    (73) OpBin -> . OpBin OpLogico TermMod
+    (74) OpBin -> . TermMod
+    (75) TermMod -> . TermMod OpMod TermPlus
+    (76) TermMod -> . TermPlus
+    (77) TermPlus -> . TermPlus OpPlus TermMult
+    (78) TermPlus -> . TermMult
+    (79) TermMult -> . TermMult OpMult TermPow
+    (80) TermMult -> . TermPow
+    (81) TermPow -> . TermPow OpPow Base
+    (82) TermPow -> . Base
+    (83) Base -> . OpUno
+    (84) Base -> . ( AtribOp )
+    (85) Base -> . ID
+    (86) Base -> . NUM
+    (87) Base -> . FunCall
+    (88) Base -> . READ
+    (68) OpUno -> . NEG Base
+    (69) OpUno -> . AccessArray
+    (70) OpUno -> . SUB Base
+    (71) OpUno -> . Base PRINT
+    (89) FunCall -> . ID ( FunArg )
+    (72) AccessArray -> . ID ArraySize
+
+    ID              shift and go to state 53
+    (               shift and go to state 12
+    NUM             shift and go to state 36
+    READ            shift and go to state 37
+    NEG             shift and go to state 38
+    SUB             shift and go to state 40
+
+    AtribOp                        shift and go to state 131
+    AtribNum                       shift and go to state 29
+    Op                             shift and go to state 52
+    AtribArray                     shift and go to state 54
+    OpBin                          shift and go to state 24
+    TermMod                        shift and go to state 30
+    TermPlus                       shift and go to state 31
+    TermMult                       shift and go to state 32
+    TermPow                        shift and go to state 33
+    Base                           shift and go to state 34
+    OpUno                          shift and go to state 35
+    FunCall                        shift and go to state 55
+    AccessArray                    shift and go to state 39
+
+state 101
+
     (57) ArraySize -> [ AtribOp . ]
     (61) AtribNum -> AtribOp . RARROW ID
     (55) AtribArray -> AtribOp . RARROW ID ArraySize
 
-    ]               shift and go to state 131
-    RARROW          shift and go to state 102
+    ]               shift and go to state 132
+    RARROW          shift and go to state 103
 
 
-state 101
+state 102
 
     (84) Base -> ( AtribOp ) .
 
@@ -2835,6 +2869,7 @@ state 101
     ADD             reduce using rule 84 (Base -> ( AtribOp ) .)
     SUB             reduce using rule 84 (Base -> ( AtribOp ) .)
     MOD             reduce using rule 84 (Base -> ( AtribOp ) .)
+    DIFF            reduce using rule 84 (Base -> ( AtribOp ) .)
     AND             reduce using rule 84 (Base -> ( AtribOp ) .)
     OR              reduce using rule 84 (Base -> ( AtribOp ) .)
     LESSER          reduce using rule 84 (Base -> ( AtribOp ) .)
@@ -2860,15 +2895,15 @@ state 101
     ]               reduce using rule 84 (Base -> ( AtribOp ) .)
 
 
-state 102
+state 103
 
     (61) AtribNum -> AtribOp RARROW . ID
     (55) AtribArray -> AtribOp RARROW . ID ArraySize
 
-    ID              shift and go to state 132
+    ID              shift and go to state 133
 
 
-state 103
+state 104
 
     (60) AtribNum -> ID LARROW . AtribOp
     (48) AtribOp -> . AtribNum
@@ -2909,7 +2944,7 @@ state 103
     NEG             shift and go to state 38
     SUB             shift and go to state 40
 
-    AtribOp                        shift and go to state 133
+    AtribOp                        shift and go to state 134
     AtribNum                       shift and go to state 29
     Op                             shift and go to state 52
     AtribArray                     shift and go to state 54
@@ -2923,7 +2958,7 @@ state 103
     FunCall                        shift and go to state 55
     AccessArray                    shift and go to state 39
 
-state 104
+state 105
 
     (26) If -> IfScope AtribOp Body .
     (28) IfElse -> IfScope AtribOp Body . ElseScope Body
@@ -2944,13 +2979,13 @@ state 104
     $end            reduce using rule 26 (If -> IfScope AtribOp Body .)
     }               reduce using rule 26 (If -> IfScope AtribOp Body .)
     :               reduce using rule 26 (If -> IfScope AtribOp Body .)
-    ELSE            shift and go to state 135
+    ELSE            shift and go to state 136
 
   ! ELSE            [ reduce using rule 26 (If -> IfScope AtribOp Body .) ]
 
-    ElseScope                      shift and go to state 134
+    ElseScope                      shift and go to state 135
 
-state 105
+state 106
 
     (89) FunCall -> ID . ( FunArg )
     (63) Atrib -> ID . LARROW AtribOp
@@ -2976,6 +3011,7 @@ state 105
     ADD             reduce using rule 85 (Base -> ID .)
     SUB             reduce using rule 85 (Base -> ID .)
     MOD             reduce using rule 85 (Base -> ID .)
+    DIFF            reduce using rule 85 (Base -> ID .)
     AND             reduce using rule 85 (Base -> ID .)
     OR              reduce using rule 85 (Base -> ID .)
     LESSER          reduce using rule 85 (Base -> ID .)
@@ -2989,7 +3025,7 @@ state 105
 
     ArraySize                      shift and go to state 48
 
-state 106
+state 107
 
     (14) Body -> { . }
     (16) Body -> { . Code }
@@ -3054,8 +3090,8 @@ state 106
     (71) OpUno -> . Base PRINT
     (72) AccessArray -> . ID ArraySize
 
-    }               shift and go to state 136
-    ID              shift and go to state 105
+    }               shift and go to state 137
+    ID              shift and go to state 106
     STRING          shift and go to state 13
     IF              shift and go to state 25
     WHILE           shift and go to state 26
@@ -3067,8 +3103,8 @@ state 106
     NEG             shift and go to state 38
     SUB             shift and go to state 40
 
-    Code                           shift and go to state 137
-    Block                          shift and go to state 138
+    Code                           shift and go to state 138
+    Block                          shift and go to state 139
     FunCall                        shift and go to state 5
     Exp                            shift and go to state 6
     If                             shift and go to state 7
@@ -3095,7 +3131,7 @@ state 106
     OpUno                          shift and go to state 35
     AccessArray                    shift and go to state 39
 
-state 107
+state 108
 
     (15) Body -> Block .
 
@@ -3116,7 +3152,7 @@ state 107
     :               reduce using rule 15 (Body -> Block .)
 
 
-state 108
+state 109
 
     (64) Atrib -> AtribOp RARROW ID .
     (59) DeclAtrib -> AtribOp RARROW ID . ID
@@ -3126,23 +3162,23 @@ state 108
     (57) ArraySize -> . [ AtribOp ]
 
     ;               reduce using rule 64 (Atrib -> AtribOp RARROW ID .)
-    ID              shift and go to state 139
+    ID              shift and go to state 140
     RARROW          reduce using rule 61 (AtribNum -> AtribOp RARROW ID .)
     [               shift and go to state 50
 
-    ArraySize                      shift and go to state 140
+    ArraySize                      shift and go to state 141
 
-state 109
+state 110
 
     (30) While -> WhileScope ( AtribOp . ) Body
     (61) AtribNum -> AtribOp . RARROW ID
     (55) AtribArray -> AtribOp . RARROW ID ArraySize
 
-    )               shift and go to state 141
-    RARROW          shift and go to state 102
+    )               shift and go to state 142
+    RARROW          shift and go to state 103
 
 
-state 110
+state 111
 
     (33) Switch -> SwitchScope Conds { . Cases }
     (38) Cases -> . Cases Case
@@ -3150,13 +3186,13 @@ state 110
     (40) Case -> . ID : Body
     (41) Case -> . : Body
 
-    ID              shift and go to state 144
-    :               shift and go to state 145
+    ID              shift and go to state 145
+    :               shift and go to state 146
 
-    Cases                          shift and go to state 142
-    Case                           shift and go to state 143
+    Cases                          shift and go to state 143
+    Case                           shift and go to state 144
 
-state 111
+state 112
 
     (34) Conds -> Conds , . Cond
     (36) Cond -> . ID ( AtribOp )
@@ -3165,9 +3201,9 @@ state 111
     ID              shift and go to state 62
     (               shift and go to state 63
 
-    Cond                           shift and go to state 146
+    Cond                           shift and go to state 147
 
-state 112
+state 113
 
     (36) Cond -> ID ( . AtribOp )
     (48) AtribOp -> . AtribNum
@@ -3208,7 +3244,7 @@ state 112
     NEG             shift and go to state 38
     SUB             shift and go to state 40
 
-    AtribOp                        shift and go to state 147
+    AtribOp                        shift and go to state 148
     AtribNum                       shift and go to state 29
     Op                             shift and go to state 52
     AtribArray                     shift and go to state 54
@@ -3222,22 +3258,23 @@ state 112
     FunCall                        shift and go to state 55
     AccessArray                    shift and go to state 39
 
-state 113
+state 114
 
     (37) Cond -> ( AtribOp . )
     (61) AtribNum -> AtribOp . RARROW ID
     (55) AtribArray -> AtribOp . RARROW ID ArraySize
 
-    )               shift and go to state 148
-    RARROW          shift and go to state 102
+    )               shift and go to state 149
+    RARROW          shift and go to state 103
 
 
-state 114
+state 115
 
     (73) OpBin -> OpBin OpLogico TermMod .
     (75) TermMod -> TermMod . OpMod TermPlus
-    (101) OpMod -> . MOD
+    (102) OpMod -> . MOD
 
+    DIFF            reduce using rule 73 (OpBin -> OpBin OpLogico TermMod .)
     AND             reduce using rule 73 (OpBin -> OpBin OpLogico TermMod .)
     OR              reduce using rule 73 (OpBin -> OpBin OpLogico TermMod .)
     LESSER          reduce using rule 73 (OpBin -> OpBin OpLogico TermMod .)
@@ -3262,19 +3299,20 @@ state 114
     SUB             reduce using rule 73 (OpBin -> OpBin OpLogico TermMod .)
     ,               reduce using rule 73 (OpBin -> OpBin OpLogico TermMod .)
     ]               reduce using rule 73 (OpBin -> OpBin OpLogico TermMod .)
-    MOD             shift and go to state 73
+    MOD             shift and go to state 74
 
-    OpMod                          shift and go to state 72
+    OpMod                          shift and go to state 73
 
-state 115
+state 116
 
     (75) TermMod -> TermMod OpMod TermPlus .
     (77) TermPlus -> TermPlus . OpPlus TermMult
-    (102) OpPlus -> . ADD
-    (103) OpPlus -> . SUB
+    (103) OpPlus -> . ADD
+    (104) OpPlus -> . SUB
 
   ! shift/reduce conflict for SUB resolved as shift
     MOD             reduce using rule 75 (TermMod -> TermMod OpMod TermPlus .)
+    DIFF            reduce using rule 75 (TermMod -> TermMod OpMod TermPlus .)
     AND             reduce using rule 75 (TermMod -> TermMod OpMod TermPlus .)
     OR              reduce using rule 75 (TermMod -> TermMod OpMod TermPlus .)
     LESSER          reduce using rule 75 (TermMod -> TermMod OpMod TermPlus .)
@@ -3298,23 +3336,24 @@ state 115
     NEG             reduce using rule 75 (TermMod -> TermMod OpMod TermPlus .)
     ,               reduce using rule 75 (TermMod -> TermMod OpMod TermPlus .)
     ]               reduce using rule 75 (TermMod -> TermMod OpMod TermPlus .)
-    ADD             shift and go to state 75
-    SUB             shift and go to state 76
+    ADD             shift and go to state 76
+    SUB             shift and go to state 77
 
   ! SUB             [ reduce using rule 75 (TermMod -> TermMod OpMod TermPlus .) ]
 
-    OpPlus                         shift and go to state 74
+    OpPlus                         shift and go to state 75
 
-state 116
+state 117
 
     (77) TermPlus -> TermPlus OpPlus TermMult .
     (79) TermMult -> TermMult . OpMult TermPow
-    (104) OpMult -> . MUL
-    (105) OpMult -> . DIV
+    (105) OpMult -> . MUL
+    (106) OpMult -> . DIV
 
     ADD             reduce using rule 77 (TermPlus -> TermPlus OpPlus TermMult .)
     SUB             reduce using rule 77 (TermPlus -> TermPlus OpPlus TermMult .)
     MOD             reduce using rule 77 (TermPlus -> TermPlus OpPlus TermMult .)
+    DIFF            reduce using rule 77 (TermPlus -> TermPlus OpPlus TermMult .)
     AND             reduce using rule 77 (TermPlus -> TermPlus OpPlus TermMult .)
     OR              reduce using rule 77 (TermPlus -> TermPlus OpPlus TermMult .)
     LESSER          reduce using rule 77 (TermPlus -> TermPlus OpPlus TermMult .)
@@ -3338,22 +3377,23 @@ state 116
     NEG             reduce using rule 77 (TermPlus -> TermPlus OpPlus TermMult .)
     ,               reduce using rule 77 (TermPlus -> TermPlus OpPlus TermMult .)
     ]               reduce using rule 77 (TermPlus -> TermPlus OpPlus TermMult .)
-    MUL             shift and go to state 78
-    DIV             shift and go to state 79
+    MUL             shift and go to state 79
+    DIV             shift and go to state 80
 
-    OpMult                         shift and go to state 77
+    OpMult                         shift and go to state 78
 
-state 117
+state 118
 
     (79) TermMult -> TermMult OpMult TermPow .
     (81) TermPow -> TermPow . OpPow Base
-    (106) OpPow -> . POW
+    (107) OpPow -> . POW
 
     MUL             reduce using rule 79 (TermMult -> TermMult OpMult TermPow .)
     DIV             reduce using rule 79 (TermMult -> TermMult OpMult TermPow .)
     ADD             reduce using rule 79 (TermMult -> TermMult OpMult TermPow .)
     SUB             reduce using rule 79 (TermMult -> TermMult OpMult TermPow .)
     MOD             reduce using rule 79 (TermMult -> TermMult OpMult TermPow .)
+    DIFF            reduce using rule 79 (TermMult -> TermMult OpMult TermPow .)
     AND             reduce using rule 79 (TermMult -> TermMult OpMult TermPow .)
     OR              reduce using rule 79 (TermMult -> TermMult OpMult TermPow .)
     LESSER          reduce using rule 79 (TermMult -> TermMult OpMult TermPow .)
@@ -3377,11 +3417,11 @@ state 117
     NEG             reduce using rule 79 (TermMult -> TermMult OpMult TermPow .)
     ,               reduce using rule 79 (TermMult -> TermMult OpMult TermPow .)
     ]               reduce using rule 79 (TermMult -> TermMult OpMult TermPow .)
-    POW             shift and go to state 81
+    POW             shift and go to state 82
 
-    OpPow                          shift and go to state 80
+    OpPow                          shift and go to state 81
 
-state 118
+state 119
 
     (81) TermPow -> TermPow OpPow Base .
     (71) OpUno -> Base . PRINT
@@ -3392,6 +3432,7 @@ state 118
     ADD             reduce using rule 81 (TermPow -> TermPow OpPow Base .)
     SUB             reduce using rule 81 (TermPow -> TermPow OpPow Base .)
     MOD             reduce using rule 81 (TermPow -> TermPow OpPow Base .)
+    DIFF            reduce using rule 81 (TermPow -> TermPow OpPow Base .)
     AND             reduce using rule 81 (TermPow -> TermPow OpPow Base .)
     OR              reduce using rule 81 (TermPow -> TermPow OpPow Base .)
     LESSER          reduce using rule 81 (TermPow -> TermPow OpPow Base .)
@@ -3415,10 +3456,10 @@ state 118
     NEG             reduce using rule 81 (TermPow -> TermPow OpPow Base .)
     ,               reduce using rule 81 (TermPow -> TermPow OpPow Base .)
     ]               reduce using rule 81 (TermPow -> TermPow OpPow Base .)
-    PRINT           shift and go to state 82
+    PRINT           shift and go to state 83
 
 
-state 119
+state 120
 
     (72) AccessArray -> ID ArraySize .
     (56) ArraySize -> ArraySize . [ AtribOp ]
@@ -3430,6 +3471,7 @@ state 119
     ADD             reduce using rule 72 (AccessArray -> ID ArraySize .)
     SUB             reduce using rule 72 (AccessArray -> ID ArraySize .)
     MOD             reduce using rule 72 (AccessArray -> ID ArraySize .)
+    DIFF            reduce using rule 72 (AccessArray -> ID ArraySize .)
     AND             reduce using rule 72 (AccessArray -> ID ArraySize .)
     OR              reduce using rule 72 (AccessArray -> ID ArraySize .)
     LESSER          reduce using rule 72 (AccessArray -> ID ArraySize .)
@@ -3453,34 +3495,34 @@ state 119
     NEG             reduce using rule 72 (AccessArray -> ID ArraySize .)
     ,               reduce using rule 72 (AccessArray -> ID ArraySize .)
     ]               reduce using rule 72 (AccessArray -> ID ArraySize .)
-    [               shift and go to state 99
-
-
-state 120
-
-    (52) DeclArraySize -> DeclArraySize [ . NUM ]
-
-    NUM             shift and go to state 149
+    [               shift and go to state 100
 
 
 state 121
+
+    (52) DeclArraySize -> DeclArraySize [ . NUM ]
+
+    NUM             shift and go to state 150
+
+
+state 122
 
     (58) DeclAtrib -> ID ID LARROW AtribOp .
     (61) AtribNum -> AtribOp . RARROW ID
     (55) AtribArray -> AtribOp . RARROW ID ArraySize
 
     ;               reduce using rule 58 (DeclAtrib -> ID ID LARROW AtribOp .)
-    RARROW          shift and go to state 102
-
-
-state 122
-
-    (53) DeclArraySize -> [ NUM . ]
-
-    ]               shift and go to state 150
+    RARROW          shift and go to state 103
 
 
 state 123
+
+    (53) DeclArraySize -> [ NUM . ]
+
+    ]               shift and go to state 151
+
+
+state 124
 
     (17) Function -> ID FunScope FunCases Body .
 
@@ -3498,21 +3540,21 @@ state 123
     $end            reduce using rule 17 (Function -> ID FunScope FunCases Body .)
 
 
-state 124
-
-    (19) FunCases -> FunExtra RARROW . ID
-
-    ID              shift and go to state 151
-
-
 state 125
 
-    (23) FunExtra -> FunExtra , . ID
+    (19) FunCases -> FunExtra RARROW . ID
 
     ID              shift and go to state 152
 
 
 state 126
+
+    (23) FunExtra -> FunExtra , . ID
+
+    ID              shift and go to state 153
+
+
+state 127
 
     (20) FunCases -> RARROW ID .
 
@@ -3530,7 +3572,7 @@ state 126
     SUB             reduce using rule 20 (FunCases -> RARROW ID .)
 
 
-state 127
+state 128
 
     (89) FunCall -> ID ( FunArg ) .
 
@@ -3542,6 +3584,7 @@ state 127
     ADD             reduce using rule 89 (FunCall -> ID ( FunArg ) .)
     SUB             reduce using rule 89 (FunCall -> ID ( FunArg ) .)
     MOD             reduce using rule 89 (FunCall -> ID ( FunArg ) .)
+    DIFF            reduce using rule 89 (FunCall -> ID ( FunArg ) .)
     AND             reduce using rule 89 (FunCall -> ID ( FunArg ) .)
     OR              reduce using rule 89 (FunCall -> ID ( FunArg ) .)
     LESSER          reduce using rule 89 (FunCall -> ID ( FunArg ) .)
@@ -3566,7 +3609,7 @@ state 127
     ]               reduce using rule 89 (FunCall -> ID ( FunArg ) .)
 
 
-state 128
+state 129
 
     (92) FunRec -> FunRec , . AtribOp
     (48) AtribOp -> . AtribNum
@@ -3607,7 +3650,7 @@ state 128
     NEG             shift and go to state 38
     SUB             shift and go to state 40
 
-    AtribOp                        shift and go to state 153
+    AtribOp                        shift and go to state 154
     AtribNum                       shift and go to state 29
     Op                             shift and go to state 52
     AtribArray                     shift and go to state 54
@@ -3621,7 +3664,7 @@ state 128
     FunCall                        shift and go to state 55
     AccessArray                    shift and go to state 39
 
-state 129
+state 130
 
     (54) AtribArray -> ID ArraySize LARROW AtribOp .
     (61) AtribNum -> AtribOp . RARROW ID
@@ -3644,22 +3687,22 @@ state 129
     SUB             reduce using rule 54 (AtribArray -> ID ArraySize LARROW AtribOp .)
     ,               reduce using rule 54 (AtribArray -> ID ArraySize LARROW AtribOp .)
     ]               reduce using rule 54 (AtribArray -> ID ArraySize LARROW AtribOp .)
-    RARROW          shift and go to state 102
+    RARROW          shift and go to state 103
 
   ! RARROW          [ reduce using rule 54 (AtribArray -> ID ArraySize LARROW AtribOp .) ]
 
 
-state 130
+state 131
 
     (56) ArraySize -> ArraySize [ AtribOp . ]
     (61) AtribNum -> AtribOp . RARROW ID
     (55) AtribArray -> AtribOp . RARROW ID ArraySize
 
-    ]               shift and go to state 154
-    RARROW          shift and go to state 102
+    ]               shift and go to state 155
+    RARROW          shift and go to state 103
 
 
-state 131
+state 132
 
     (57) ArraySize -> [ AtribOp ] .
 
@@ -3672,6 +3715,7 @@ state 131
     ADD             reduce using rule 57 (ArraySize -> [ AtribOp ] .)
     SUB             reduce using rule 57 (ArraySize -> [ AtribOp ] .)
     MOD             reduce using rule 57 (ArraySize -> [ AtribOp ] .)
+    DIFF            reduce using rule 57 (ArraySize -> [ AtribOp ] .)
     AND             reduce using rule 57 (ArraySize -> [ AtribOp ] .)
     OR              reduce using rule 57 (ArraySize -> [ AtribOp ] .)
     LESSER          reduce using rule 57 (ArraySize -> [ AtribOp ] .)
@@ -3697,7 +3741,7 @@ state 131
     ]               reduce using rule 57 (ArraySize -> [ AtribOp ] .)
 
 
-state 132
+state 133
 
     (61) AtribNum -> AtribOp RARROW ID .
     (55) AtribArray -> AtribOp RARROW ID . ArraySize
@@ -3723,9 +3767,9 @@ state 132
     ]               reduce using rule 61 (AtribNum -> AtribOp RARROW ID .)
     [               shift and go to state 50
 
-    ArraySize                      shift and go to state 140
+    ArraySize                      shift and go to state 141
 
-state 133
+state 134
 
     (60) AtribNum -> ID LARROW AtribOp .
     (61) AtribNum -> AtribOp . RARROW ID
@@ -3748,12 +3792,12 @@ state 133
     ,               reduce using rule 60 (AtribNum -> ID LARROW AtribOp .)
     ;               reduce using rule 60 (AtribNum -> ID LARROW AtribOp .)
     ]               reduce using rule 60 (AtribNum -> ID LARROW AtribOp .)
-    RARROW          shift and go to state 102
+    RARROW          shift and go to state 103
 
   ! RARROW          [ reduce using rule 60 (AtribNum -> ID LARROW AtribOp .) ]
 
 
-state 134
+state 135
 
     (28) IfElse -> IfScope AtribOp Body ElseScope . Body
     (14) Body -> . { }
@@ -3818,8 +3862,8 @@ state 134
     (71) OpUno -> . Base PRINT
     (72) AccessArray -> . ID ArraySize
 
-    {               shift and go to state 106
-    ID              shift and go to state 105
+    {               shift and go to state 107
+    ID              shift and go to state 106
     STRING          shift and go to state 13
     IF              shift and go to state 25
     WHILE           shift and go to state 26
@@ -3833,8 +3877,8 @@ state 134
 
     IfScope                        shift and go to state 19
     AtribOp                        shift and go to state 20
-    Body                           shift and go to state 155
-    Block                          shift and go to state 107
+    Body                           shift and go to state 156
+    Block                          shift and go to state 108
     FunCall                        shift and go to state 5
     Exp                            shift and go to state 6
     If                             shift and go to state 7
@@ -3859,7 +3903,7 @@ state 134
     OpUno                          shift and go to state 35
     AccessArray                    shift and go to state 39
 
-state 135
+state 136
 
     (27) ElseScope -> ELSE .
 
@@ -3877,7 +3921,7 @@ state 135
     SUB             reduce using rule 27 (ElseScope -> ELSE .)
 
 
-state 136
+state 137
 
     (14) Body -> { } .
 
@@ -3898,7 +3942,7 @@ state 136
     :               reduce using rule 14 (Body -> { } .)
 
 
-state 137
+state 138
 
     (16) Body -> { Code . }
     (6) Code -> Code . Block
@@ -3961,8 +4005,8 @@ state 137
     (71) OpUno -> . Base PRINT
     (72) AccessArray -> . ID ArraySize
 
-    }               shift and go to state 156
-    ID              shift and go to state 105
+    }               shift and go to state 157
+    ID              shift and go to state 106
     STRING          shift and go to state 13
     IF              shift and go to state 25
     WHILE           shift and go to state 26
@@ -3974,7 +4018,7 @@ state 137
     NEG             shift and go to state 38
     SUB             shift and go to state 40
 
-    Block                          shift and go to state 157
+    Block                          shift and go to state 158
     FunCall                        shift and go to state 5
     Exp                            shift and go to state 6
     If                             shift and go to state 7
@@ -4001,7 +4045,7 @@ state 137
     OpUno                          shift and go to state 35
     AccessArray                    shift and go to state 39
 
-state 138
+state 139
 
     (7) Code -> Block .
 
@@ -4019,14 +4063,14 @@ state 138
     SUB             reduce using rule 7 (Code -> Block .)
 
 
-state 139
+state 140
 
     (59) DeclAtrib -> AtribOp RARROW ID ID .
 
     ;               reduce using rule 59 (DeclAtrib -> AtribOp RARROW ID ID .)
 
 
-state 140
+state 141
 
     (55) AtribArray -> AtribOp RARROW ID ArraySize .
     (56) ArraySize -> ArraySize . [ AtribOp ]
@@ -4048,10 +4092,10 @@ state 140
     SUB             reduce using rule 55 (AtribArray -> AtribOp RARROW ID ArraySize .)
     ,               reduce using rule 55 (AtribArray -> AtribOp RARROW ID ArraySize .)
     ]               reduce using rule 55 (AtribArray -> AtribOp RARROW ID ArraySize .)
-    [               shift and go to state 99
+    [               shift and go to state 100
 
 
-state 141
+state 142
 
     (30) While -> WhileScope ( AtribOp ) . Body
     (14) Body -> . { }
@@ -4116,8 +4160,8 @@ state 141
     (71) OpUno -> . Base PRINT
     (72) AccessArray -> . ID ArraySize
 
-    {               shift and go to state 106
-    ID              shift and go to state 105
+    {               shift and go to state 107
+    ID              shift and go to state 106
     STRING          shift and go to state 13
     IF              shift and go to state 25
     WHILE           shift and go to state 26
@@ -4131,8 +4175,8 @@ state 141
 
     WhileScope                     shift and go to state 21
     AtribOp                        shift and go to state 20
-    Body                           shift and go to state 158
-    Block                          shift and go to state 107
+    Body                           shift and go to state 159
+    Block                          shift and go to state 108
     FunCall                        shift and go to state 5
     Exp                            shift and go to state 6
     If                             shift and go to state 7
@@ -4157,20 +4201,20 @@ state 141
     OpUno                          shift and go to state 35
     AccessArray                    shift and go to state 39
 
-state 142
+state 143
 
     (33) Switch -> SwitchScope Conds { Cases . }
     (38) Cases -> Cases . Case
     (40) Case -> . ID : Body
     (41) Case -> . : Body
 
-    }               shift and go to state 159
-    ID              shift and go to state 144
-    :               shift and go to state 145
+    }               shift and go to state 160
+    ID              shift and go to state 145
+    :               shift and go to state 146
 
-    Case                           shift and go to state 160
+    Case                           shift and go to state 161
 
-state 143
+state 144
 
     (39) Cases -> Case .
 
@@ -4179,14 +4223,14 @@ state 143
     :               reduce using rule 39 (Cases -> Case .)
 
 
-state 144
+state 145
 
     (40) Case -> ID . : Body
 
-    :               shift and go to state 161
+    :               shift and go to state 162
 
 
-state 145
+state 146
 
     (41) Case -> : . Body
     (14) Body -> . { }
@@ -4251,8 +4295,8 @@ state 145
     (71) OpUno -> . Base PRINT
     (72) AccessArray -> . ID ArraySize
 
-    {               shift and go to state 106
-    ID              shift and go to state 105
+    {               shift and go to state 107
+    ID              shift and go to state 106
     STRING          shift and go to state 13
     IF              shift and go to state 25
     WHILE           shift and go to state 26
@@ -4264,8 +4308,8 @@ state 145
     NEG             shift and go to state 38
     SUB             shift and go to state 40
 
-    Body                           shift and go to state 162
-    Block                          shift and go to state 107
+    Body                           shift and go to state 163
+    Block                          shift and go to state 108
     FunCall                        shift and go to state 5
     Exp                            shift and go to state 6
     If                             shift and go to state 7
@@ -4292,7 +4336,7 @@ state 145
     OpUno                          shift and go to state 35
     AccessArray                    shift and go to state 39
 
-state 146
+state 147
 
     (34) Conds -> Conds , Cond .
 
@@ -4300,17 +4344,17 @@ state 146
     ,               reduce using rule 34 (Conds -> Conds , Cond .)
 
 
-state 147
+state 148
 
     (36) Cond -> ID ( AtribOp . )
     (61) AtribNum -> AtribOp . RARROW ID
     (55) AtribArray -> AtribOp . RARROW ID ArraySize
 
-    )               shift and go to state 163
-    RARROW          shift and go to state 102
+    )               shift and go to state 164
+    RARROW          shift and go to state 103
 
 
-state 148
+state 149
 
     (37) Cond -> ( AtribOp ) .
 
@@ -4318,14 +4362,14 @@ state 148
     ,               reduce using rule 37 (Cond -> ( AtribOp ) .)
 
 
-state 149
+state 150
 
     (52) DeclArraySize -> DeclArraySize [ NUM . ]
 
-    ]               shift and go to state 164
+    ]               shift and go to state 165
 
 
-state 150
+state 151
 
     (53) DeclArraySize -> [ NUM ] .
 
@@ -4333,7 +4377,7 @@ state 150
     ;               reduce using rule 53 (DeclArraySize -> [ NUM ] .)
 
 
-state 151
+state 152
 
     (19) FunCases -> FunExtra RARROW ID .
 
@@ -4351,7 +4395,7 @@ state 151
     SUB             reduce using rule 19 (FunCases -> FunExtra RARROW ID .)
 
 
-state 152
+state 153
 
     (23) FunExtra -> FunExtra , ID .
 
@@ -4371,7 +4415,7 @@ state 152
     SUB             reduce using rule 23 (FunExtra -> FunExtra , ID .)
 
 
-state 153
+state 154
 
     (92) FunRec -> FunRec , AtribOp .
     (61) AtribNum -> AtribOp . RARROW ID
@@ -4379,10 +4423,10 @@ state 153
 
     ,               reduce using rule 92 (FunRec -> FunRec , AtribOp .)
     )               reduce using rule 92 (FunRec -> FunRec , AtribOp .)
-    RARROW          shift and go to state 102
+    RARROW          shift and go to state 103
 
 
-state 154
+state 155
 
     (56) ArraySize -> ArraySize [ AtribOp ] .
 
@@ -4395,6 +4439,7 @@ state 154
     ADD             reduce using rule 56 (ArraySize -> ArraySize [ AtribOp ] .)
     SUB             reduce using rule 56 (ArraySize -> ArraySize [ AtribOp ] .)
     MOD             reduce using rule 56 (ArraySize -> ArraySize [ AtribOp ] .)
+    DIFF            reduce using rule 56 (ArraySize -> ArraySize [ AtribOp ] .)
     AND             reduce using rule 56 (ArraySize -> ArraySize [ AtribOp ] .)
     OR              reduce using rule 56 (ArraySize -> ArraySize [ AtribOp ] .)
     LESSER          reduce using rule 56 (ArraySize -> ArraySize [ AtribOp ] .)
@@ -4420,7 +4465,7 @@ state 154
     ]               reduce using rule 56 (ArraySize -> ArraySize [ AtribOp ] .)
 
 
-state 155
+state 156
 
     (28) IfElse -> IfScope AtribOp Body ElseScope Body .
 
@@ -4441,7 +4486,7 @@ state 155
     :               reduce using rule 28 (IfElse -> IfScope AtribOp Body ElseScope Body .)
 
 
-state 156
+state 157
 
     (16) Body -> { Code } .
 
@@ -4462,7 +4507,7 @@ state 156
     :               reduce using rule 16 (Body -> { Code } .)
 
 
-state 157
+state 158
 
     (6) Code -> Code Block .
 
@@ -4480,7 +4525,7 @@ state 157
     SUB             reduce using rule 6 (Code -> Code Block .)
 
 
-state 158
+state 159
 
     (30) While -> WhileScope ( AtribOp ) Body .
 
@@ -4501,7 +4546,7 @@ state 158
     :               reduce using rule 30 (While -> WhileScope ( AtribOp ) Body .)
 
 
-state 159
+state 160
 
     (33) Switch -> SwitchScope Conds { Cases } .
 
@@ -4522,7 +4567,7 @@ state 159
     :               reduce using rule 33 (Switch -> SwitchScope Conds { Cases } .)
 
 
-state 160
+state 161
 
     (38) Cases -> Cases Case .
 
@@ -4531,7 +4576,7 @@ state 160
     :               reduce using rule 38 (Cases -> Cases Case .)
 
 
-state 161
+state 162
 
     (40) Case -> ID : . Body
     (14) Body -> . { }
@@ -4596,8 +4641,8 @@ state 161
     (71) OpUno -> . Base PRINT
     (72) AccessArray -> . ID ArraySize
 
-    {               shift and go to state 106
-    ID              shift and go to state 105
+    {               shift and go to state 107
+    ID              shift and go to state 106
     STRING          shift and go to state 13
     IF              shift and go to state 25
     WHILE           shift and go to state 26
@@ -4609,8 +4654,8 @@ state 161
     NEG             shift and go to state 38
     SUB             shift and go to state 40
 
-    Body                           shift and go to state 165
-    Block                          shift and go to state 107
+    Body                           shift and go to state 166
+    Block                          shift and go to state 108
     FunCall                        shift and go to state 5
     Exp                            shift and go to state 6
     If                             shift and go to state 7
@@ -4637,7 +4682,7 @@ state 161
     OpUno                          shift and go to state 35
     AccessArray                    shift and go to state 39
 
-state 162
+state 163
 
     (41) Case -> : Body .
 
@@ -4646,7 +4691,7 @@ state 162
     :               reduce using rule 41 (Case -> : Body .)
 
 
-state 163
+state 164
 
     (36) Cond -> ID ( AtribOp ) .
 
@@ -4654,7 +4699,7 @@ state 163
     ,               reduce using rule 36 (Cond -> ID ( AtribOp ) .)
 
 
-state 164
+state 165
 
     (52) DeclArraySize -> DeclArraySize [ NUM ] .
 
@@ -4662,7 +4707,7 @@ state 164
     ;               reduce using rule 52 (DeclArraySize -> DeclArraySize [ NUM ] .)
 
 
-state 165
+state 166
 
     (40) Case -> ID : Body .
 
@@ -4677,13 +4722,13 @@ WARNING: shift/reduce conflict for ; in state 5 resolved as shift
 WARNING: shift/reduce conflict for SUB in state 31 resolved as shift
 WARNING: shift/reduce conflict for ID in state 44 resolved as shift
 WARNING: shift/reduce conflict for ( in state 53 resolved as shift
-WARNING: shift/reduce conflict for PRINT in state 83 resolved as shift
-WARNING: shift/reduce conflict for ( in state 84 resolved as shift
-WARNING: shift/reduce conflict for PRINT in state 85 resolved as shift
-WARNING: shift/reduce conflict for RARROW in state 96 resolved as shift
-WARNING: shift/reduce conflict for ELSE in state 104 resolved as shift
-WARNING: shift/reduce conflict for SUB in state 115 resolved as shift
-WARNING: shift/reduce conflict for RARROW in state 129 resolved as shift
-WARNING: shift/reduce conflict for RARROW in state 133 resolved as shift
+WARNING: shift/reduce conflict for PRINT in state 84 resolved as shift
+WARNING: shift/reduce conflict for ( in state 85 resolved as shift
+WARNING: shift/reduce conflict for PRINT in state 86 resolved as shift
+WARNING: shift/reduce conflict for RARROW in state 97 resolved as shift
+WARNING: shift/reduce conflict for ELSE in state 105 resolved as shift
+WARNING: shift/reduce conflict for SUB in state 116 resolved as shift
+WARNING: shift/reduce conflict for RARROW in state 130 resolved as shift
+WARNING: shift/reduce conflict for RARROW in state 134 resolved as shift
 WARNING: reduce/reduce conflict in state 0 resolved using rule (Start -> <empty>)
 WARNING: rejected rule (Axiom -> <empty>) in state 0
