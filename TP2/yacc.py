@@ -153,7 +153,8 @@ def p_funcases_funextra_rarrow(p):
                                                      'tamanho': [1],
                                                      'tipo': 'int'}
         else:
-            print("ERROR: Variable %s already declared locally." % p[1][-i],file=sys.stderr)
+            print("ERROR: Variable %s already declared locally." 
+            % p[1][-i],file=sys.stderr)
             p_error(p)
     p[0] = (True, p[1])
     p.parser.local_adress = 1
@@ -178,13 +179,16 @@ def p_funcases_funextra(p):
                                                      'tamanho': [1],
                                                      'tipo': 'int'}
         else:
-            print("ERROR: Variable %s already declared locally." % p[1][-i],file=sys.stderr)
+            print("ERROR: Variable %s already declared locally." 
+            % p[1][-i],file=sys.stderr)
             p_error(p)
+    p.parser.local_adress = 0
     p[0] = (False, p[1])
 
 
 def p_funcases_empty(p):
     "FunCases : "
+    p.parser.local_adress = 0
     p[0] = (False, [])
 
 
@@ -219,10 +223,10 @@ def p_if(p):
 
 def p_else_scope(p):
     "ElseScope : ELSE"
-    pop_local_vars(p)  # pop do if
+      # pop do if
     p.parser.id_table_stack.append(dict())
     # limpar scope anterior (if anterior)
-    p[0] = p[1]
+    p[0] = pop_local_vars(p)
 
 
 def p_ifelse(p):
@@ -232,11 +236,12 @@ def p_ifelse(p):
     p[0] = p[2] + f"jz I{label}\n" + \
         p[3] + \
         f"jump E{label}\n" + \
+        p[4] + \
         f"I{label}:\n" + \
         p[5] + \
         f"E{label}:\n"
     p.parser.internal_label += 1
-
+    # p[4] são as local_vars do if
     p[0] += pop_local_vars(p)  # pop do else
 
 
