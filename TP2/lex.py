@@ -16,7 +16,8 @@ tokens = (
 'IF',
 'ELSE',
 'WHILE',
-'SWITCH',
+'SWITCHCOND',
+'SWITCHCASE',
 'NEG',
 'AND',
 'OR',
@@ -42,7 +43,8 @@ reserved = {
     'if' : 'IF',
     'else' : 'ELSE',
     'while' : 'WHILE',
-    'switch' : 'SWITCH'
+    'switchcond' : 'SWITCHCOND',
+    'switchcase' : 'SWITCHCASE'
 }
 
 t_RARROW = r'-+>'

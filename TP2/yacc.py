@@ -254,8 +254,8 @@ def p_while(p):
     p[0] += pop_local_vars(p)
 
 
-def p_switch_scope(p):
-    "SwitchScope : SWITCH"
+def p_switch_scopecond(p):
+    "SwitchScope : SWITCHCOND"
     p.parser.id_table_stack.append(dict())
     p.parser.label_table_stack.append(
         (  # -----isto ´e um tuplo
@@ -264,6 +264,19 @@ def p_switch_scope(p):
         )  # -----
     )  # cond,cases
     # inicializar com o caracter especial e uma lista vazia
+    p[0] = 2
+
+def p_switch_scopecase(p):
+    "SwitchScope : SWITCHCASE"
+    p.parser.id_table_stack.append(dict())
+    p.parser.label_table_stack.append(
+        (  # -----isto ´e um tuplo
+            {':': list()},
+            {':': list()}
+        )  # -----
+    )  # cond,cases
+    # inicializar com o caracter especial e uma lista vazia
+    p[0] = 4
 
 
 def p_switch(p):
@@ -276,17 +289,19 @@ def p_switch(p):
 
     # testes de integridade das tabelas
     if cond_table.keys() != case_table.keys():
-        print("ERROR: Condition labels don't match case labels")  # pode ser feito melhor
+        print("ERROR: Condition labels don't match case labels")
+        p_error(p)
     if len(cond_table[':']) != len(case_table[':']):
         # estou a fazer com que todas as condiçoes apareçam e sejam chamadas uma vez (pode ser mudado)
         print("ERROR: Number of unlabeled conditions doesn't match number of unlabeled cases")
+        p_error(p)
 
     end_label_num = p.parser.internal_label
     p.parser.internal_label += 1
 
     p[0] = ""
 
-    for label in p[4]:  # percorrer ap[0]chamadas
+    for label in p[p[1]]:  # percorrer ap[0]chamadas
         lab_num = p.parser.internal_label
         if label == ':':
             cond = cond_table[':'].pop(0)
@@ -308,8 +323,8 @@ def p_switch(p):
 # nas conds passar para cima um par (conds_com_lable (dict?), conds_sem_lable (lista?))
 def p_conds_rec(p):
     "Conds : Conds ',' Cond"
-    p[0] = p[3]
-    p[0].append(p[1])
+    p[0] = p[1]
+    p[0].append(p[3])
 
 
 def p_conds_base(p):
@@ -331,8 +346,8 @@ def p_cond_empty(p):
 
 def p_cases_rec(p):
     "Cases : Cases Case "
-    p[0] = p[2]
-    p[0].append(p[1])
+    p[0] = p[1]
+    p[0].append(p[2])
 
 
 def p_cases_base(p):
