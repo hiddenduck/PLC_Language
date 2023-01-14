@@ -393,7 +393,7 @@ def p_case_empty(p):
 def p_exp_print(p):
     "Exp : STRING PRINT"
     # funciona para tudo que não seja array
-    p[0] = p[1] + "writes\n" + r'pushs "\n"' + "\nwrites\n"
+    p[0] = "pushs " + p[1] + "\nwrites\n" + r'pushs "\n"' + "\nwrites\n"
 
 def p_exp_atrib(p):
     "Exp : Atrib"
