@@ -111,7 +111,8 @@ def p_function(p):
 
     local_args = len(p.parser.id_table_stack[-1])-int(num_args)
     if local_args > 0:
-        s += "pop %d\n" % (local_args)
+        #deixar se houver retorno e não houver argumentos
+        s += "pop %d\n" % (local_args - int(num_args == 0 and p[3][0]))
     p.parser.local_adress = 0
     p.parser.id_table_stack.pop()
     #Se a função devolve ou não algo. p[3] é um tuplo.
@@ -385,6 +386,10 @@ def p_case_empty(p):
     else:
         p[0] = p[1][0]"""
 
+def p_exp_print(p):
+    "Exp : STRING PRINT"
+    # funciona para tudo que não seja array
+    p[0] = p[1] + "writes\n" + r'pushs "\n"' + "\nwrites\n"
 
 def p_exp_atrib(p):
     "Exp : Atrib"
