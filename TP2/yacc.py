@@ -464,14 +464,14 @@ def p_declarray(p):
         if len(p.parser.id_table_stack) == 1:
             p.parser.id_table_stack[0][p[2]] = {'classe': 'array',
                                                 'endereco': p.parser.global_adress,
-                                                'tamanho': p[3][1:],
+                                                'tamanho': p[3],
                                                 'tipo': p[1]}
             p.parser.global_adress += res
             p.parser.local_adress += res
         else:
             p.parser.id_table_stack[-1][p[2]] = {'classe': 'array',
                                                  'endereco': p.parser.local_adress,
-                                                 'tamanho': p[3][1:],
+                                                 'tamanho': p[3],
                                                  'tipo': p[1]}
             p.parser.local_adress += res
 
@@ -495,7 +495,7 @@ def p_atribarray_Leftatribop(p):
                 endereco = p.parser.id_table_stack[i][p[1]]['endereco']
                 s = "pushfp\n"
                 # tamanho nao guarda o primeiro!!"!"!!!!!""!"!"!"!"!"!"
-                sizes = p.parser.id_table_stack[i][p[1]]['tamanho']
+                sizes = p.parser.id_table_stack[i][p[1]]['tamanho'][:1]
                 break
             else:
                 print("ERROR: Variable %s is not of array type" % p[1],file=sys.stderr)
@@ -506,7 +506,7 @@ def p_atribarray_Leftatribop(p):
                 endereco = p.parser.id_table_stack[0][p[1]]['endereco']
                 s = "pushgp\n"
                 # tamanho nao guarda o primeiro!!"!"!!!!!""!"!"!"!"!"!"
-                sizes = p.parser.id_table_stack[0][p[1]]['tamanho']
+                sizes = p.parser.id_table_stack[0][p[1]]['tamanho'][:1]
             else:
                 print("ERROR: Variable %s is not of array type" % p[1],file=sys.stderr)
                 p_error(p)
@@ -533,13 +533,13 @@ def p_atribarray_Rightatribop(p):
         if p[3] in p.parser.id_table_stack[i]:
             s = "pushfp\n"
             # tamanho nao guarda o primeiro!!"!"!!!!!""!"!"!"!"!"!"
-            sizes = p.parser.id_table_stack[i][p[3]]['tamanho']
+            sizes = p.parser.id_table_stack[i][p[3]]['tamanho'][:1]
             break
     else:
         if p[3] in p.parser.id_table_stack[0]:
             s = "pushgp\n"
             # tamanho nao guarda o primeiro!!"!"!!!!!""!"!"!"!"!"!"
-            sizes = p.parser.id_table_stack[0][p[3]]['tamanho']
+            sizes = p.parser.id_table_stack[0][p[3]]['tamanho'][:1]
         else:
             print("ERROR: variable %s not in scope" % p[3],file=sys.stderr)
             return
@@ -556,7 +556,7 @@ def p_accessarray(p):
     for i in range(len(p.parser.id_table_stack)-1, 0, -1):
         if p[1] in p.parser.id_table_stack[i]:
             end = p.parser.id_table_stack[i][p[1]]['endereco']
-            sizes = p.parser.id_table_stack[i][p[1]]['tamanho']
+            sizes = p.parser.id_table_stack[i][p[1]]['tamanho'][:1]
             s += p[2]
             for size in sizes:
                 s += f"pushi {size}\nmul\nadd\n"
@@ -566,7 +566,7 @@ def p_accessarray(p):
         print("ERROR: Variable %s not in scope" % p[1],file=sys.stderr)
     else:
         end = p.parser.id_table_stack[0][p[1]]['endereco']
-        sizes = p.parser.id_table_stack[0][p[1]]['tamanho']
+        sizes = p.parser.id_table_stack[0][p[1]]['tamanho'][:1]
         s += p[2]
         for size in sizes:
             s += f"pushi {size}\nmul\nadd\n"
