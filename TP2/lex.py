@@ -5,6 +5,7 @@ import sys
 tokens = (
 'ID',
 'NUM',
+'STRING',
 'RARROW',
 'LARROW',
 'SWAP',
@@ -27,7 +28,8 @@ tokens = (
 'DIV',
 'POW',
 'READ',
-'PRINT'
+'PRINT',
+'COMMENT'
 )
 
 t_ANY_ignore = ' \n\t'
@@ -41,6 +43,8 @@ reserved = {
     'switchcond' : 'SWITCHCOND',
     'switchcase' : 'SWITCHCASE'
 }
+
+t_COMMENT = r'\#[^\#]\#'
 
 t_STRING = r'"[^"\n]'
 
