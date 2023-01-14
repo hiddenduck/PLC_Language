@@ -44,7 +44,7 @@ reserved = {
     'switchcase' : 'SWITCHCASE'
 }
 
-t_COMMENT = r'\#[^\#]\#'
+t_COMMENT = r'\#[^\#]*\#'
 
 t_STRING = r'"[^"\n]'
 
