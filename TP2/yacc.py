@@ -494,7 +494,6 @@ def p_atribarray_Leftatribop(p):
             if p.parser.id_table_stack[i][p[1]]['classe'] == 'array':
                 endereco = p.parser.id_table_stack[i][p[1]]['endereco']
                 s = "pushfp\n"
-                # tamanho nao guarda o primeiro!!"!"!!!!!""!"!"!"!"!"!"
                 sizes = p.parser.id_table_stack[i][p[1]]['tamanho'][1:]
                 break
             else:
@@ -505,7 +504,6 @@ def p_atribarray_Leftatribop(p):
             if p.parser.id_table_stack[0][p[1]]['classe'] == 'array':
                 endereco = p.parser.id_table_stack[0][p[1]]['endereco']
                 s = "pushgp\n"
-                # tamanho nao guarda o primeiro!!"!"!!!!!""!"!"!"!"!"!"
                 sizes = p.parser.id_table_stack[0][p[1]]['tamanho'][1:]
             else:
                 print("ERROR: Variable %s is not of array type" % p[1],file=sys.stderr)
@@ -539,7 +537,7 @@ def p_atribarray_Rightatribop(p):
         if p[3] in p.parser.id_table_stack[0]:
             s = "pushgp\n"
             # tamanho nao guarda o primeiro!!"!"!!!!!""!"!"!"!"!"!"
-            sizes = p.parser.id_table_stack[0][p[3]]['tamanho'][:1]
+            sizes = p.parser.id_table_stack[0][p[3]]['tamanho'][1:]
         else:
             print("ERROR: variable %s not in scope" % p[3],file=sys.stderr)
             return
@@ -556,7 +554,7 @@ def p_accessarray(p):
     for i in range(len(p.parser.id_table_stack)-1, 0, -1):
         if p[1] in p.parser.id_table_stack[i]:
             end = p.parser.id_table_stack[i][p[1]]['endereco']
-            sizes = p.parser.id_table_stack[i][p[1]]['tamanho'][:1]
+            sizes = p.parser.id_table_stack[i][p[1]]['tamanho'][1:]
             s += p[2]
             for size in sizes:
                 s += f"pushi {size}\nmul\nadd\n"
@@ -566,7 +564,7 @@ def p_accessarray(p):
         print("ERROR: Variable %s not in scope" % p[1],file=sys.stderr)
     else:
         end = p.parser.id_table_stack[0][p[1]]['endereco']
-        sizes = p.parser.id_table_stack[0][p[1]]['tamanho'][:1]
+        sizes = p.parser.id_table_stack[0][p[1]]['tamanho'][1:]
         s += p[2]
         for size in sizes:
             s += f"pushi {size}\nmul\nadd\n"
