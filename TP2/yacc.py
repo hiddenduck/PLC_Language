@@ -2,11 +2,6 @@ import ply.yacc as yacc
 import sys
 from lex import tokens
 
-# YOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO provavelmente o lex deu asneira por causa das labels
-# Está pela ordem que aparecce na gramatica
-# tem dois \n entre as funçoes para os pitoninhos nao gritarem comigo
-
-
 def p_axiom_start(p):
     "Axiom : Start"
     main = "pusha main\ncall\n" if p.parser.main else ""
