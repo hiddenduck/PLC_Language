@@ -20,15 +20,3 @@ int x <- 10;
 
 
 
-int i <- 0;
-int x[2][2];
-
-while(i<2){
-    int j <- 0;
-    while(j<2){
-        (x[i][j])>?;
-        j <- j + 1;
-    }
-    
-    i <- i + 1;
-}

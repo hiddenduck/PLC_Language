@@ -7,8 +7,8 @@ from lex import tokens
 # tem dois \n entre as funçoes para os pitoninhos nao gritarem comigo
 
 
-def p_start_axiom(p):
-    "Start : Axiom"
+def p_axiom_start(p):
+    "Axiom : Start"
     main = "pusha main\ncall\n" if p.parser.main else ""
     p.parser.final_code = "start\n" + \
         p[1] + main + pop_local_vars(p) + "stop\n" + \
@@ -16,24 +16,24 @@ def p_start_axiom(p):
 
 
 def p_start_empty(p):
-    "Start : "
-    p.parser.fina_code = ""
+    "Axiom : "
+    p.parser.final_code = ""
 
 
 def p_axiom_code(p):
-    "Axiom : Axiom Block"
+    "Start : Start Block"
     #p[0] = "\n".join(p.parser.function_buffer) + "start" + p[1] + p[2] + "stop"
     p[0] = p[1] + p[2]
 
 
 def p_axiom_function(p):
-    "Axiom : Axiom Function"
+    "Start : Start Function"
     # p.parser.function_buffer
     p[0] = p[1]
 
 
 def p_axiom_empty(p):
-    "Axiom : "
+    "Start : "
     p[0] = ""
 
 
@@ -156,7 +156,7 @@ def p_funcases_funextra_rarrow(p):
                                                      'tamanho': 1,
                                                      'tipo': 'int'}
         else:
-            print("ERROR: Variable %s already declared locally." % p[1][-i])
+            print("ERROR: Variable %s already declared locally." % p[1][-i],file=sys.stderr)
             p_error(p)
     p[0] = (True, p[1])
     p.parser.local_adress = 1
@@ -181,7 +181,7 @@ def p_funcases_funextra(p):
                                                      'tamanho': 1,
                                                      'tipo': 'int'}
         else:
-            print("ERROR: Variable %s already declared locally." % p[1][-i])
+            print("ERROR: Variable %s already declared locally." % p[1][-i],file=sys.stderr)
             p_error(p)
     p[0] = (False, p[1])
 
@@ -303,11 +303,11 @@ def p_switch(p):
 
     # testes de integridade das tabelas
     if cond_table.keys() != case_table.keys():
-        print("ERROR: Condition labels don't match case labels")
+        print("ERROR: Condition labels don't match case labels",file=sys.stderr)
         p_error(p)
     if len(cond_table[':']) != len(case_table[':']):
         # estou a fazer com que todas as condiçoes apareçam e sejam chamadas uma vez (pode ser mudado)
-        print("ERROR: Number of unlabeled conditions doesn't match number of unlabeled cases")
+        print("ERROR: Number of unlabeled conditions doesn't match number of unlabeled cases",file=sys.stderr)
         p_error(p)
 
     end_label_num = p.parser.internal_label
@@ -433,7 +433,7 @@ def p_atribop_op(p):
 def p_decl(p):
     "Decl : ID ID"
     if p[1].lower() not in p.parser.type_table:
-        print("ERROR : invalid type")
+        print("ERROR : invalid type",file=sys.stderr)
     else:
         p[0] = "pushi 0\n"
         if len(p.parser.id_table_stack) == 1:
@@ -450,7 +450,7 @@ def p_decl(p):
                                                  'tipo': p[1]}
             p.parser.local_adress += 1
         else:
-            print("ERROR : Variable %s already declared locally." % p[2])
+            print("ERROR : Variable %s already declared locally." % p[2],file=sys.stderr)
             p_error(p)
 
 
@@ -458,7 +458,7 @@ def p_declarray(p):
     "DeclArray : ID ID DeclArraySize"
     # int x[1][1][2]
     if p[1].lower() not in p.parser.type_table:
-        print("ERROR: invalid type")
+        print("ERROR: invalid type",file=sys.stderr)
     else:
         res = 1
         for s in p[3]:
@@ -501,7 +501,7 @@ def p_atribarray_Leftatribop(p):
                 sizes = p.parser.id_table_stack[i][p[1]]['tamanho']
                 break
             else:
-                print("ERROR: Variable %s is not of array type" % p[1])
+                print("ERROR: Variable %s is not of array type" % p[1],file=sys.stderr)
                 p_error(p)
     else:
         if p[1] in p.parser.id_table_stack[0]:
@@ -511,10 +511,10 @@ def p_atribarray_Leftatribop(p):
                 # tamanho nao guarda o primeiro!!"!"!!!!!""!"!"!"!"!"!"
                 sizes = p.parser.id_table_stack[0][p[1]]['tamanho']
             else:
-                print("ERROR: Variable %s is not of array type" % p[1])
+                print("ERROR: Variable %s is not of array type" % p[1],file=sys.stderr)
                 p_error(p)
         else:
-            print("ERROR: Variable %s not in scope" % p[1])
+            print("ERROR: Variable %s not in scope" % p[1],file=sys.stderr)
             p_error(p)
     if endereco != 0:
         s += f"pushi {endereco}\npadd\n"
@@ -544,7 +544,7 @@ def p_atribarray_Rightatribop(p):
             # tamanho nao guarda o primeiro!!"!"!!!!!""!"!"!"!"!"!"
             sizes = p.parser.id_table_stack[0][p[3]]['tamanho']
         else:
-            print("ERROR: variable %s not in scope" % p[3])
+            print("ERROR: variable %s not in scope" % p[3],file=sys.stderr)
             return
     s += p[4]
     for size in sizes:
@@ -566,7 +566,7 @@ def p_accessarray(p):
             p[0] = f"pushfp\npushi {end}\npadd\n" + s + "loadn\n"
             return
     if p[1] not in p.parser.id_table_stack[0]:
-        print("ERROR: Variable %s not in scope" % p[1])
+        print("ERROR: Variable %s not in scope" % p[1],file=sys.stderr)
     else:
         end = p.parser.id_table_stack[0][p[1]]['endereco']
         sizes = p.parser.id_table_stack[0][p[1]]['tamanho']
@@ -591,7 +591,7 @@ def p_declatrib_left(p):
     "DeclAtrib : ID ID LARROW AtribOp"
     # int x <--------------------- 5+8
     if p[1].lower() not in p.parser.type_table:
-        print("ERROR: invalid type")
+        print("ERROR: invalid type",file=sys.stderr)
     else:
         p[0] = p[4]
         if len(p.parser.id_table_stack) == 1:
@@ -613,7 +613,7 @@ def p_declatrib_right(p):
     "DeclAtrib : AtribOp RARROW ID ID"
     # 7+5 -> int  INT Int iNt x? #####vao permitir isto???#####
     if p[3].lower() not in p.parser.type_table:
-        print("ERROR: invalid type")
+        print("ERROR: invalid type",file=sys.stderr)
     else:
         p[0] = p[1]
         if len(p.parser.id_table_stack) == 1:
@@ -685,14 +685,14 @@ def p_atrib_equiv(p):
             end1 = "pushg %d\n" % end
             store1 = "storeg %d\n" % end 
         else:
-            print("ERROR: Variable %s not in scope" % p[1])    
+            print("ERROR: Variable %s not in scope" % p[1],file=sys.stderr)    
     if flag2: 
         if p[3] in p.parser.id_table_stack[0]:
             end = p.parser.id_table_stack[0][p[3]]['endereco']
             end2 = "pushg %d\n" % end
             store2 = "storeg %d\n" % end 
         else:
-            print("ERROR: Variable %s not in scope" % p[3])
+            print("ERROR: Variable %s not in scope" % p[3],file=sys.stderr)
     
     p[0] = end1 + end2 + store1 + store2
 
@@ -803,7 +803,7 @@ def p_base_id(p):
             p[0] = "pushl %d\n" % p.parser.id_table_stack[i][p[1]]['endereco']
             return
     if p[1] not in p.parser.id_table_stack[0]:
-        print("ERROR: variable %s not in scope" % p[1])
+        print("ERROR: variable %s not in scope" % p[1],file=sys.stderr)
         p_error(p)
     else:
         p[0] = "pushg %d\n" % p.parser.id_table_stack[0][p[1]]['endereco']
@@ -821,7 +821,7 @@ def p_base_funcall(p):
         p[0] = p[1][0]
     else:
         print("ERROR: Function %s doesn't return any value" % p[1][2] +
-              " and is used in an operation.")
+              " and is used in an operation.",file=sys.stderr)
         p_error(p)
 
 
@@ -834,7 +834,7 @@ def p_funcall(p):
     "FunCall : ID '(' FunArg ')'"
     # print(p.parser.function_table)
     if p[1] not in p.parser.function_table:
-        print("ERROR: Function %s not defined" % p[1])
+        print("ERROR: Function %s not defined" % p[1],file=sys.stderr)
         p_error(p)
     label = p.parser.function_table[p[1]]['label']
     var_num = p.parser.function_table[p[1]]['num_args']
@@ -847,7 +847,7 @@ def p_funcall(p):
                 p[1])  # Nao esquecer de por o return em cima da primeira variavelF
     else:
         print("ERROR: Number of arguments given %d is not equal to needed %d, for function %s"
-              % (len(p[3]), var_num, p[1]))
+              % (len(p[3]), var_num, p[1]),file=sys.stderr)
         p_error(p)
 
 
@@ -973,7 +973,7 @@ def gen_atrib_code_stack(p, id, atribop):
             break
     else:
         if id not in p.parser.id_table_stack[0]:
-            print("ERROR: Name %s not defined." % id)
+            print("ERROR: Name %s not defined." % id,file=sys.stderr)
             # invoke error
         else:
             s = "storeg %d\n" % p.parser.id_table_stack[0][id]['endereco']
