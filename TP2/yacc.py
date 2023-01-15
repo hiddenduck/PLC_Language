@@ -447,7 +447,7 @@ def p_decl(p):
         p_error(p)
     else:
         p[0] = "pushi 0\n"
-        if len(p.parser.id_table_stack) == 1:
+        if len(p.parser.id_table_stack) == 1 and p[2] not in p.parser.id_table_stack[0]:
             p.parser.id_table_stack[0][p[2]] = {'classe': 'var',
                                                 'endereco': p.parser.global_adress,
                                                 'tamanho': [1],
@@ -585,23 +585,32 @@ def p_accessarray(p):
     s = ""
     for i in range(len(p.parser.id_table_stack)-1, 0, -1):
         if p[1] in p.parser.id_table_stack[i]:
-            end = p.parser.id_table_stack[i][p[1]]['endereco']
-            sizes = p.parser.id_table_stack[i][p[1]]['tamanho'][1:]
-            s += p[2]
-            for size in sizes:
-                s += f"pushi {size}\nmul\nadd\n"
-            p[0] = f"pushfp\npushi {end}\npadd\n" + s + "loadn\n"
-            return
-    if p[1] not in p.parser.id_table_stack[0]:
-        print("ERROR: Variable %s not in scope" % p[1],file=sys.stderr)
+            if p.parser.id_table_stack[i][p[1]]['classe'] == 'array':
+                endereco = p.parser.id_table_stack[i][p[1]]['endereco']
+                s = "pushfp\n"
+                sizes = p.parser.id_table_stack[i][p[1]]['tamanho'][1:]
+                break
+            else:
+                print("ERROR: Variable %s is not of array type" % p[1],file=sys.stderr)
+                p_error(p)
     else:
-        end = p.parser.id_table_stack[0][p[1]]['endereco']
-        sizes = p.parser.id_table_stack[0][p[1]]['tamanho'][1:]
-        s += p[2]
-        for size in sizes:
-            s += f"pushi {size}\nmul\nadd\n"
-        p[0] = f"pushgp\npushi {end}\npadd\n" + s + "loadn\n"
-    return
+        if p[1] in p.parser.id_table_stack[0]:
+            if p.parser.id_table_stack[0][p[1]]['classe'] == 'array':
+                endereco = p.parser.id_table_stack[0][p[1]]['endereco']
+                s = "pushgp\n"
+                sizes = p.parser.id_table_stack[0][p[1]]['tamanho'][1:]
+            else:
+                print("ERROR: Variable %s is not of array type" % p[1],file=sys.stderr)
+                p_error(p)
+        else:
+            print("ERROR: Variable %s not in scope" % p[1],file=sys.stderr)
+            p_error(p)
+    if endereco != 0:
+        s += f"pushi {endereco}\npadd\n"
+    s += p[2]
+    for size in sizes:
+        s += f"pushi {size}\nmul\nadd\n"
+    p[0] = s + "loadn\n"
 
 
 def p_arraysize_rec(p):
@@ -619,21 +628,25 @@ def p_declatrib_left(p):
     # int x <--------------------- 5+8
     if p[1].lower() not in p.parser.type_table:
         print("ERROR: invalid type",file=sys.stderr)
+        p_error(p)
     else:
         p[0] = p[4]
-        if len(p.parser.id_table_stack) == 1:
+        if len(p.parser.id_table_stack) == 1 and p[2] not in parser.id_table_stack[0]:
             p.parser.id_table_stack[0][p[2]] = {'classe': 'var',
                                                 'endereco': p.parser.local_adress,
                                                 'tamanho': [1],
                                                 'tipo': p[1]}
             p.parser.global_adress += 1
             p.parser.local_adress += 1
-        else:
+        elif p[2] not in parser.id_table_stack[-1]:
             p.parser.id_table_stack[-1][p[2]] = {'classe': 'var',
                                                  'endereco': p.parser.local_adress,
                                                  'tamanho': [1],
                                                  'tipo': p[1]}
             p.parser.local_adress += 1
+        else:
+            print("ERROR: Variable %s already declared locally" % p[2],file=sys.stderr)
+            p_error(p)
 
 
 def p_declatrib_right(p):
