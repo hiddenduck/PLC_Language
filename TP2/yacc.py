@@ -558,7 +558,7 @@ def p_atribarray_Rightatribop(p):
                 print("ERROR: Variable %s is not of array type" % p[3],file=sys.stderr)
                 p_error(p)
     else:
-        if p[1] in p.parser.id_table_stack[0]:
+        if p[3] in p.parser.id_table_stack[0]:
             if p.parser.id_table_stack[0][p[3]]['classe'] == 'array':
                 endereco = p.parser.id_table_stack[0][p[3]]['endereco']
                 s = "pushgp\n"
