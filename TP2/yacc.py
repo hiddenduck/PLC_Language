@@ -460,9 +460,13 @@ def p_declarray(p):
     # int x[1][1][2]
     if p[1].lower() not in p.parser.type_table:
         print("ERROR: invalid type",file=sys.stderr)
+        p_error(p)
     else:
         res = 1
         for s in p[3]:
+            if s <= 0:
+                print("ERROR: Dimension non-positive for array %s" % p[2],file=sys.stderr)
+                p_error(p)
             res *= s
         p[0] = f"pushn {res}\n"
         if len(p.parser.id_table_stack) == 1:
@@ -559,7 +563,9 @@ def p_atribarray_Rightatribop(p):
     for size in sizes:
         s += f"pushi {size}\nmul\nadd\n"
 
-    p[0] = s + p[1] + "storen\n"
+    end = p.parser.local_adress
+
+    p[0] = p[1] + s + f"pushl {end}" + "storen\n"
 
 
 def p_accessarray(p):
@@ -710,7 +716,7 @@ def p_atrib_equiv(p):
 
 def p_atrib_array(p):
     "Atrib : AtribArray"
-    p[0] = p[1]
+    p[0] = p[1] + "pop 1\n"
 
 
 # def p_op_opuno(p):
@@ -978,7 +984,7 @@ def gen_atrib_code_stack(p, id, atribop):
     s = ""
     for tamanho in range(len(p.parser.id_table_stack)-1, 0, -1):
         if id in p.parser.id_table_stack[tamanho]:
-            if p.parser.id_table_stack[tamanho]['classe'] == 'var':
+            if p.parser.id_table_stack[tamanho][id]['classe'] == 'var':
                 s = "storel %d\n" % p.parser.id_table_stack[tamanho][id]['endereco']
                 break
             else:
@@ -989,7 +995,7 @@ def gen_atrib_code_stack(p, id, atribop):
             print("ERROR: Name %s not defined." % id,file=sys.stderr)
             p_error(p)
         else:
-            if p.parser.id_table_stack[0]['classe'] == 'var':
+            if p.parser.id_table_stack[0][id]['classe'] == 'var':
                 s = "storeg %d\n" % p.parser.id_table_stack[0][id]['endereco']
             else:
                 print("ERROR: %s is not of variable class" % id,file=sys.stderr)
