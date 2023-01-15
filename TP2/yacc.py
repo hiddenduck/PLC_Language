@@ -224,25 +224,26 @@ def p_if(p):
 def p_else_scope(p):
     "ElseScope : ELSE"
       # pop do if
+    p[0] = pop_local_vars(p)
     p.parser.id_table_stack.append(dict())
     # limpar scope anterior (if anterior)
-    p[0] = pop_local_vars(p)
 
 
 def p_ifelse(p):
     "IfElse : IfScope AtribOp Body ElseScope Body"
 
     label = p.parser.internal_label
+    else_vars = pop_local_vars(p) #pop_else
     p[0] = p[2] + f"jz I{label}\n" + \
         p[3] + \
-        f"jump E{label}\n" + \
         p[4] + \
+        f"jump E{label}\n" + \
         f"I{label}:\n" + \
         p[5] + \
+        else_vars + \
         f"E{label}:\n"
     p.parser.internal_label += 1
     # p[4] são as local_vars do if
-    p[0] += pop_local_vars(p)  # pop do else
 
 
 def p_while_scope(p):
@@ -297,7 +298,6 @@ def p_switch_scopecase(p):
 
 def p_switch(p):
     # aqui eu ja tenho as duas tabelas
-    # acho que nao vai ser preciso o Conds
     "Switch : SwitchScope Conds '{' Cases '}'"
 
     cond_table = p.parser.label_table_stack[-1][0]
