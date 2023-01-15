@@ -119,7 +119,7 @@ def p_function(p):
     local_args = len(p.parser.id_table_stack[-1])-int(p[1][1])
     if local_args > 0:
         #deixar se houver retorno e não houver argumentos
-        s += "pop %d\n" % (local_args - int(p[1][1] == 0 and p[3][0]))
+        s += "pop %d\n" % (local_args - int(p[1][1] == 0 and p[1][0]))
     p.parser.local_adress = 0
     p.parser.id_table_stack.pop()
 
@@ -479,19 +479,22 @@ def p_declarray(p):
                 p_error(p)
             res *= s
         p[0] = f"pushn {res}\n"
-        if len(p.parser.id_table_stack) == 1:
+        if len(p.parser.id_table_stack) == 1 and p[2] not in p.parser.id_table_stack[0]:
             p.parser.id_table_stack[0][p[2]] = {'classe': 'array',
                                                 'endereco': p.parser.global_adress,
                                                 'tamanho': p[3],
                                                 'tipo': p[1]}
             p.parser.global_adress += res
             p.parser.local_adress += res
-        else:
+        elif p[2] not in p.parser.id_table_stack[-1]:
             p.parser.id_table_stack[-1][p[2]] = {'classe': 'array',
                                                  'endereco': p.parser.local_adress,
                                                  'tamanho': p[3],
                                                  'tipo': p[1]}
             p.parser.local_adress += res
+        else:
+            print("ERROR : Variable %s already declared locally." % p[2],file=sys.stderr)
+            p_error(p)
 
 
 def p_declarraysize_rec(p):
@@ -1000,7 +1003,7 @@ def p_error(p):
     # print(p)
     # get formatted representation of stack
     stack_state_str = ' '.join([symbol.type for symbol in parser.symstack][1:])
-
+    p.parser_success = False
     print('Syntax error in input! Parser State: {} {}\n . {}\n'
           .format(parser.state,
                   stack_state_str,
@@ -1054,6 +1057,7 @@ parser = yacc.yacc(debugfile="yacc.debug")
 
 # 0->global; 1+->local
 # ++ x = (tipo, classe, localidade, endereço, dimenção)
+parser.success = True
 parser.main = False
 parser.type_table = {'int'}
 parser.id_table_stack = list()
@@ -1081,5 +1085,6 @@ f.close()
 
 #f = open("test1.vm", "w")
 # f.write(parser.final_code)
-
-print(parser.final_code)
+print(parser.success, file=sys.stderr)
+if parser.success:
+    print(parser.final_code)
