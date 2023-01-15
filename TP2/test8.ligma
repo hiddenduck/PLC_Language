@@ -1,5 +1,6 @@
 int x[3];
-
+int x <- 1;
+x <- 0;
 f : x,y -> z {
     if (x = 0)
         z <- z + y;
