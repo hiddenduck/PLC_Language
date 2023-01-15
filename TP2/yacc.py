@@ -94,40 +94,42 @@ def p_body_code(p):
     "Body : '{' Code '}'"
     p[0] = p[2]
 
-
-def p_function(p):
-    "Function : ID FunScope FunCases Body"
+def p_function_header(p):
+    "FunctionHeader : ID FunScope FunCases"
     label = p.parser.internal_label
     num_args = len(p[3][1])
+
+    s_label = f"F{label}"
+    if p[1] == 'main':
+        p.parser.main = True
+        s_label = f"main"
+
     p.parser.function_table[p[1]] = {'num_args': num_args,
                                      'return': p[3][0],
-                                     'label': f"F{label}"}
+                                     'label': s_label}
 
+    #Se a função devolve ou não algo. p[3] é um tuplo.
+    
+    p[0] = (p[3][0], num_args, s_label + ":\n")
+
+
+def p_function(p):
+    "Function : FunctionHeader Body"
     s = ""
-
-    local_args = len(p.parser.id_table_stack[-1])-int(num_args)
+    local_args = len(p.parser.id_table_stack[-1])-int(p[1][1])
     if local_args > 0:
         #deixar se houver retorno e não houver argumentos
-        s += "pop %d\n" % (local_args - int(num_args == 0 and p[3][0]))
+        s += "pop %d\n" % (local_args - int(p[1][1] == 0 and p[3][0]))
     p.parser.local_adress = 0
     p.parser.id_table_stack.pop()
 
-    #Se a função devolve ou não algo. p[3] é um tuplo.
-
-    s_label = f"F{label}:\n"
-
-    if p[1] == 'main':
-        p.parser.main = True
-        s_label = f"main:\n"
-
-    if p[3][0]:
+    if p[1][0]:
         p.parser.function_buffer.append(
-            s_label + "pushi 0\n" + p[4] + \
-            f"pushl 0\nstorel {-num_args}\n" + s + "return\n")
+            p[1][2] + "pushi 0\n" + p[2] + \
+            f"pushl 0\nstorel {-p[1][1]}\n" + s + "return\n")
     else:
         p.parser.function_buffer.append(
-            s_label + p[4] + s + "return\n")
-
+            p[1][2] + p[2] + s + "return\n")
 
     p[0] = ""
     p.parser.internal_label += 1
@@ -525,7 +527,9 @@ def p_atribarray_Leftatribop(p):
     for size in sizes:
         s += f"pushi {size}\nmul\nadd\n"
 
-    p[0] = s + p[4] + "storen\n"
+    end = p.parser.local_adress
+
+    p[0] = p[4] + s + f"pushl {end}\n" + "storen\n"
 
 
 def p_atribarray_Rightatribop(p):
@@ -565,7 +569,7 @@ def p_atribarray_Rightatribop(p):
 
     end = p.parser.local_adress
 
-    p[0] = p[1] + s + f"pushl {end}" + "storen\n"
+    p[0] = p[1] + s + f"pushl {end}\n" + "storen\n"
 
 
 def p_accessarray(p):
@@ -964,7 +968,6 @@ def p_oppow(p):
 
 
 def p_error(p):
-    print("Syntax error!")
     # print(p)
     # get formatted representation of stack
     stack_state_str = ' '.join([symbol.type for symbol in parser.symstack][1:])
@@ -1043,7 +1046,7 @@ file_in = input()
 f = open(file_in, "r")
 ligma_code = f.read()
 
-parser.parse(ligma_code, debug=1)
+parser.parse(ligma_code, debug=0)
 
 f.close()
 
