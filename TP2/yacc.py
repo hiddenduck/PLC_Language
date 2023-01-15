@@ -827,13 +827,21 @@ def p_base_id(p):
     "Base : ID"
     for i in range(len(p.parser.id_table_stack)-1, 0, -1):
         if p[1] in p.parser.id_table_stack[i]:
-            p[0] = "pushl %d\n" % p.parser.id_table_stack[i][p[1]]['endereco']
-            return
+            ele = p.parser.id_table_stack[i][p[1]]
+            if ele['classe'] == 'var':
+                p[0] = "pushl %d\n" % ele['endereco']
+                return
+            else:
+                print("ERROR: %s is not a variable." % p[1],file=sys.stderr)
+                p_error(p)
     if p[1] not in p.parser.id_table_stack[0]:
         print("ERROR: variable %s not in scope" % p[1],file=sys.stderr)
         p_error(p)
-    else:
+    elif p.parser.id_table_stack[0][p1]['classe'] == 'var' :
         p[0] = "pushg %d\n" % p.parser.id_table_stack[0][p[1]]['endereco']
+    else:
+        print("ERROR: %s is not a variable." % p[1],file=sys.stderr)
+        p_error(p)
     return
 
 
