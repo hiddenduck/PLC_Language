@@ -971,14 +971,20 @@ def gen_atrib_code_stack(p, id, atribop):
     s = ""
     for tamanho in range(len(p.parser.id_table_stack)-1, 0, -1):
         if id in p.parser.id_table_stack[tamanho]:
-            s = "storel %d\n" % p.parser.id_table_stack[tamanho][id]['endereco']
-            break
+            if p.parser.id_table_stack[tamanho]['classe'] == 'var':
+                s = "storel %d\n" % p.parser.id_table_stack[tamanho][id]['endereco']
+                break
+            else:
+                print("ERROR: %s is not of variable class" % id,file=sys.stderr)
     else:
         if id not in p.parser.id_table_stack[0]:
             print("ERROR: Name %s not defined." % id,file=sys.stderr)
             # invoke error
         else:
-            s = "storeg %d\n" % p.parser.id_table_stack[0][id]['endereco']
+            if p.parser.id_table_stack[0]['classe'] == 'var':
+                s = "storeg %d\n" % p.parser.id_table_stack[0][id]['endereco']
+            else:
+                print("ERROR: %s is not of variable class" % id,file=sys.stderr)
     return s
 
 
