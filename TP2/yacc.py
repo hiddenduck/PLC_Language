@@ -376,7 +376,7 @@ def p_cases_base(p):
 def p_case_id(p):
     "Case : ID ':' Body"
     # preciso ver se ja tem la para dar erro
-    if p[1] not in p.parser.label_table_stack[-1][1]:
+    if p[1] not in p.parser.label_table_stack[-1][0]:
         print("ERROR: %s not label in current scope" % p[1],file=sys.stderr)
         p_error(p)
     p.parser.label_table_stack[-1][1][p[1]] = p[3]
@@ -386,9 +386,6 @@ def p_case_id(p):
 def p_case_empty(p):
     "Case : ':' Body"
     # o par no label stack seria cond,case
-    if p[1] not in p.parser.label_table_stack[-1][1]:
-        print("ERROR: %s not label in current scope" % p[1],file=sys.stderr)
-        p_error(p)
     p.parser.label_table_stack[-1][1][':'].append(p[2])
     p[0] = ':'
 
@@ -1003,7 +1000,7 @@ def p_error(p):
     # print(p)
     # get formatted representation of stack
     stack_state_str = ' '.join([symbol.type for symbol in parser.symstack][1:])
-    p.parser_success = False
+    p.success = False
     print('Syntax error in input! Parser State: {} {}\n . {}\n'
           .format(parser.state,
                   stack_state_str,
@@ -1085,6 +1082,5 @@ f.close()
 
 #f = open("test1.vm", "w")
 # f.write(parser.final_code)
-print(parser.success, file=sys.stderr)
 if parser.success:
     print(parser.final_code)
