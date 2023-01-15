@@ -223,10 +223,11 @@ def p_if(p):
 
 def p_else_scope(p):
     "ElseScope : ELSE"
-      # pop do if
+    # limpar scope anterior (if anterior)
+    # pop do if
     p[0] = pop_local_vars(p)
     p.parser.id_table_stack.append(dict())
-    # limpar scope anterior (if anterior)
+    
 
 
 def p_ifelse(p):
@@ -383,14 +384,6 @@ def p_case_empty(p):
     # o par no label stack seria cond,case
     p.parser.label_table_stack[-1][1][':'].append(p[2])
     p[0] = ':'
-
-
-"""def p_exp_funcall(p):
-    "Exp : FunCall"
-    if p[1][1]:
-        p[0] = p[1][0] + "pop 1\n"
-    else:
-        p[0] = p[1][0]"""
 
 def p_exp_print(p):
     "Exp : STRING PRINT"
