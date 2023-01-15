@@ -111,6 +111,7 @@ def p_function(p):
         s += "pop %d\n" % (local_args - int(num_args == 0 and p[3][0]))
     p.parser.local_adress = 0
     p.parser.id_table_stack.pop()
+
     #Se a função devolve ou não algo. p[3] é um tuplo.
 
     s_label = f"F{label}:\n"
@@ -266,8 +267,7 @@ def p_while(p):
         p[5] + \
         pop_local + \
         f"jump W{lable_num}\n" + \
-        f"WE{lable_num}:\n" + \
-        pop_local
+        f"WE{lable_num}:\n"
 
     p.parser.internal_label += 1
 
@@ -982,7 +982,7 @@ def pop_local_vars(p):
         if (n := p.parser.id_table_stack[-1][var]['endereco']) < min:
             min = n
     if min != float("inf"):
-        p.parser.local_adress = min
+        p.parser.local_adress = min if min > 0 else 0
     s += "pop %d\n" % pop_size
     p.parser.id_table_stack.pop()
     return s
