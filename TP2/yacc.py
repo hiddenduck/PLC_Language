@@ -393,9 +393,17 @@ def p_case_empty(p):
     p[0] = ':'
 
 def p_exp_print(p):
-    "Exp : STRING PRINT"
+    "Exp : Str PRINT"
     # funciona para tudo que não seja array
     p[0] = "pushs " + p[1] + "\nwrites\n" + r'pushs "\n"' + "\nwrites\n"
+
+def p_Str_Aspas(p):
+    "Str : '(' STRING ')'"
+    p[0] = p[2]
+
+def p_Str_SemAspas(p):
+    "Str : STRING"
+    p[0] = p[1]
 
 def p_exp_atrib(p):
     "Exp : Atrib"
