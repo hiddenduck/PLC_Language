@@ -1,0 +1,8 @@
+int i;
+int ar[4];
+
+i <- 0;
+while(i<4){
+    ar[i] <- i;
+    i <- i + 1;
+}
