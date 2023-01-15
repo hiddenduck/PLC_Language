@@ -233,7 +233,6 @@ def p_else_scope(p):
 
 def p_ifelse(p):
     "IfElse : IfScope AtribOp Body ElseScope Body"
-
     label = p.parser.internal_label
     else_vars = pop_local_vars(p) #pop_else
     p[0] = p[2] + f"jz I{label}\n" + \
@@ -527,18 +526,28 @@ def p_atribarray_Rightatribop(p):
     # coloca o valor do atribop no topo da stack
     for i in range(len(p.parser.id_table_stack)-1, 0, -1):
         if p[3] in p.parser.id_table_stack[i]:
-            s = "pushfp\n"
-            # tamanho nao guarda o primeiro!!"!"!!!!!""!"!"!"!"!"!"
-            sizes = p.parser.id_table_stack[i][p[3]]['tamanho'][1:]
-            break
+            if p.parser.id_table_stack[i][p[3]]['classe'] == 'array':
+                endereco = p.parser.id_table_stack[i][p[3]]['endereco']
+                s = "pushfp\n"
+                sizes = p.parser.id_table_stack[i][p[3]]['tamanho'][1:]
+                break
+            else:
+                print("ERROR: Variable %s is not of array type" % p[3],file=sys.stderr)
+                p_error(p)
     else:
-        if p[3] in p.parser.id_table_stack[0]:
-            s = "pushgp\n"
-            # tamanho nao guarda o primeiro!!"!"!!!!!""!"!"!"!"!"!"
-            sizes = p.parser.id_table_stack[0][p[3]]['tamanho'][1:]
+        if p[1] in p.parser.id_table_stack[0]:
+            if p.parser.id_table_stack[0][p[3]]['classe'] == 'array':
+                endereco = p.parser.id_table_stack[0][p[3]]['endereco']
+                s = "pushgp\n"
+                sizes = p.parser.id_table_stack[0][p[3]]['tamanho'][1:]
+            else:
+                print("ERROR: Variable %s is not of array type" % p[3],file=sys.stderr)
+                p_error(p)
         else:
-            print("ERROR: variable %s not in scope" % p[3],file=sys.stderr)
-            return
+            print("ERROR: Variable %s not in scope" % p[3],file=sys.stderr)
+            p_error(p)
+    if endereco != 0:
+        s += f"pushi {endereco}\npadd\n"
     s += p[4]
     for size in sizes:
         s += f"pushi {size}\nmul\nadd\n"
