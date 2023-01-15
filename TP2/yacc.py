@@ -374,6 +374,9 @@ def p_cases_base(p):
 def p_case_id(p):
     "Case : ID ':' Body"
     # preciso ver se ja tem la para dar erro
+    if p[1] not in p.parser.label_table_stack[-1][1]:
+        print("ERROR: %s not label in current scope" % p[1],file=sys.stderr)
+        p_error(p)
     p.parser.label_table_stack[-1][1][p[1]] = p[3]
     p[0] = p[1]  # ~acho que podemos ignorar isto mas whatever
 
@@ -381,6 +384,9 @@ def p_case_id(p):
 def p_case_empty(p):
     "Case : ':' Body"
     # o par no label stack seria cond,case
+    if p[1] not in p.parser.label_table_stack[-1][1]:
+        print("ERROR: %s not label in current scope" % p[1],file=sys.stderr)
+        p_error(p)
     p.parser.label_table_stack[-1][1][':'].append(p[2])
     p[0] = ':'
 
@@ -428,20 +434,21 @@ def p_decl(p):
     "Decl : ID ID"
     if p[1].lower() not in p.parser.type_table:
         print("ERROR : invalid type",file=sys.stderr)
+        p_error(p)
     else:
         p[0] = "pushi 0\n"
         if len(p.parser.id_table_stack) == 1:
             p.parser.id_table_stack[0][p[2]] = {'classe': 'var',
                                                 'endereco': p.parser.global_adress,
                                                 'tamanho': [1],
-                                                'tipo': p[1]}
+                                                'tipo': p[1].lower()}
             p.parser.global_adress += 1
             p.parser.local_adress += 1
         elif p[2] not in p.parser.id_table_stack[-1]:
-            p.parser.id_table_stack[-1][p[2]] = {'classe': 'array',
+            p.parser.id_table_stack[-1][p[2]] = {'classe': 'var',
                                                  'endereco': p.parser.local_adress,
                                                  'tamanho': [1],
-                                                 'tipo': p[1]}
+                                                 'tipo': p[1].lower()}
             p.parser.local_adress += 1
         else:
             print("ERROR : Variable %s already declared locally." % p[2],file=sys.stderr)
@@ -959,7 +966,7 @@ def p_error(p):
     print('Syntax error in input! Parser State: {} {}\n . {}\n'
           .format(parser.state,
                   stack_state_str,
-                  p))
+                  p),file=sys.stderr)
     raise SyntaxError
 
 
@@ -976,15 +983,17 @@ def gen_atrib_code_stack(p, id, atribop):
                 break
             else:
                 print("ERROR: %s is not of variable class" % id,file=sys.stderr)
+                p_error(p)
     else:
         if id not in p.parser.id_table_stack[0]:
             print("ERROR: Name %s not defined." % id,file=sys.stderr)
-            # invoke error
+            p_error(p)
         else:
             if p.parser.id_table_stack[0]['classe'] == 'var':
                 s = "storeg %d\n" % p.parser.id_table_stack[0][id]['endereco']
             else:
                 print("ERROR: %s is not of variable class" % id,file=sys.stderr)
+                p_error(p)
     return s
 
 
