@@ -10,7 +10,7 @@ storel 0
 pushl -1
 pushi 1
 sub 
-storel -1	
+storel -1
 jump P1
 P2:
 storel -2
