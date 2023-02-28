@@ -1,7 +1,7 @@
 f : x,y -----> z
 x-y+2+2->z;
 int x;
-switchcase x( (x<-f(x, 1)) >= 1), (<?) {
+switchcond x( (x<-f(x, 1)) >= 1), (<?) {
     
     : {
         f(x,1)>?;

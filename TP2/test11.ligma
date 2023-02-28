@@ -1,0 +1,17 @@
+int x;
+
+x <− <?;
+
+x <− x + 2;
+
+( x ) >?;
+
+
+"Fim do programa">?;
+
+#
+ Codigo em comentario
+ if ( 10 ) {
+ x <− 0;
+ }
+#
